@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "NmoCVEZof9lUwyBfU5Gcp/0jH6fG6eds5VnJH6MA2cemQmTeuYC3q8FjdmYbbj70mcbGpn58ayi9jVM+5jkx6w==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\ICMSRestore.API\\API.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\evand\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,9 @@
+C:\Users\evand\source\repos\ICMSRestore\DAO\bin\Debug\netstandard2.0\DAO.deps.json
+C:\Users\evand\source\repos\ICMSRestore\DAO\bin\Debug\netstandard2.0\DAO.dll
+C:\Users\evand\source\repos\ICMSRestore\DAO\bin\Debug\netstandard2.0\DAO.pdb
+C:\Users\evand\source\repos\ICMSRestore\DAO\obj\Debug\netstandard2.0\DAO.csprojAssemblyReference.cache
+C:\Users\evand\source\repos\ICMSRestore\DAO\obj\Debug\netstandard2.0\DAO.AssemblyInfoInputs.cache
+C:\Users\evand\source\repos\ICMSRestore\DAO\obj\Debug\netstandard2.0\DAO.AssemblyInfo.cs
+C:\Users\evand\source\repos\ICMSRestore\DAO\obj\Debug\netstandard2.0\DAO.csproj.CoreCompileInputs.cache
+C:\Users\evand\source\repos\ICMSRestore\DAO\obj\Debug\netstandard2.0\DAO.dll
+C:\Users\evand\source\repos\ICMSRestore\DAO\obj\Debug\netstandard2.0\DAO.pdb

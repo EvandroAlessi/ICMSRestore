@@ -1,0 +1,9 @@
+C:\Users\evand\source\repos\ICMSRestore\Dominio\bin\Debug\netstandard2.0\Dominio.deps.json
+C:\Users\evand\source\repos\ICMSRestore\Dominio\bin\Debug\netstandard2.0\Dominio.dll
+C:\Users\evand\source\repos\ICMSRestore\Dominio\bin\Debug\netstandard2.0\Dominio.pdb
+C:\Users\evand\source\repos\ICMSRestore\Dominio\obj\Debug\netstandard2.0\Dominio.csprojAssemblyReference.cache
+C:\Users\evand\source\repos\ICMSRestore\Dominio\obj\Debug\netstandard2.0\Dominio.AssemblyInfoInputs.cache
+C:\Users\evand\source\repos\ICMSRestore\Dominio\obj\Debug\netstandard2.0\Dominio.AssemblyInfo.cs
+C:\Users\evand\source\repos\ICMSRestore\Dominio\obj\Debug\netstandard2.0\Dominio.csproj.CoreCompileInputs.cache
+C:\Users\evand\source\repos\ICMSRestore\Dominio\obj\Debug\netstandard2.0\Dominio.dll
+C:\Users\evand\source\repos\ICMSRestore\Dominio\obj\Debug\netstandard2.0\Dominio.pdb

@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "BAQXh3UHlfwbX8mqZn7nvctBwiP3GZc3P0/Pj+qkJTDWYNwMpt0j2VxttiuiJOYNj/6LMv/okHXFMMP2bO00QA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\DAO\\DAO.csproj",
+  "expectedPackageFiles": [
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+  ],
+  "logs": []
+}
