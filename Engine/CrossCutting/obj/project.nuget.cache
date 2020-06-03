@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "+tOQqtPkumLEmP126dcpeuyJa4SxbSn1VG6Tgn18aaG6RwzR2Uog6A/OYuJ1sigddRXnOtQdAl39wvIq0mVQnA==",
+  "dgSpecHash": "gZwCzdp7gAvmbSF7EXpEV3WbRAuP9W8uINoeW3jvqMS+bfclcOGRtGO7lGggAvZzvE7dXUQ/5pjdKFHOG0f9cg==",
   "success": true,
   "projectFilePath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\CrossCutting\\CrossCutting.csproj",
   "expectedPackageFiles": [
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+    "C:\\Users\\evand\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
+    "C:\\Users\\evand\\.nuget\\packages\\system.io.filesystem.accesscontrol\\4.7.0\\system.io.filesystem.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\evand\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
+    "C:\\Users\\evand\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
+    "C:\\Users\\evand\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
   "logs": []
 }

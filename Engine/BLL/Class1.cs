@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace CrossCutting
+namespace BLL
 {
     public class Class1
     {

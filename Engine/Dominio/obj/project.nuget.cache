@@ -1,11 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "6QVD+pmZTlkSuHKtqayrkL90kBXag+51cibnDFiVDA9xZBvrjqQ4OvO8m2JHolILZ+c0iFxoOIhe9cIVhfSyTQ==",
+  "dgSpecHash": "9yekSDcM03aSTJRBe41mfr78r4KXHtVSq2S+E5s6ZSzrNrGDd+jsyXOhQf7DQaN8zle3to2uvz0vFZzGbT3wXQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\Dominio\\Dominio.csproj",
   "expectedPackageFiles": [
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512"
+    "C:\\Users\\evand\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
   ],
   "logs": []
 }

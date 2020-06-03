@@ -2,7 +2,7 @@
 
 namespace Dominio
 {
-    public class NFe
+    public class Class1
     {
     }
 }
