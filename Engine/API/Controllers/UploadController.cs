@@ -10,7 +10,7 @@ using CrossCutting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Models;
+using API.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -30,7 +30,7 @@ namespace API.Controllers
         // POST: api/<UploadController>
         [HttpPost]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Post(List<IFormFile> files)
+        public async Task<IActionResult> Post([FromForm]List<IFormFile> files)
         {
             try
             {
@@ -116,12 +116,6 @@ namespace API.Controllers
         {
             return "value";
         }
-
-        // POST api/<UploadController>
-        //[HttpPost]
-        //public void Post([FromBody] string value)
-        //{
-        //}
 
         // PUT api/<UploadController>/5
         [HttpPut("{id}")]

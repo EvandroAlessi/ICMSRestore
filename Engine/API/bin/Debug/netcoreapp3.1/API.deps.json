@@ -25,7 +25,6 @@
       "API/1.0.0": {
         "dependencies": {
           "CrossCutting": "1.0.0",
-          "Models": "1.0.0",
           "Swashbuckle.AspNetCore": "5.4.1",
           "System.IO.FileSystem.AccessControl": "4.7.0",
           "Microsoft.AspNetCore.Antiforgery": "3.1.0.0",
@@ -401,14 +400,6 @@
         },
         "compile": {
           "CrossCutting.dll": {}
-        }
-      },
-      "Models/1.0.0": {
-        "runtime": {
-          "Models.dll": {}
-        },
-        "compile": {
-          "Models.dll": {}
         }
       },
       "Microsoft.AspNetCore.Antiforgery/3.1.0.0": {
@@ -2128,11 +2119,6 @@
       "hashPath": "system.security.principal.windows.4.7.0.nupkg.sha512"
     },
     "CrossCutting/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "Models/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

@@ -154,16 +154,6 @@
         "runtime": {
           "bin/placeholder/CrossCutting.dll": {}
         }
-      },
-      "Models/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "compile": {
-          "bin/placeholder/Models.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/Models.dll": {}
-        }
       }
     }
   },
@@ -433,17 +423,11 @@
       "type": "project",
       "path": "../CrossCutting/CrossCutting.csproj",
       "msbuildProject": "../CrossCutting/CrossCutting.csproj"
-    },
-    "Models/1.0.0": {
-      "type": "project",
-      "path": "../Models/Models.csproj",
-      "msbuildProject": "../Models/Models.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
       "CrossCutting >= 1.0.0",
-      "Models >= 1.0.0",
       "Swashbuckle.AspNetCore >= 5.4.1",
       "System.IO.FileSystem.AccessControl >= 4.7.0"
     ]
@@ -480,9 +464,6 @@
           "projectReferences": {
             "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\CrossCutting\\CrossCutting.csproj": {
               "projectPath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\CrossCutting\\CrossCutting.csproj"
-            },
-            "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\Models\\Models.csproj": {
-              "projectPath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\Models\\Models.csproj"
             }
           }
         }
