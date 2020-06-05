@@ -13,6 +13,29 @@ CREATE DATABASE icms_restore
 	
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
 	
+-- Table: public.Empresas
+
+-- DROP TABLE public."Empresas";
+
+CREATE TABLE public."Empresas"
+(
+    "Nome" character varying COLLATE pg_catalog."default",
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "Cidade" character varying COLLATE pg_catalog."default",
+    "UF" character varying COLLATE pg_catalog."default",
+    "CNPJ" character varying COLLATE pg_catalog."default",
+    CONSTRAINT "ID_PK" PRIMARY KEY ("ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Empresas"
+    OWNER to postgres;
+	
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
 -- Table: public.Itens
 
 -- DROP TABLE public."Itens";
@@ -23,13 +46,13 @@ CREATE TABLE public."Itens"
     "cProd" character varying COLLATE pg_catalog."default" NOT NULL,
     "cEAN" character varying COLLATE pg_catalog."default",
     "xProd" character varying COLLATE pg_catalog."default",
-    "NCM" character varying COLLATE pg_catalog."default",
-    "CFOP" character varying COLLATE pg_catalog."default",
+    "NCM" character varying COLLATE pg_catalog."default" NOT NULL,
+    "CFOP" character varying COLLATE pg_catalog."default" NOT NULL,
     "uCom" character varying COLLATE pg_catalog."default",
     "qCom" real,
     "vUnCom" real,
     orig integer,
-    "CST" character varying COLLATE pg_catalog."default",
+    "CST" character varying COLLATE pg_catalog."default" NOT NULL,
     "modBC" integer,
     "vBC" real,
     "pICMS" real,
@@ -81,9 +104,10 @@ CREATE INDEX "NCM_Index"
     ON public."Itens" USING btree
     ("NCM" COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
+
 	
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	
+
 -- Table: public.NFe
 
 -- DROP TABLE public."NFe";
@@ -127,7 +151,13 @@ CREATE TABLE public."NFe"
     "xPais" character varying COLLATE pg_catalog."default",
     "xPais_DEST" character varying COLLATE pg_catalog."default",
     "cNF" integer NOT NULL,
-    CONSTRAINT "NFe_PK" PRIMARY KEY ("cNF")
+    "ProcessoID" integer NOT NULL,
+    CONSTRAINT "NFe_PK" PRIMARY KEY ("cNF"),
+    CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
+        REFERENCES public."Processos" ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
 )
 
 TABLESPACE pg_default;
@@ -142,3 +172,31 @@ CREATE INDEX "dhSaiEnt_Index"
     ON public."NFe" USING btree
     ("dhSaiEnt" COLLATE pg_catalog."default" DESC NULLS LAST)
     TABLESPACE pg_default;
+	
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Table: public.Processos
+
+-- DROP TABLE public."Processos";
+
+CREATE TABLE public."Processos"
+(
+    "EmpresaID" integer NOT NULL,
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "Nome" character varying COLLATE pg_catalog."default",
+    "DataCriacao" date NOT NULL,
+    "InicioPeriodo" date NOT NULL,
+    "FimPeriodo" date NOT NULL,
+    CONSTRAINT "ID_PFK" PRIMARY KEY ("ID"),
+    CONSTRAINT "Empresa_FK" FOREIGN KEY ("EmpresaID")
+        REFERENCES public."Empresas" ("ID") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."Processos"
+    OWNER to postgres;

@@ -27,10 +27,15 @@ namespace API.Controllers
             _logger = logger;
         }
 
-        // POST: api/<UploadController>
-        [HttpPost]
+        /// <summary>
+        /// POST: api/<UploadController>
+        /// </summary>
+        /// <param name="files">Arquivos: XML e/ou ZIP</param>
+        /// <param name="id">ID do processo</param>
+        /// <returns></returns>
+        [HttpPost("{id}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Post([FromForm]List<IFormFile> files)
+        public async Task<IActionResult> Post([FromForm]List<IFormFile> files, int id)
         {
             try
             {
@@ -38,23 +43,32 @@ namespace API.Controllers
 
                 foreach (var file in files)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", file.FileName);
+                    var path = Path.Combine(AppSettings.RootPath, id.ToString());
 
-                    if (!System.IO.File.Exists(path))
+                    if (Directory.Exists(path))
                     {
                         if (file.FileName.EndsWith(".xml"))
                         {
-                            using (var fileStream = new FileStream(path, FileMode.Create))
+                            var filePath = Path.Combine(path, file.FileName);
+
+                            if (!System.IO.File.Exists(filePath))
                             {
-                                await file.CopyToAsync(fileStream);
-
-                                var responseFile = new FileUploadResult()
+                                using (var fileStream = new FileStream(filePath, FileMode.Create))
                                 {
-                                    Name = file.FileName,
-                                    Length = file.Length
-                                };
+                                    await file.CopyToAsync(fileStream);
 
-                                result.Add(responseFile);
+                                    var responseFile = new FileUploadResult()
+                                    {
+                                        Name = file.FileName,
+                                        Length = file.Length
+                                    };
+
+                                    result.Add(responseFile);
+                                }
+                            }
+                            else
+                            {
+                                return BadRequest("Arquivo já se encontrada em nosso servidor.");
                             }
                         }
                         else
@@ -63,70 +77,48 @@ namespace API.Controllers
                             {
                                 using (ZipArchive archive = new ZipArchive(stream))
                                 {
-                                    var dir = Path.ChangeExtension(path, null);
+                                    var zipDir = Path.Combine(path, Path.ChangeExtension(file.FileName, null));
 
-                                    PathControl.GrantAccess(dir);
+                                    PathControl.Create(zipDir);
 
-                                    foreach (ZipArchiveEntry entry in archive.Entries)
+                                    // One By One Code
+                                    foreach (ZipArchiveEntry entry in archive.Entries.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
                                     {
-                                        var filePath = Path.Combine(dir, entry.FullName);
+                                        entry.ExtractToFile(Path.Combine(zipDir, entry.Name), true);
 
-                                        if (!System.IO.File.Exists(filePath))
+                                        var responseFile = new FileUploadResult()
                                         {
-                                            if (!dir.EndsWith(filePath))
-                                                continue;
+                                            Name = entry.Name,
+                                            Length = entry.Length
+                                        };
 
-                                            if (string.IsNullOrEmpty(Path.GetExtension(entry.FullName)))
-                                            {
-                                                PathControl.GrantAccess(filePath);
-                                            }
-                                            else
-                                            {
-                                                entry.ExtractToFile(Path.Combine(dir, entry.FullName));
-
-                                                var responseFile = new FileUploadResult()
-                                                {
-                                                    Name = entry.FullName,
-                                                    Length = entry.Length
-                                                };
-
-                                                result.Add(responseFile);
-                                            }
-                                        }
+                                        result.Add(responseFile);
                                     }
                                 }
                             }
                         }
                     }
+                    else
+                    {
+                        return BadRequest("Pasta de Processo não encontrada.");
+                    }
                 }
 
-                return Ok(result);
+                if (result.Count > 0)
+                {
+                    return Ok(result);
+                }
+                else
+                {
+                    return NoContent();
+                }
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
 
-                return BadRequest();
+                return StatusCode(500, ex.Message);
             }
-        }
-
-        // GET api/<UploadController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // PUT api/<UploadController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<UploadController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

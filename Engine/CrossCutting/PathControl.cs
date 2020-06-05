@@ -12,14 +12,9 @@ namespace CrossCutting
         {
             Thread.BeginCriticalRegion();
 
-            foreach (var folder in path.Split(Path.DirectorySeparatorChar))
+            if (!Directory.Exists(path))
             {
-                var aux = path.Split(new string[] { folder }, StringSplitOptions.None)[0];
-
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(aux);
-                }
+                Directory.CreateDirectory(path);
             }
             
             Thread.EndCriticalRegion();

@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 using System.Xml.Serialization;
 
 namespace Dominio
 {
-    public class Item
+    public partial class Item
     {
         public int nItem { get; set; }
 
-        [XmlIgnore]
+        [Required]
         public int cNF { get; set; }
 
         #region Produto
 
+        [Required]
         public string cProd { get; set; }
         public string cEAN { get; set; }
         public string xProd { get; set; }
+
+        [Required]
         public string NCM { get; set; }
+
+        [Required]
         public string CFOP { get; set; }
         public string uCom { get; set; }
         public double? qCom { get; set; }
@@ -30,6 +36,8 @@ namespace Dominio
         #region ICMS -> ICMS00
 
         public int? orig { get; set; }
+
+        [Required]
         public string CST { get; set; }
         public int? modBC { get; set; }
         public double? vBC { get; set; }

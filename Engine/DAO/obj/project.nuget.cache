@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "rTJhqqnYogOSoh/OFtILFH3NR/YrOQzCAIx9DEdSXMPLR+dqhhNCglIce1Ri9npCZ0W9X3+35Z+J1K37K+zcSA==",
+  "dgSpecHash": "K3J+bVxDac1IuTBNjALq0rzAz7mK5aq8xxLgBkuyp0+Q6uhj4RTp0WiGWWgEp2eRafGsjtt4cYW5okg+KadVRg==",
   "success": true,
   "projectFilePath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\DAO\\DAO.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\evand\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\3.1.4\\microsoft.extensions.configuration.abstractions.3.1.4.nupkg.sha512",
+    "C:\\Users\\evand\\.nuget\\packages\\microsoft.extensions.primitives\\3.1.4\\microsoft.extensions.primitives.3.1.4.nupkg.sha512",
     "C:\\Users\\evand\\.nuget\\packages\\microsoft.netcore.platforms\\3.1.0\\microsoft.netcore.platforms.3.1.0.nupkg.sha512",
     "C:\\Users\\evand\\.nuget\\packages\\npgsql\\4.1.3.1\\npgsql.4.1.3.1.nupkg.sha512",
     "C:\\Users\\evand\\.nuget\\packages\\system.io.filesystem.accesscontrol\\4.7.0\\system.io.filesystem.accesscontrol.4.7.0.nupkg.sha512",

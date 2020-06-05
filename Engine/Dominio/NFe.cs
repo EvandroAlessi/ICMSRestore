@@ -3,10 +3,8 @@ using System.Collections.Generic;
 
 namespace Dominio
 {
-    public class NFe
+    public partial class NFe
     {
-        public List<Item> Itens { get; set; }
-
         #region Identificacao
 
         public int cUF { get; set; }
@@ -76,5 +74,8 @@ namespace Dominio
         public string email_DEST { get; set; }
 
         #endregion
+
+        public List<Item> Itens { get; set; }
+        public Processo Processo { get; set; }
     }
 }

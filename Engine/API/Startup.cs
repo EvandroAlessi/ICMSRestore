@@ -21,12 +21,16 @@ namespace ICMSRestore.API
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        public static IConfiguration Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            //services.AddSingleton<IConfiguration>(Configuration);
+
+            var appSettings = new CrossCutting.AppSettings(Configuration);
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>

@@ -1,4 +1,5 @@
-﻿using Dominio;
+﻿using CrossCutting;
+using Dominio;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace DAO
 {
     public class NFeDAO
     {
-        static string connString = "Server=127.0.0.1;Port=5432;Database=icms_restore;User Id=postgres;Password=admin";
+        static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
         public async Task<List<NFe>> GetAll()
@@ -23,7 +24,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROm {quote}NFe{ quote};";
+                        cmd.CommandText = $@"SELECT * FROM {quote}NFe{ quote};";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -90,7 +91,47 @@ namespace DAO
             }
         }
 
-        public bool Insert(NFe nfe)
+        public async Task<bool> Exists(int cNF)
+        {
+            try
+            {
+                bool exists = false;
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT {quote}cNF{quote}  FROM {quote}NFe{quote} 
+                                WHERE {quote}cNF{quote} = { cNF };";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                exists = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return exists;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool Insert(NFe nfe, int processoID)
         {
             try
             {
@@ -103,7 +144,8 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
-                                {quote}CEP{quote}
+                                {quote}ProcessoID{quote}
+                                , {quote}CEP{quote}
                                 , {quote}CEP_DEST{quote}
                                 , {quote}CNPJ{quote}
                                 , {quote}CNPJ_DEST{quote}
@@ -141,7 +183,8 @@ namespace DAO
                                 , {quote}xPais{quote}
                                 , {quote}xPais_DEST{quote}
                             ) VALUES (
-                                '{ nfe.CEP }'
+                                { processoID }
+                                , '{ nfe.CEP }'
                                 , '{ nfe.CEP_DEST }'
                                 , '{ nfe.CNPJ }'
                                 , '{ nfe.CNPJ_DEST }'

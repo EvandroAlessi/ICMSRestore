@@ -1,14 +1,35 @@
 ﻿using Dominio;
 using DAO;
 using System;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
 
 namespace BLL
 {
     public class NFeService
     {
-        private readonly NFeDAO nFeProcDAO = new NFeDAO();
+        private readonly NFeDAO nfeDAO = new NFeDAO(); 
 
-        public bool Insert(CrossCutting.SerializationModels.NFeProc nFeProc)
+        public async Task<List<NFe>> GetAll()
+        {
+            return await nfeDAO.GetAll();
+        }
+
+        public async Task<bool> Exists(int cNF)
+        {
+            try
+            {
+                return await nfeDAO.Exists(cNF);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public bool Insert(CrossCutting.SerializationModels.NFeProc nFeProc, int processoID)
         {
             try
             {
@@ -53,7 +74,7 @@ namespace BLL
                     xPais_DEST = nFeProc.NotaFiscalEletronica.InformacoesNFe.Destinatario?.Endereco?.xPais
                 };
 
-                return nFeProcDAO.Insert(nFe);
+                return nfeDAO.Insert(nFe, processoID);
             }
             catch (Exception ex)
             {
