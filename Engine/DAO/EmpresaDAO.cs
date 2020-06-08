@@ -119,7 +119,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote}  FROM {quote}Empresas{quote} 
+                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}Empresas{quote} 
                                 WHERE {quote}ID{quote} = { id };";
 
                         using (var reader = cmd.ExecuteReader())

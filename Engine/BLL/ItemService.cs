@@ -1,14 +1,74 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DAO;
+﻿using DAO;
 using Dominio;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace BLL
 {
     public class ItemService
     {
         private readonly ItemDAO itemDAO = new ItemDAO();
+
+        public async Task<List<Item>> GetAll()
+        {
+            try
+            {
+                return await itemDAO.GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<Item>> GetAll(int cNF)
+        {
+            try
+            {
+                return await itemDAO.GetAll(cNF);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<Item> Get(int cNF, string cProd)
+        {
+            try
+            {
+                return await itemDAO.Get(cProd, cNF);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Exists(int cNF, string cProd)
+        {
+            try
+            {
+                return await itemDAO.Exists(cProd, cNF);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public Item Insert(Item item)
+        {
+            try
+            {
+                return itemDAO.Insert(item);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public bool Insert(CrossCutting.SerializationModels.Detalhe detalhe, int cNFe)
         {
@@ -44,7 +104,31 @@ namespace BLL
                     cNF = cNFe
                 };
 
-                return itemDAO.Insert(item);
+                return itemDAO.InserWithoutObjReturn(item);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool Edit(Item item)
+        {
+            try
+            {
+                return itemDAO.Edit(item);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool Delete(int cNF, string cProd)
+        {
+            try
+            {
+                return itemDAO.Delete(cProd, cNF);
             }
             catch (Exception ex)
             {

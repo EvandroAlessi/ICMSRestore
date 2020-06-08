@@ -9,11 +9,30 @@ namespace BLL
 {
     public class NFeService
     {
-        private readonly NFeDAO nfeDAO = new NFeDAO(); 
+        private static readonly NFeDAO nfeDAO = new NFeDAO();
 
         public async Task<List<NFe>> GetAll()
         {
-            return await nfeDAO.GetAll();
+            try
+            {
+                return await nfeDAO.GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<NFe> Get(int cNF)
+        {
+            try
+            {
+                return await nfeDAO.Get(cNF);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<bool> Exists(int cNF)
@@ -28,6 +47,17 @@ namespace BLL
             }
         }
 
+        public NFe Insert(NFe nfe)
+        {
+            try
+            {
+                return nfeDAO.Insert(nfe);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public bool Insert(CrossCutting.SerializationModels.NFeProc nFeProc, int processoID)
         {
@@ -71,10 +101,36 @@ namespace BLL
                     xNome = nFeProc.NotaFiscalEletronica.InformacoesNFe.Emitente?.xNome,
                     xNome_DEST = nFeProc.NotaFiscalEletronica.InformacoesNFe.Destinatario?.xNome,
                     xPais = nFeProc.NotaFiscalEletronica.InformacoesNFe.Emitente?.Endereco?.xPais,
-                    xPais_DEST = nFeProc.NotaFiscalEletronica.InformacoesNFe.Destinatario?.Endereco?.xPais
+                    xPais_DEST = nFeProc.NotaFiscalEletronica.InformacoesNFe.Destinatario?.Endereco?.xPais,
+                    ProcessoID = processoID
                 };
 
-                return nfeDAO.Insert(nFe, processoID);
+                return nfeDAO.InserWithoutObjReturn(nFe);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public bool Edit(NFe nfe)
+        {
+            try
+            {
+                return nfeDAO.Edit(nfe);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool Delete(int cNF)
+        {
+            try
+            {
+                return nfeDAO.Delete(cNF);
             }
             catch (Exception ex)
             {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Dominio
 {
@@ -18,5 +20,9 @@ namespace Dominio
         public string Cidade { get; set; }
 
         public string UF { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public List<Processo> Processos { get; set; }
     }
 }

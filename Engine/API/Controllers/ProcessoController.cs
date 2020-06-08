@@ -1,13 +1,12 @@
-﻿using System;
+﻿using BLL;
+using CrossCutting;
+using Dominio;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using BLL;
-using CrossCutting;
-using Dominio;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
@@ -75,7 +74,7 @@ namespace API.Controllers
                 {
                     var empresaService = new EmpresaService();
 
-                    var exists = empresaService.Exists(processo.Empresa.ID).Result;
+                    var exists = empresaService.Exists(processo.EmpresaID).Result;
 
                     if (exists)
                     {
@@ -83,7 +82,7 @@ namespace API.Controllers
 
                         if (processo is null)
                         {
-                            return BadRequest("Não foi possivel realizar a inserção.");
+                            return BadRequest("Can't complete the insert process, please verify the data send.");
                         }
                         else
                         {
@@ -96,7 +95,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        return BadRequest("A Empresa indicada não existe em nossa base.");
+                        return BadRequest("The indicated Empresa does not exist in our database.");
                     }
                 }
             }
@@ -125,13 +124,13 @@ namespace API.Controllers
                 }
                 else if (processo.ID != id)
                 {
-                    return BadRequest("IDs incompativeis.");
+                    return BadRequest("The ID in the object is different from the indicates in the URL");
                 }
                 else
                 {
                     var empresaService = new EmpresaService();
 
-                    bool empExists = empresaService.Exists(processo.Empresa.ID).Result;
+                    bool empExists = empresaService.Exists(processo.EmpresaID).Result;
 
                     if (empExists)
                     {
@@ -151,13 +150,13 @@ namespace API.Controllers
                             }
                             else
                             {
-                                return BadRequest("Não foi possivel realizar a alteração.");
+                                return BadRequest("Can't complete the edit process, please verify the data send.");
                             }
                         }
                     }
                     else
                     {
-                        return BadRequest("A Empresa indicada não existe em nossa base.");
+                        return BadRequest("The indicated Empresa does not exist in our database.");
                     }
                 }
             }
@@ -189,7 +188,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        return BadRequest("Não foi possivel deletar.");
+                        return BadRequest("Can't complete the delete process, please verify the data send.");
                     }
                 }
             }

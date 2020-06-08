@@ -1,32 +1,30 @@
-﻿using System;
+﻿using BLL;
+using Dominio;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BLL;
-using Dominio;
-using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class EmpresaController : ControllerBase
+    public class ItemController : ControllerBase
     {
-        private static readonly EmpresaService empresaService = new EmpresaService();
+        private static readonly ItemService itemService = new ItemService();
 
-        // GET: api/<EmpresaController>
+        // GET: api/<ItemController>
         /// <summary>
         /// 
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<Empresa>> Get()
+        public async Task<List<Item>> Get()
         {
             try
             {
-                return await empresaService.GetAll();
+                return await itemService.GetAll();
             }
             catch (Exception ex)
             {
@@ -34,26 +32,27 @@ namespace API.Controllers
             }
         }
 
-        // GET api/<EmpresaController>/5
+        // GET api/<ItemController>/5
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="cNf"></param>
+        /// <param name="CProd"></param>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
+        [HttpGet("{cNf}")]
+        public async Task<IActionResult> Get(int cNf, string CProd)
         {
             try
             {
-                var empresa = await empresaService.Get(id);
+                var item = await itemService.Get(cNf, CProd);
 
-                if (empresa is null)
+                if (item is null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return Ok(empresa);
+                    return Ok(item);
                 }
             }
             catch (Exception ex)
@@ -62,14 +61,14 @@ namespace API.Controllers
             }
         }
 
-        // POST api/<EmpresaController>
+        // POST api/<ItemController>
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="empresa"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromBody] Empresa empresa)
+        public IActionResult Post([FromBody] Item item)
         {
             try
             {
@@ -77,24 +76,24 @@ namespace API.Controllers
                 {
                     List<string> errors = new List<string>();
 
-                    foreach (var item in ModelState.Values)
+                    foreach (var state in ModelState.Values)
                     {
-                        errors.AddRange(item.Errors.Select(x => x.ErrorMessage).Where(x => !string.IsNullOrEmpty(x)));
+                        errors.AddRange(state.Errors.Select(x => x.ErrorMessage).Where(x => !string.IsNullOrEmpty(x)));
                     }
 
                     return BadRequest(errors);
                 }
                 else
                 {
-                    empresa = empresaService.Insert(empresa);
+                    item = itemService.Insert(item);
 
-                    if (empresa is null)
+                    if (item is null)
                     {
                         return BadRequest("Can't complete the insert process, please verify the data send.");
                     }
                     else
                     {
-                        return Ok(empresa);
+                        return Ok(item);
                     }
                 }
             }
@@ -104,15 +103,15 @@ namespace API.Controllers
             }
         }
 
-        // PUT api/<EmpresaController>/5
+        // PUT api/<ItemController>/5
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
-        /// <param name="empresa"></param>
+        /// <param name="item"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Empresa empresa)
+        public IActionResult Put(string cProd, [FromBody] Item item)
         {
             try
             {
@@ -120,20 +119,20 @@ namespace API.Controllers
                 {
                     List<string> errors = new List<string>();
 
-                    foreach (var item in ModelState.Values)
+                    foreach (var state in ModelState.Values)
                     {
-                        errors.AddRange(item.Errors.Select(x => x.ErrorMessage).Where(x => !string.IsNullOrEmpty(x)));
+                        errors.AddRange(state.Errors.Select(x => x.ErrorMessage).Where(x => !string.IsNullOrEmpty(x)));
                     }
 
                     return BadRequest(errors);
                 }
-                else if (empresa.ID != id)
+                else if (item.cProd != cProd)
                 {
                     return BadRequest("The ID in the object is different from the indicates in the URL.");
                 }
                 else
                 {
-                    bool exists = empresaService.Exists(id).Result;
+                    bool exists = itemService.Exists(item.cNF, item.cProd).Result;
 
                     if (!exists)
                     {
@@ -141,7 +140,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        bool edited = empresaService.Edit(empresa);
+                        bool edited = itemService.Edit(item);
 
                         if (edited)
                         {
@@ -160,18 +159,18 @@ namespace API.Controllers
             }
         }
 
-        // DELETE api/<EmpresaController>/5
+        // DELETE api/<ItemController>/5
         /// <summary>
         /// 
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int cNF, string cProd)
         {
             try
             {
-                bool exists = empresaService.Exists(id).Result;
+                bool exists = itemService.Exists(cNF, cProd).Result;
 
                 if (!exists)
                 {
@@ -179,7 +178,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = empresaService.Delete(id);
+                    bool deleted = itemService.Delete(cNF, cProd);
 
                     if (deleted)
                     {

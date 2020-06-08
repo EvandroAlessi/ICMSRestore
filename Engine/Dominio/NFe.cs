@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace Dominio
 {
@@ -75,7 +77,10 @@ namespace Dominio
 
         #endregion
 
+        public int ProcessoID { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
         public List<Item> Itens { get; set; }
-        public Processo Processo { get; set; }
     }
 }

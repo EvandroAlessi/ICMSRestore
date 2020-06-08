@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Xml.Serialization;
@@ -10,9 +11,12 @@ namespace CrossCutting.SerializationModels
     {
         [XmlElement(ElementName = "infNFe")]
         public InfNFe InformacoesNFe { get; set; }
-        
+
         public class InfNFe
         {
+            [XmlAttribute("Id")]
+            public string Id { get; set; }
+
             [XmlElement("ide")]
             public Identificacao Identificacao { get; set; }
 

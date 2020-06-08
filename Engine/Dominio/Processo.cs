@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Principal;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Dominio
 {
@@ -22,6 +24,10 @@ namespace Dominio
         public DateTime FimPeriodo { get; set; }
 
         [Required]
-        public Empresa Empresa { get; set; }
+        public int EmpresaID { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public List<NFe> NFes { get; set; }
     }
 }

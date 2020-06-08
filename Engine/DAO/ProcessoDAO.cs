@@ -40,7 +40,7 @@ namespace DAO
                                     DataCriacao = Convert.ToDateTime(reader["DataCriacao"]),
                                     InicioPeriodo = Convert.ToDateTime(reader["InicioPeriodo"]),
                                     FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
-                                    Empresa = await empresaDAO.Get(Convert.ToInt32(reader["EmpresaID"]))
+                                    EmpresaID = Convert.ToInt32(reader["EmpresaID"])
                                 };
 
                                 list.Add(processo);
@@ -91,7 +91,7 @@ namespace DAO
                                     DataCriacao = Convert.ToDateTime(reader["DataCriacao"]),
                                     InicioPeriodo = Convert.ToDateTime(reader["InicioPeriodo"]),
                                     FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
-                                    Empresa = await empresaDAO.Get(Convert.ToInt32(reader["EmpresaID"]))
+                                    EmpresaID = Convert.ToInt32(reader["EmpresaID"])
                                 };
                             }
                         }
@@ -176,7 +176,7 @@ namespace DAO
                                 , {quote}InicioPeriodo{quote}
                                 , {quote}FimPeriodo{quote}
                             ) VALUES (
-                                { processo.Empresa.ID }
+                                { processo.EmpresaID }
                                 , '{ processo.Nome }'
                                 , '{ processo.DataCriacao }'
                                 , '{ processo.InicioPeriodo }'
@@ -223,7 +223,7 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"UPDATE {quote}Processos{quote} SET
-                                {quote}EmpresaID{quote} = '{ processo.Empresa.ID }'
+                                {quote}EmpresaID{quote} = '{ processo.EmpresaID }'
                                 , {quote}Nome{quote} = '{ processo.Nome }'
                                 , {quote}DataCriacao{quote} = '{ processo.DataCriacao }'
                                 , {quote}InicioPeriodo{quote} = '{ processo.InicioPeriodo }'

@@ -2,11 +2,15 @@
 using CrossCutting;
 using CrossCutting.Serializable;
 using CrossCutting.SerializationModels;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using System.Timers;
+using static CrossCutting.LOG;
 
 namespace NFeSeeder
 {
@@ -16,31 +20,25 @@ namespace NFeSeeder
         private static Dictionary<int, Dictionary<string, bool>> processDirs = new Dictionary<int, Dictionary<string, bool>>();
         private static List<string> dirPaths;
 
+        [STAThread]
         static void Main(string[] args)
         {
             try
             {
-                AppSettings.RootPath = @"C:\Users\evand\source\repos\ICMSRestore\Engine\API\wwwroot";
-                AppSettings.ConnectionString = "Server=127.0.0.1;Port=5432;Database=icms_restore;User Id=postgres;Password=admin";
-                dirPaths = Directory.GetDirectories(AppSettings.RootPath).ToList();
+                IConfiguration config = new ConfigurationBuilder()
+                     .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                     .AddEnvironmentVariables()
+                     .AddCommandLine(args)
+                     .Build();
 
-                foreach (var dirPath in dirPaths)
-                {
-                    string[] subDirs = Directory.GetDirectories(dirPath);
+                _ = new AppSettings(config);
 
-                    var aux = new Dictionary<string, bool>();
+                FindProcessFolders();
 
-                    foreach (var subDir in subDirs)
-                        aux.Add(subDir, false);
-
-                    int processID = Convert.ToInt32(Path.GetFileName(dirPath));
-
-                    processDirs.Add(processID, aux);
-                }
-                    
+                OnElapsed(null, null);
 
                 timer = new System.Timers.Timer();
-                timer.Interval = TimeSpan.FromSeconds(10).TotalMilliseconds;
+                timer.Interval = TimeSpan.FromMinutes(AppSettings.TimerElapsed).TotalMilliseconds;
 
                 timer.Elapsed += new ElapsedEventHandler(OnElapsed);
 
@@ -50,6 +48,7 @@ namespace NFeSeeder
             }
             catch (Exception ex)
             {
+                Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
                 Console.WriteLine(ex.Message);
             }
 
@@ -58,61 +57,146 @@ namespace NFeSeeder
 
         private static void OnElapsed(object sender, ElapsedEventArgs e)
         {
-            lock (dirPaths)
+            try
             {
-                var currentProcessList = Directory.GetDirectories(AppSettings.RootPath).ToList();
+                //Find new processes folders
+                CheckNewFolders();
 
-                var newProcesses = currentProcessList.Except(dirPaths).ToList();
+                // start working with all sub folders in parallel
+                StartParallelWork();
+            }
+            catch (Exception ex)
+            {
+                Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
+            }
+        }
 
-                if (newProcesses.Count() > 0)
+        public static void FindProcessFolders()
+        {
+            try
+            {
+                dirPaths = Directory.GetDirectories(AppSettings.RootPath).ToList();
+
+                lock (dirPaths)
                 {
-                    foreach (var dirPath in newProcesses)
+                    foreach (var dirPath in dirPaths)
                     {
-                        string[] subDirs = Directory.GetDirectories(dirPath);
-
-                        var aux = new Dictionary<string, bool>();
-
-                        foreach (var subDir in subDirs)
-                            aux.Add(subDir, false);
+                        var subFolders = FindProcessSubFolders(dirPath);
 
                         int processID = Convert.ToInt32(Path.GetFileName(dirPath));
 
-                        processDirs.Add(processID, aux);
-                        dirPaths.Add(dirPath);
+                        processDirs.Add(processID, subFolders);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public static Dictionary<string, bool> FindProcessSubFolders(string dirPath)
+        {
+            try
+            {
+                string[] subDirs = Directory.GetDirectories(dirPath);
+
+                var aux = new Dictionary<string, bool>();
+
+                foreach (var subDir in subDirs)
+                {
+                    var insideFiles = Directory.GetFiles(subDir);
+
+                    if (insideFiles.Count() > 0)
+                    {
+                        aux.Add(subDir, false);
                     }
                 }
 
-                foreach (var dirPath in dirPaths)
-                {
-                    var currentSubDirList = Directory.GetDirectories(dirPath).ToList();
-                    int processID = Convert.ToInt32(Path.GetFileName(dirPath));
-
-                    var newSubDirs = currentSubDirList.Except(processDirs[processID].Keys).ToList();
-
-                    foreach (var subDir in newSubDirs)
-                        processDirs[processID].Add(subDir, false);
-                }
+                return aux;
             }
-
-            // Divide o processamento em pastas
-            lock (processDirs)
+            catch (Exception ex)
             {
-                foreach (var process in processDirs)
-                {
-                    try
-                    {
-                        foreach (var subDir in process.Value)
-                        {
-                            if (!subDir.Value)
-                            {
-                                processDirs[process.Key][subDir.Key] = true;
+                throw ex;
+            }
+        }
 
-                                DoWork(process.Key, subDir.Key);
+
+        public static void CheckNewFolders()
+        {
+            try
+            {
+                lock (dirPaths)
+                {
+                    var currentProcessList = Directory.GetDirectories(AppSettings.RootPath).ToList();
+
+                    var newProcesses = currentProcessList.Except(dirPaths).ToList();
+
+                    foreach (var dirPath in newProcesses)
+                    {
+                        var subFolders = FindProcessSubFolders(dirPath);
+
+                        int processID = Convert.ToInt32(Path.GetFileName(dirPath));
+
+                        processDirs.Add(processID, subFolders);
+                        dirPaths.Add(dirPath);
+                    }
+
+                    foreach (var dirPath in dirPaths)
+                    {
+                        var currentSubDirList = Directory.GetDirectories(dirPath).ToList();
+                        int processID = Convert.ToInt32(Path.GetFileName(dirPath));
+
+                        var newSubDirs = currentSubDirList.Except(processDirs[processID].Keys).ToList();
+
+                        foreach (var subDir in newSubDirs)
+                        {
+                            var insideFiles = Directory.GetFiles(subDir);
+
+                            if (insideFiles.Count() > 0)
+                            {
+                                processDirs[processID].Add(subDir, false);
                             }
                         }
                     }
-                    catch {  }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        public static void StartParallelWork()
+        {
+            try
+            {
+                lock (processDirs)
+                {
+                    foreach (var process in processDirs.ToList())
+                    {
+                        try
+                        {
+                            foreach (var subDir in process.Value.ToList())
+                            {
+                                if (!subDir.Value)
+                                {
+                                    processDirs[process.Key][subDir.Key] = true;
+
+                                    Task.Run(() => {
+                                        DoWork(process.Key, subDir.Key);
+                                    });
+                                }
+                            }
+                        }
+                        catch (Exception ex) { }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
 
@@ -136,16 +220,8 @@ namespace NFeSeeder
                         try
                         {
                             nfe = serializable.GetObjectFromFile<NFeProc>(filePath);
-                        }
-                        catch (Exception ex)
-                        {
-                            //DO Something
-                            continue;
-                        }
 
-                        if (nfe?.NotaFiscalEletronica?.InformacoesNFe != null)
-                        {
-                            try
+                            if (nfe?.NotaFiscalEletronica?.InformacoesNFe != null)
                             {
                                 if (nfeService.Insert(nfe, processoID))
                                 {
@@ -174,18 +250,42 @@ namespace NFeSeeder
                                     {
                                         File.Delete(filePath);
                                     }
+                                    else
+                                    {
+                                        //DO Something
+                                    }
                                 }
                             }
-                            catch (Exception ex)
+                        }
+                        catch (Exception ex)
+                        {
+                            if (nfe?.NotaFiscalEletronica?.InformacoesNFe?.Identificacao?.cNF != null)
                             {
                                 var exists = nfeService.Exists(nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.cNF).Result;
 
                                 if (exists)
                                 {
                                     File.Delete(filePath);
+
                                     continue;
                                 }
                             }
+
+                            var logging = new
+                            {
+                                ProcessoID = processoID,
+                                ZipFolder = Path.GetFileName(subDir),
+                                XmlFile = Path.GetFileName(filePath),
+                                FullPath = filePath
+                            };
+
+                            Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex, logging);
+
+                            var errorpPath = Path.Combine(subDir, "Error");
+
+                            PathControl.Create(errorpPath);
+
+                            File.Move(filePath, Path.Combine(errorpPath, Path.GetFileName(filePath)));
                         }
                     }
                 }
@@ -195,13 +295,24 @@ namespace NFeSeeder
                     try
                     {
                         processDirs[processoID].Remove(subDir);
+
+                        if (processDirs[processoID].Values.Count == 0)
+                        {
+                            var processPath = dirPaths.FirstOrDefault(x => Path.GetFileName(x).Equals(processoID.ToString()));
+
+                            processDirs.Remove(processoID);
+                            dirPaths.Remove(processPath);
+                        }
+
+                        //ProcessoUploadl.update(false);
                         Directory.Delete(subDir);
                     }
-                    catch { } 
+                    catch { }
                 }
             }
             catch (Exception ex)
             {
+                Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
                 throw ex;
             }
         }

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Compression;
-using System.Linq;
-using System.Security.AccessControl;
-using System.Security.Principal;
-using System.Threading.Tasks;
+﻿using API.Models;
+using BLL;
 using CrossCutting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using API.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
+using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -27,15 +26,16 @@ namespace API.Controllers
             _logger = logger;
         }
 
+        // POST: api/<UploadController>
         /// <summary>
-        /// POST: api/<UploadController>
+        /// Send indicated files to our server
         /// </summary>
-        /// <param name="files">Arquivos: XML e/ou ZIP</param>
-        /// <param name="id">ID do processo</param>
-        /// <returns></returns>
+        /// <param name="files">Files types: XML e/ou ZIP</param>
+        /// <param name="id">Process ID</param>
+        /// <returns>An object list with name and file length</returns>
         [HttpPost("{id}")]
         [Consumes("multipart/form-data")]
-        public async Task<IActionResult> Post([FromForm]List<IFormFile> files, int id)
+        public IActionResult Post([FromForm]List<IFormFile> files, int id)
         {
             try
             {
@@ -47,60 +47,75 @@ namespace API.Controllers
 
                     if (Directory.Exists(path))
                     {
-                        if (file.FileName.EndsWith(".xml"))
-                        {
-                            var filePath = Path.Combine(path, file.FileName);
+                        var processoService = new ProcessoService();
 
-                            if (!System.IO.File.Exists(filePath))
+                        bool exists = processoService.Exists(id).Result;
+
+                        if (!exists)
+                        {
+                            return BadRequest("Can't find indicated process, please, try again.");
+                        }
+
+                        if (!file.FileName.EndsWith(".zip"))
+                        {
+                            return BadRequest("The send file isn't a .ZIP file, please, try again.");
+
+                            //if (file.FileName.EndsWith(".xml"))
+                            //{
+                            //    var filePath = Path.Combine(path, file.FileName);
+
+                            //    if (!System.IO.File.Exists(filePath))
+                            //    {
+                            //        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                            //        {
+                            //            await file.CopyToAsync(fileStream);
+
+                            //            var responseFile = new FileUploadResult()
+                            //            {
+                            //                Name = file.FileName,
+                            //                Length = file.Length
+                            //            };
+
+                            //            result.Add(responseFile);
+                            //        }
+                            //    }
+                            //    else
+                            //    {
+                            //        return BadRequest("This file already exists in our server.");
+                            //    }
+                            //}
+                        }
+
+                        //Save the files in our server
+                        using (var stream = file.OpenReadStream())
+                        {
+                            using (ZipArchive archive = new ZipArchive(stream))
                             {
-                                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                                var zipDir = Path.Combine(path, Path.ChangeExtension(file.FileName, null));
+
+                                PathControl.Create(zipDir);
+
+                                //ProcessoUpload.Insert()
+
+                                // One By One Code
+                                foreach (ZipArchiveEntry entry in archive.Entries.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
                                 {
-                                    await file.CopyToAsync(fileStream);
+                                    entry.ExtractToFile(Path.Combine(zipDir, entry.Name), true);
 
                                     var responseFile = new FileUploadResult()
                                     {
-                                        Name = file.FileName,
-                                        Length = file.Length
+                                        Name = entry.Name,
+                                        Length = entry.Length
                                     };
 
                                     result.Add(responseFile);
-                                }
-                            }
-                            else
-                            {
-                                return BadRequest("Arquivo já se encontrada em nosso servidor.");
-                            }
-                        }
-                        else
-                        {
-                            using (var stream = file.OpenReadStream())
-                            {
-                                using (ZipArchive archive = new ZipArchive(stream))
-                                {
-                                    var zipDir = Path.Combine(path, Path.ChangeExtension(file.FileName, null));
-
-                                    PathControl.Create(zipDir);
-
-                                    // One By One Code
-                                    foreach (ZipArchiveEntry entry in archive.Entries.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
-                                    {
-                                        entry.ExtractToFile(Path.Combine(zipDir, entry.Name), true);
-
-                                        var responseFile = new FileUploadResult()
-                                        {
-                                            Name = entry.Name,
-                                            Length = entry.Length
-                                        };
-
-                                        result.Add(responseFile);
-                                    }
                                 }
                             }
                         }
                     }
                     else
                     {
-                        return BadRequest("Pasta de Processo não encontrada.");
+                        return BadRequest("Process folder doesn't find.");
                     }
                 }
 
