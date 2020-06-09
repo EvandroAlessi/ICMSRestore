@@ -1,6 +1,7 @@
 ﻿using API.Models;
 using BLL;
 using CrossCutting;
+using Dominio;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -31,25 +32,26 @@ namespace API.Controllers
         /// Send indicated files to our server
         /// </summary>
         /// <param name="files">Files types: XML e/ou ZIP</param>
-        /// <param name="id">Process ID</param>
+        /// <param name="processoID">Process ID</param>
         /// <returns>An object list with name and file length</returns>
-        [HttpPost("{id}")]
+        [HttpPost("{processoID}")]
         [Consumes("multipart/form-data")]
-        public IActionResult Post([FromForm]List<IFormFile> files, int id)
+        public IActionResult Post([FromForm]List<IFormFile> files, int processoID)
         {
             try
             {
-                var result = new List<FileUploadResult>();
+                //var result = new List<FileUploadResult>();
+                List<ProcessoUpload> processosUpload = new List<ProcessoUpload>();
 
                 foreach (var file in files)
                 {
-                    var path = Path.Combine(AppSettings.RootPath, id.ToString());
+                    var path = Path.Combine(AppSettings.RootPath, processoID.ToString());
 
                     if (Directory.Exists(path))
                     {
                         var processoService = new ProcessoService();
 
-                        bool exists = processoService.Exists(id).Result;
+                        bool exists = processoService.Exists(processoID).Result;
 
                         if (!exists)
                         {
@@ -95,21 +97,35 @@ namespace API.Controllers
 
                                 PathControl.Create(zipDir);
 
-                                //ProcessoUpload.Insert()
+                                var entries = archive.Entries.Where(x => !string.IsNullOrWhiteSpace(x.Name));
 
                                 // One By One Code
-                                foreach (ZipArchiveEntry entry in archive.Entries.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
+                                foreach (ZipArchiveEntry entry in entries)
                                 {
                                     entry.ExtractToFile(Path.Combine(zipDir, entry.Name), true);
 
-                                    var responseFile = new FileUploadResult()
-                                    {
-                                        Name = entry.Name,
-                                        Length = entry.Length
-                                    };
+                                    //var responseFile = new FileUploadResult()
+                                    //{
+                                    //    Name = entry.Name,
+                                    //    Length = entry.Length
+                                    //};
 
-                                    result.Add(responseFile);
+                                    //result.Add(responseFile);
                                 }
+
+                                var processoUploadService = new ProcessoUploadService();
+
+                                var processoUpload = new ProcessoUpload
+                                {
+                                    ProcessoID = processoID,
+                                    PastaZip = zipDir,
+                                    QntArq = entries.Count(),
+                                    Ativo = true
+                                };
+
+                                processoUpload = processoUploadService.Insert(processoUpload);
+
+                                processosUpload.Add(processoUpload);
                             }
                         }
                     }
@@ -119,14 +135,23 @@ namespace API.Controllers
                     }
                 }
 
-                if (result.Count > 0)
+                if (processosUpload.Count > 0)
                 {
-                    return Ok(result);
+                    return Ok(processosUpload);
                 }
                 else
                 {
-                    return NoContent();
+                    return BadRequest("Something wrong happened, please try again.");
                 }
+
+                //if (result.Count > 0)
+                //{
+                //    return Ok(result);
+                //}
+                //else
+                //{
+                //    return NoContent();
+                //}
             }
             catch (Exception ex)
             {

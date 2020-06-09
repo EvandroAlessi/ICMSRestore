@@ -304,7 +304,6 @@ namespace NFeSeeder
                             dirPaths.Remove(processPath);
                         }
 
-                        //ProcessoUploadl.update(false);
                         Directory.Delete(subDir);
                     }
                     catch { }

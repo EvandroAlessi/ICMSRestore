@@ -29,5 +29,9 @@ namespace Dominio
         [NotMapped]
         [JsonIgnore]
         public List<NFe> NFes { get; set; }
+
+        [NotMapped]
+        [JsonIgnore]
+        public List<ProcessoUpload> ProcessosUpload { get; set; }
     }
 }
