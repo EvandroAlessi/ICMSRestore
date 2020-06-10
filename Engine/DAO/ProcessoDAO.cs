@@ -13,6 +13,19 @@ namespace DAO
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
+        public Processo Make(NpgsqlDataReader reader)
+        {
+            return new Processo
+            {
+                ID = Convert.ToInt32(reader["ID"]),
+                Nome = reader["Nome"]?.ToString(),
+                DataCriacao = Convert.ToDateTime(reader["DataCriacao"]),
+                InicioPeriodo = Convert.ToDateTime(reader["InicioPeriodo"]),
+                FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
+                EmpresaID = Convert.ToInt32(reader["EmpresaID"])
+            };
+        }
+
         public async Task<List<Processo>> GetAll()
         {
             try
@@ -33,17 +46,7 @@ namespace DAO
 
                             while (reader.Read())
                             {
-                                var processo = new Processo
-                                {
-                                    ID = Convert.ToInt32(reader["ID"]),
-                                    Nome = reader["Nome"]?.ToString(),
-                                    DataCriacao = Convert.ToDateTime(reader["DataCriacao"]),
-                                    InicioPeriodo = Convert.ToDateTime(reader["InicioPeriodo"]),
-                                    FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
-                                    EmpresaID = Convert.ToInt32(reader["EmpresaID"])
-                                };
-
-                                list.Add(processo);
+                                list.Add(Make(reader));
                             }
                         }
                     }
@@ -84,15 +87,7 @@ namespace DAO
 
                             while (reader.Read())
                             {
-                                processo = new Processo
-                                {
-                                    ID = Convert.ToInt32(reader["ID"]),
-                                    Nome = reader["Nome"]?.ToString(),
-                                    DataCriacao = Convert.ToDateTime(reader["DataCriacao"]),
-                                    InicioPeriodo = Convert.ToDateTime(reader["InicioPeriodo"]),
-                                    FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
-                                    EmpresaID = Convert.ToInt32(reader["EmpresaID"])
-                                };
+                                processo = Make(reader);
                             }
                         }
                     }

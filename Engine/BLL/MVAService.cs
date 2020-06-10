@@ -1,0 +1,86 @@
+﻿using DAO;
+using Dominio;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace BLL
+{
+    public class MVAService
+    {
+        private static readonly MVADAO mvaDAO = new MVADAO();
+
+        public async Task<List<MVA>> GetAll()
+        {
+            try
+            {
+                return await mvaDAO.GetAll();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<MVA> Get(int id)
+        {
+            try
+            {
+                return await mvaDAO.Get(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Exists(int id)
+        {
+            try
+            {
+                return await mvaDAO.Exists(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public MVA Insert(MVA mva)
+        {
+            try
+            {
+                return mvaDAO.Insert(mva);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool Edit(MVA mva)
+        {
+            try
+            {
+                return mvaDAO.Edit(mva);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool Delete(int id)
+        {
+            try
+            {
+                return mvaDAO.Delete(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+    }
+}

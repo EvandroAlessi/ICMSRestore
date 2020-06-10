@@ -200,8 +200,10 @@ CREATE TABLE public."MVA"
     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     "CEST" integer,
     "NCM_SH" bigint NOT NULL,
-    "DESCRIÇÃO" character varying COLLATE pg_catalog."default",
+    "Descricao" character varying COLLATE pg_catalog."default",
     "MVA_ST " real NOT NULL,
+    "DataInicial" date NOT NULL,
+    "DataFinal" date NOT NULL,
     CONSTRAINT "MVA_pkey" PRIMARY KEY ("ID")
 )
 

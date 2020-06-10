@@ -3,34 +3,34 @@ using Dominio;
 using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class EmpresaDAO
+    public class MVADAO
     {
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
-        public Empresa Make(NpgsqlDataReader reader)
+        public MVA Make(NpgsqlDataReader reader)
         {
-            return new Empresa
+            return new MVA
             {
                 ID = Convert.ToInt32(reader["ID"]),
-                CNPJ = reader["CNPJ"]?.ToString(),
-                Nome = reader["Nome"]?.ToString(),
-                Cidade = reader["Cidade"]?.ToString(),
-                UF = reader["UF"]?.ToString(),
+                CEST = Convert.ToInt32(reader["CEST"]),
+                Descricao = reader["Descricao"]?.ToString(),
+                MVA_ST = Convert.ToDouble(reader["xProd"]),
+                NCM_SH = Convert.ToInt32(reader["NCM_SH"]),
+                DataInicial = Convert.ToDateTime(reader["DataInicial"]),
+                DataFinal = Convert.ToDateTime(reader["DataFinal"])
             };
         }
 
-        public async Task<List<Empresa>> GetAll()
+        public async Task<List<MVA>> GetAll()
         {
             try
             {
-                var list = new List<Empresa>();
+                var list = new List<MVA>();
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
@@ -38,7 +38,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Empresas{ quote};";
+                        cmd.CommandText = $@"SELECT * FROM {quote}MVA{ quote};";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -64,11 +64,11 @@ namespace DAO
             }
         }
 
-        public async Task<Empresa> Get(int id)
+        public async Task<MVA> Get(int id)
         {
             try
             {
-                Empresa empresa = null;
+                MVA mva = null;
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
@@ -76,14 +76,14 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Empresas{quote} 
+                        cmd.CommandText = $@"SELECT * FROM {quote}MVA{quote} 
                                 WHERE {quote}ID{quote} = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                empresa = Make(reader);
+                                mva = Make(reader);
                             }
                         }
                     }
@@ -91,7 +91,7 @@ namespace DAO
                     await conn.CloseAsync();
                 }
 
-                return empresa;
+                return mva;
             }
             catch (NpgsqlException ex)
             {
@@ -115,7 +115,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}Empresas{quote} 
+                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}MVA{quote} 
                                 WHERE {quote}ID{quote} = { id };";
 
                         using (var reader = cmd.ExecuteReader())
@@ -143,7 +143,7 @@ namespace DAO
             }
         }
 
-        public Empresa Insert(Empresa empresa)
+        public MVA Insert(MVA mva)
         {
             try
             {
@@ -155,16 +155,20 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}Empresas{quote} (
-                                {quote}CNPJ{quote}
-                                , {quote}Nome{quote}
-                                , {quote}Cidade{quote}
-                                , {quote}UF{quote}
+                        cmd.CommandText = $@"INSERT INTO {quote}MVA{quote} (
+                                {quote}CEST{quote}
+                                , {quote}Descricao{quote}
+                                , {quote}MVA_ST{quote}
+                                , {quote}NCM_SH{quote}
+                                , {quote}DataInicial{quote}
+                                , {quote}DataFinal{quote}
                             ) VALUES (
-                                '{ empresa.CNPJ }'
-                                , '{ empresa.Nome }'
-                                , '{ empresa.Cidade }'
-                                , '{ empresa.UF }')
+                                { mva.CEST }
+                                , '{ mva.Descricao }'
+                                , { mva.MVA_ST }
+                                , { mva.NCM_SH }
+                                , { mva.DataInicial }
+                                , { mva.DataFinal })
                             RETURNING {quote}ID{quote};";
 
                         id = cmd.ExecuteScalar();
@@ -175,9 +179,9 @@ namespace DAO
 
                 if (id != null && id.GetType() != typeof(DBNull))
                 {
-                    empresa.ID = (int)id;
+                    mva.ID = (int)id;
 
-                    return empresa;
+                    return mva;
                 }
                 else
                 {
@@ -194,7 +198,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(Empresa empresa)
+        public bool Edit(MVA mva)
         {
             try
             {
@@ -206,12 +210,14 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}Empresas{quote} SET
-                                {quote}CNPJ{quote} = '{ empresa.CNPJ }'
-                                , {quote}Nome{quote} = '{ empresa.Nome }'
-                                , {quote}Cidade{quote} = '{ empresa.Cidade }'
-                                , {quote}UF{quote} = '{ empresa.UF }'
-                            WHERE {quote}ID{quote} = { empresa.ID };";
+                        cmd.CommandText = $@"UPDATE {quote}MVA{quote} SET
+                                {quote}CEST{quote} = { mva.CEST }
+                                , {quote}Descricao{quote} = '{ mva.Descricao }'
+                                , {quote}MVA_ST{quote} = { mva.MVA_ST }
+                                , {quote}NCM_SH{quote} = '{ mva.NCM_SH }'
+                                , {quote}DataInicial{quote} = '{ mva.DataInicial }'
+                                , {quote}DataFinal{quote} = '{ mva.DataFinal }'
+                            WHERE {quote}ID{quote} = { mva.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -243,7 +249,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}Empresas{quote}
+                        cmd.CommandText = $@"DELETE FROM {quote}MVA{quote}
                             WHERE {quote}ID{quote} = { id };";
 
                         rows = cmd.ExecuteNonQuery();
