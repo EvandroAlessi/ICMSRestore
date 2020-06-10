@@ -23,13 +23,13 @@ namespace DAO
                     cProd = reader["cProd"]?.ToString(),
                     cEAN = reader["cEAN"]?.ToString(),
                     xProd = reader["xProd"]?.ToString(),
-                    NCM = reader["NCM"]?.ToString(),
-                    CFOP = reader["CFOP"]?.ToString(),
+                    NCM = Convert.ToInt32(reader["NCM"]),
+                    CFOP = Convert.ToInt32(reader["CFOP"]),
                     uCom = reader["uCom"]?.ToString(),
                     qCom = Convert.ToDouble(reader["qCom"]),
                     vUnCom = Convert.ToDouble(reader["vUnCom"]),
                     orig = Convert.ToInt32(reader["orig"]),
-                    CST = reader["CST"]?.ToString(),
+                    CST = Convert.ToInt32(reader["CST"]),
                     modBC = Convert.ToInt32(reader["modBC"]),
                     vBC = Convert.ToDouble(reader["vBC"]),
                     pICMS = Convert.ToDouble(reader["pICMS"]),
@@ -44,7 +44,8 @@ namespace DAO
                     vBC_COFINS = Convert.ToDouble(reader["vBC_COFINS"]),
                     pCOFINS = Convert.ToDouble(reader["pCOFINS"]),
                     vCOFINS = Convert.ToDouble(reader["vCOFINS"]),
-                    cNF = Convert.ToInt32(reader["cNF"])
+                    NFeID = Convert.ToInt32(reader["NFeID"]),
+                    ID = Convert.ToInt32(reader["ID"])
                 };
         }
 
@@ -60,7 +61,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROm {quote}Itens{ quote};";
+                        cmd.CommandText = $@"SELECT * FROM {quote}Itens{ quote};";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -86,7 +87,7 @@ namespace DAO
             }
         }
 
-        public async Task<List<Item>> GetAll(int cNF)
+        public async Task<List<Item>> GetAll(int nfeID)
         {
             try
             {
@@ -99,7 +100,7 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"SELECT * FROm {quote}Itens{ quote}
-                                    WHERE {quote}cNF{quote} = { cNF };";
+                                    WHERE {quote}NFeID{quote} = { nfeID };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -125,7 +126,7 @@ namespace DAO
             }
         }
 
-        public async Task<Item> Get(string cProd, int cNF)
+        public async Task<Item> Get(int id)
         {
             try
             {
@@ -137,9 +138,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Items{quote} 
-                                WHERE {quote}cNF{quote} = { cNF }
-                                    AND {quote}cProd{quote} = { cProd };";
+                        cmd.CommandText = $@"SELECT * FROM {quote}Itens{quote} 
+                                WHERE {quote}ID{quote} = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -165,7 +165,7 @@ namespace DAO
             }
         }
 
-        public async Task<bool> Exists(string cProd, int cNF)
+        public async Task<bool> Exists(int id)
         {
             try
             {
@@ -177,9 +177,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}cNF{quote} FROM {quote}Items{quote} 
-                                WHERE {quote}cNF{quote} = { cNF }
-                                    AND {quote}cProd{quote} = { cProd };";
+                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}Itens{quote} 
+                                WHERE {quote}ID{quote} = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -208,12 +207,8 @@ namespace DAO
 
         public Item Insert(Item item)
         {
-            var lastCulture = Thread.CurrentThread.CurrentCulture;
-
             try
             {
-                Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
-
                 object id;
 
                 using (var conn = new NpgsqlConnection(connString))
@@ -249,19 +244,19 @@ namespace DAO
                                 , {quote}vBC_COFINS{quote}
                                 , {quote}pCOFINS{quote}
                                 , {quote}vCOFINS{quote}
-                                , {quote}cNF{quote}
+                                , {quote}NFeID{quote}
                             ) VALUES (
                                 { item.nItem }
                                 , '{ item.cProd }'
                                 , '{ item.cEAN }'
                                 , '{ item.xProd }'
-                                , '{ item.NCM }'
-                                , '{ item.CFOP }'
+                                , { NullableUtils.TestValue(item.NCM) }
+                                , { NullableUtils.TestValue(item.CFOP) }
                                 , '{ item.uCom }'
                                 , { NullableUtils.TestValue(item.qCom) }
                                 , { NullableUtils.TestValue(item.vUnCom) }
                                 , { NullableUtils.TestValue(item.orig) }
-                                , '{ item.CST }'
+                                , { NullableUtils.TestValue(item.CST) }
                                 , { NullableUtils.TestValue(item.modBC) }
                                 , { NullableUtils.TestValue(item.vBC) }
                                 , { NullableUtils.TestValue(item.pICMS) }
@@ -276,7 +271,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.vBC_COFINS) }
                                 , { NullableUtils.TestValue(item.pCOFINS) }
                                 , { NullableUtils.TestValue(item.vCOFINS) }
-                                , { item.cNF })
+                                , { item.NFeID })
                             RETURNING {quote}cProd{quote};";
 
                         id = cmd.ExecuteScalar();
@@ -303,10 +298,6 @@ namespace DAO
             catch (Exception ex)
             {
                 throw ex;
-            }
-            finally
-            {
-                Thread.CurrentThread.CurrentCulture = lastCulture;
             }
         }
 
@@ -353,7 +344,7 @@ namespace DAO
                                 , {quote}vBC_COFINS{quote}
                                 , {quote}pCOFINS{quote}
                                 , {quote}vCOFINS{quote}
-                                , {quote}cNF{quote}
+                                , {quote}NFeID{quote}
                             ) VALUES (
                                 { item.nItem }
                                 , '{ item.cProd }'
@@ -380,7 +371,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.vBC_COFINS) }
                                 , { NullableUtils.TestValue(item.pCOFINS) }
                                 , { NullableUtils.TestValue(item.vCOFINS) }
-                                , { item.cNF });";
+                                , { item.NFeID });";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -527,9 +518,8 @@ namespace DAO
 	                            , {quote}vBC_COFINS{quote} = '{ item.vBC_COFINS }'
                                 , {quote}pCOFINS{quote} = '{ item.pCOFINS }'
                                 , {quote}vCOFINS{quote} = '{ item.vCOFINS }'
-                                , {quote}cNF{quote} = '{ item.cNF }''
-                            WHERE {quote}cNF{quote} = { item.cNF }
-                                    AND {quote}cProd{quote} = { item.cProd };";
+                                , {quote}NFeID{quote} = '{ item.NFeID }''
+                            WHERE {quote}ID{quote} = { item.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -549,7 +539,7 @@ namespace DAO
             }
         }
 
-        public bool Delete(string cProd, int cNF)
+        public bool Delete(int id)
         {
             try
             {
@@ -562,8 +552,7 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"DELETE FROM {quote}Items{quote}
-                            WHERE {quote}cNF{quote} = { cNF }
-                                    AND {quote}cProd{quote} = { cProd };";
+                            WHERE {quote}ID{quote} = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

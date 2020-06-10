@@ -58,7 +58,7 @@ namespace BLL
                     double restFiles = Directory.GetFiles(processoUpload.PastaZip).Count();
 
                     double processedFiles = processoUpload.QntArq - restFiles;
-
+ 
                     double rest = (double)(processedFiles / processoUpload.QntArq);
 
                     double percent = (double)(rest * 100.0);

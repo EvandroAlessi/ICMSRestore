@@ -36,15 +36,14 @@ namespace API.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cNf"></param>
-        /// <param name="CProd"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{cNf}")]
-        public async Task<IActionResult> Get(int cNf, string CProd)
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var item = await itemService.Get(cNf, CProd);
+                var item = await itemService.Get(id);
 
                 if (item is null)
                 {
@@ -111,7 +110,7 @@ namespace API.Controllers
         /// <param name="item"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public IActionResult Put(string cProd, [FromBody] Item item)
+        public IActionResult Put(int id, [FromBody] Item item)
         {
             try
             {
@@ -126,13 +125,13 @@ namespace API.Controllers
 
                     return BadRequest(errors);
                 }
-                else if (item.cProd != cProd)
+                else if (item.ID != id)
                 {
                     return BadRequest("The ID in the object is different from the indicates in the URL.");
                 }
                 else
                 {
-                    bool exists = itemService.Exists(item.cNF, item.cProd).Result;
+                    bool exists = itemService.Exists(item.ID).Result;
 
                     if (!exists)
                     {
@@ -166,11 +165,11 @@ namespace API.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public IActionResult Delete(int cNF, string cProd)
+        public IActionResult Delete(int id)
         {
             try
             {
-                bool exists = itemService.Exists(cNF, cProd).Result;
+                bool exists = itemService.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -178,7 +177,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = itemService.Delete(cNF, cProd);
+                    bool deleted = itemService.Delete(id);
 
                     if (deleted)
                     {

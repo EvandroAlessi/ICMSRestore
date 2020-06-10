@@ -8,23 +8,28 @@ namespace Dominio
 {
     public partial class Item
     {
+        [Key]
+        public int ID { get; set; }
+
         public int nItem { get; set; }
 
         [Required]
-        public int cNF { get; set; }
+        public int NFeID { get; set; }
 
         #region Produto
 
         [Required]
         public string cProd { get; set; }
         public string cEAN { get; set; }
+
+        [Required]
         public string xProd { get; set; }
 
         [Required]
-        public string NCM { get; set; }
+        public int NCM { get; set; }
 
         [Required]
-        public string CFOP { get; set; }
+        public int CFOP { get; set; }
         public string uCom { get; set; }
         public double? qCom { get; set; }
         public double? vUnCom { get; set; }
@@ -38,7 +43,7 @@ namespace Dominio
         public int? orig { get; set; }
 
         [Required]
-        public string CST { get; set; }
+        public int? CST { get; set; }
         public int? modBC { get; set; }
         public double? vBC { get; set; }
         public double? pICMS { get; set; }

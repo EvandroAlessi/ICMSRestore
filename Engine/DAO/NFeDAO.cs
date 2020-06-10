@@ -3,6 +3,9 @@ using Dominio;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DAO
@@ -11,6 +14,52 @@ namespace DAO
     {
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
+
+        public NFe Make(NpgsqlDataReader reader)
+        {
+            return new NFe
+            {
+                ID = Convert.ToInt32(reader["id"]),
+                CEP = reader["CEP"]?.ToString(),
+                CEP_DEST = reader["CEP_DEST"]?.ToString(),
+                CNPJ = reader["CNPJ"]?.ToString(),
+                CNPJ_DEST = reader["CNPJ_DEST"]?.ToString(),
+                CPF_DEST = reader["CPF_DEST"]?.ToString(),
+                CRT = Convert.ToInt32(reader["CRT"]),
+                IE = reader["IE"]?.ToString(),
+                IEST = reader["IEST"]?.ToString(),
+                UF = reader["UF"]?.ToString(),
+                UF_DEST = reader["UF_DEST"]?.ToString(),
+                cMun = reader["cMun"]?.ToString(),
+                cMun_DEST = reader["cMun_DEST"]?.ToString(),
+                cNF = Convert.ToInt32(reader["cNF"]),
+                cPais = Convert.ToInt32(reader["cPais"]),
+                cPais_DEST = Convert.ToInt32(reader["cPais_DEST"]),
+                cUF = Convert.ToInt32(reader["cUF"]),
+                dhEmi = Convert.ToDateTime(reader["dhEmi"]),
+                dhSaiEnt = Convert.ToDateTime(reader["dhSaiEnt"]),
+                email_DEST = reader["email_DEST"]?.ToString(),
+                indPag = Convert.ToInt32(reader["indPag"]),
+                mod = reader["mod"]?.ToString(),
+                nNF = Convert.ToInt32(reader["nNF"]),
+                natOp = reader["natOp"]?.ToString(),
+                nro = reader["nro"]?.ToString(),
+                nro_DEST = reader["nro_DEST"]?.ToString(),
+                serie = Convert.ToInt32(reader["serie"]),
+                xBairro = reader["xBairro"]?.ToString(),
+                xBairro_DEST = reader["xBairro_DEST"]?.ToString(),
+                xFant = reader["xFant"]?.ToString(),
+                xLgr = reader["xLgr"]?.ToString(),
+                xLgr_DEST = reader["xLgr_DEST"]?.ToString(),
+                xMun = reader["xMun"]?.ToString(),
+                xMun_DEST = reader["xMun_DEST"]?.ToString(),
+                xNome = reader["xNome"]?.ToString(),
+                xNome_DEST = reader["xNome_DEST"]?.ToString(),
+                xPais = reader["xPais"]?.ToString(),
+                xPais_DEST = reader["xPais_DEST"]?.ToString(),
+                ProcessoID = Convert.ToInt32(reader["ProcessoID"])
+            };
+        }
 
         public async Task<List<NFe>> GetAll()
         {
@@ -30,49 +79,7 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                var nfe = new NFe
-                                {
-                                    CEP = reader["CEP"]?.ToString(),
-                                    CEP_DEST = reader["CEP_DEST"]?.ToString(),
-                                    CNPJ = reader["CNPJ"]?.ToString(),
-                                    CNPJ_DEST = reader["CNPJ_DEST"]?.ToString(),
-                                    CPF_DEST = reader["CPF_DEST"]?.ToString(),
-                                    CRT = Convert.ToInt32(reader["CRT"]),
-                                    IE = reader["IE"]?.ToString(),
-                                    IEST = reader["IEST"]?.ToString(),
-                                    UF = reader["UF"]?.ToString(),
-                                    UF_DEST = reader["UF_DEST"]?.ToString(),
-                                    cMun = reader["cMun"]?.ToString(),
-                                    cMun_DEST = reader["cMun_DEST"]?.ToString(),
-                                    cNF = Convert.ToInt32(reader["cNF"]),
-                                    cPais = Convert.ToInt32(reader["cPais"]),
-                                    cPais_DEST = Convert.ToInt32(reader["cPais_DEST"]),
-                                    cUF = Convert.ToInt32(reader["cUF"]),
-                                    dhEmi = Convert.ToDateTime(reader["dhEmi"]),
-                                    dhSaiEnt = Convert.ToDateTime(reader["dhSaiEnt"]),
-                                    email_DEST = reader["email_DEST"]?.ToString(),
-                                    indPag = Convert.ToInt32(reader["indPag"]),
-                                    mod = reader["mod"]?.ToString(),
-                                    nNF = reader["nNF"]?.ToString(),
-                                    natOp = reader["natOp"]?.ToString(),
-                                    nro = reader["nro"]?.ToString(),
-                                    nro_DEST = reader["nro_DEST"]?.ToString(),
-                                    serie = Convert.ToInt32(reader["serie"]),
-                                    xBairro = reader["xBairro"]?.ToString(),
-                                    xBairro_DEST = reader["xBairro_DEST"]?.ToString(),
-                                    xFant = reader["xFant"]?.ToString(),
-                                    xLgr = reader["xLgr"]?.ToString(),
-                                    xLgr_DEST = reader["xLgr_DEST"]?.ToString(),
-                                    xMun = reader["xMun"]?.ToString(),
-                                    xMun_DEST = reader["xMun_DEST"]?.ToString(),
-                                    xNome = reader["xNome"]?.ToString(),
-                                    xNome_DEST = reader["xNome_DEST"]?.ToString(),
-                                    xPais = reader["xPais"]?.ToString(),
-                                    xPais_DEST = reader["xPais_DEST"]?.ToString(),
-                                    ProcessoID = Convert.ToInt32(reader["ProcessoID"])
-                                };
-
-                                list.Add(nfe);
+                                list.Add(Make(reader));
                             }
                         }
                     }
@@ -92,7 +99,7 @@ namespace DAO
             }
         }
 
-        public async Task<NFe> Get(int cNF)
+        public async Task<NFe> Get(int id)
         {
             try
             {
@@ -105,53 +112,13 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"SELECT * FROM {quote}NFe{quote} 
-                                WHERE {quote}cNF{quote} = { cNF };";
+                                WHERE {quote}ID{quote} = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                nfe = new NFe
-                                {
-                                    CEP = reader["CEP"]?.ToString(),
-                                    CEP_DEST = reader["CEP_DEST"]?.ToString(),
-                                    CNPJ = reader["CNPJ"]?.ToString(),
-                                    CNPJ_DEST = reader["CNPJ_DEST"]?.ToString(),
-                                    CPF_DEST = reader["CPF_DEST"]?.ToString(),
-                                    CRT = Convert.ToInt32(reader["CRT"]),
-                                    IE = reader["IE"]?.ToString(),
-                                    IEST = reader["IEST"]?.ToString(),
-                                    UF = reader["UF"]?.ToString(),
-                                    UF_DEST = reader["UF_DEST"]?.ToString(),
-                                    cMun = reader["cMun"]?.ToString(),
-                                    cMun_DEST = reader["cMun_DEST"]?.ToString(),
-                                    cNF = Convert.ToInt32(reader["cNF"]),
-                                    cPais = Convert.ToInt32(reader["cPais"]),
-                                    cPais_DEST = Convert.ToInt32(reader["cPais_DEST"]),
-                                    cUF = Convert.ToInt32(reader["cUF"]),
-                                    dhEmi = Convert.ToDateTime(reader["dhEmi"]),
-                                    dhSaiEnt = Convert.ToDateTime(reader["dhSaiEnt"]),
-                                    email_DEST = reader["email_DEST"]?.ToString(),
-                                    indPag = Convert.ToInt32(reader["indPag"]),
-                                    mod = reader["mod"]?.ToString(),
-                                    nNF = reader["nNF"]?.ToString(),
-                                    natOp = reader["natOp"]?.ToString(),
-                                    nro = reader["nro"]?.ToString(),
-                                    nro_DEST = reader["nro_DEST"]?.ToString(),
-                                    serie = Convert.ToInt32(reader["serie"]),
-                                    xBairro = reader["xBairro"]?.ToString(),
-                                    xBairro_DEST = reader["xBairro_DEST"]?.ToString(),
-                                    xFant = reader["xFant"]?.ToString(),
-                                    xLgr = reader["xLgr"]?.ToString(),
-                                    xLgr_DEST = reader["xLgr_DEST"]?.ToString(),
-                                    xMun = reader["xMun"]?.ToString(),
-                                    xMun_DEST = reader["xMun_DEST"]?.ToString(),
-                                    xNome = reader["xNome"]?.ToString(),
-                                    xNome_DEST = reader["xNome_DEST"]?.ToString(),
-                                    xPais = reader["xPais"]?.ToString(),
-                                    xPais_DEST = reader["xPais_DEST"]?.ToString(),
-                                    ProcessoID = Convert.ToInt32(reader["ProcessoID"])
-                                };
+                                nfe = Make(reader);
                             }
                         }
                     }
@@ -171,7 +138,7 @@ namespace DAO
             }
         }
 
-        public async Task<bool> Exists(int cNF)
+        public async Task<bool> Exists(int id)
         {
             try
             {
@@ -183,8 +150,49 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}cNF{quote}  FROM {quote}NFe{quote} 
-                                WHERE {quote}cNF{quote} = { cNF };";
+                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}NFe{quote} 
+                                WHERE {quote}ID{quote} = { id };";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                exists = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return exists;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Exists(int cNF, int nNF)
+        {
+            try
+            {
+                bool exists = false;
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}NFe{quote} 
+                                WHERE {quote}cNF{quote} = { cNF } 
+                                    AND {quote}nNF{quote} = { nNF } ;";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -322,6 +330,323 @@ namespace DAO
                 throw ex;
             }
             catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public bool InsertNFeItensTransaction(NFe nfe, List<Item> itens)
+        {
+            try
+            {
+                int rows = 0;
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    conn.Open();
+
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            using (var cmd = conn.CreateCommand())
+                            {
+                                cmd.Transaction = transaction;
+                                cmd.CommandType = CommandType.Text;
+                                cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
+                                            {quote}ProcessoID{quote}
+                                            , {quote}CEP{quote}
+                                            , {quote}CEP_DEST{quote}
+                                            , {quote}CNPJ{quote}
+                                            , {quote}CNPJ_DEST{quote}
+                                            , {quote}CPF_DEST{quote}
+                                            , {quote}CRT{quote}
+                                            , {quote}IE{quote}
+                                            , {quote}IEST{quote}
+                                            , {quote}UF{quote}
+                                            , {quote}UF_DEST{quote}
+                                            , {quote}cMun{quote}
+                                            , {quote}cMun_DEST{quote}
+                                            , {quote}cNF{quote}
+                                            , {quote}cPais{quote}
+                                            , {quote}cPais_DEST{quote}
+                                            , {quote}cUF{quote}
+                                            , {quote}dhEmi{quote}
+                                            , {quote}dhSaiEnt{quote}
+                                            , {quote}email_DEST{quote}
+                                            , {quote}indPag{quote}
+                                            , {quote}mod{quote}
+                                            , {quote}nNF{quote}
+                                            , {quote}natOp{quote}
+                                            , {quote}nro{quote}
+                                            , {quote}nro_DEST{quote}
+                                            , {quote}serie{quote}
+                                            , {quote}xBairro{quote}
+                                            , {quote}xBairro_DEST{quote}
+                                            , {quote}xFant{quote}
+                                            , {quote}xLgr{quote}
+                                            , {quote}xLgr_DEST{quote}
+                                            , {quote}xMun{quote}
+                                            , {quote}xMun_DEST{quote}
+                                            , {quote}xNome{quote}
+                                            , {quote}xNome_DEST{quote}
+                                            , {quote}xPais{quote}
+                                            , {quote}xPais_DEST{quote}
+                                        ) VALUES (
+                                            { nfe.ProcessoID }
+                                            , '{ nfe.CEP }'
+                                            , '{ nfe.CEP_DEST }'
+                                            , '{ nfe.CNPJ }'
+                                            , '{ nfe.CNPJ_DEST }'
+                                            , '{ nfe.CPF_DEST }'
+                                            , '{ nfe.CRT }'
+                                            , '{ nfe.IE }'
+                                            , '{ nfe.IEST }'
+                                            , '{ nfe.UF }'
+                                            , '{ nfe.UF_DEST }'
+                                            , '{ nfe.cMun }'
+                                            , '{ nfe.cMun_DEST }'
+                                            , '{ nfe.cNF }'
+                                            , '{ nfe.cPais }'
+                                            , '{ nfe.cPais_DEST }'
+                                            , '{ nfe.cUF }'
+                                            , '{ nfe.dhEmi }'
+                                            , '{ nfe.dhSaiEnt }'
+                                            , '{ nfe.email_DEST }'
+                                            , '{ nfe.indPag }'
+                                            , '{ nfe.mod }'
+                                            , '{ nfe.nNF }'
+                                            , '{ nfe.natOp }'
+                                            , '{ nfe.nro }'
+                                            , '{ nfe.nro_DEST }'
+                                            , '{ nfe.serie }'
+                                            , '{ nfe.xBairro }'
+                                            , '{ nfe.xBairro_DEST }'
+                                            , '{ nfe.xFant }'
+                                            , '{ nfe.xLgr }'
+                                            , '{ nfe.xLgr_DEST }'
+                                            , '{ nfe.xMun }'
+                                            , '{ nfe.xMun_DEST }'
+                                            , '{ nfe.xNome }'
+                                            , '{ nfe.xNome_DEST }'
+                                            , '{ nfe.xPais }'
+                                            , '{ nfe.xPais_DEST }')   
+                                    RETURNING {quote}ID{quote};";
+
+                                var nfeID = (int)cmd.ExecuteScalar();
+
+                                using (var cmd2 = conn.CreateCommand())
+                                {
+                                    var query2 = "";
+
+                                    for (int i = 0; i < itens.Count; i++)
+                                    {
+                                        if (i == 0)
+                                        {
+                                            query2 = $@"INSERT INTO {quote}Itens{ quote} (
+                                                {quote}nItem{quote}
+                                                , {quote}cProd{quote}
+                                                , {quote}cEAN{quote}
+                                                , {quote}xProd{quote}
+                                                , {quote}NCM{quote}
+                                                , {quote}CFOP{quote}
+                                                , {quote}uCom{quote}
+                                                , {quote}qCom{quote}
+                                                , {quote}vUnCom{quote}
+                                                , {quote}orig{quote}
+                                                , {quote}CST{quote}
+                                                , {quote}modBC{quote}
+                                                , {quote}vBC{quote}
+                                                , {quote}pICMS{quote}
+                                                , {quote}vICMS{quote}
+                                                , {quote}cEnq{quote}
+                                                , {quote}CST_IPI{quote}
+                                                , {quote}CST_PIS{quote}
+                                                , {quote}vBC_PIS{quote}
+                                                , {quote}pPIS{quote}
+                                                , {quote}vPIS{quote}
+                                                , {quote}CST_COFINS{quote}
+                                                , {quote}vBC_COFINS{quote}
+                                                , {quote}pCOFINS{quote}
+                                                , {quote}vCOFINS{quote}
+                                                , {quote}NFeID{quote}
+                                            ) VALUES (
+                                                { itens[i].nItem }
+                                                , '{ itens[i].cProd }'
+                                                , '{ itens[i].cEAN }'
+                                                , '{ itens[i].xProd }'
+                                                , { NullableUtils.TestValue(itens[i].NCM) }
+                                                , { NullableUtils.TestValue(itens[i].CFOP) }
+                                                , '{ itens[i].uCom }'
+                                                , { NullableUtils.TestValue(itens[i].qCom) }
+                                                , { NullableUtils.TestValue(itens[i].vUnCom) }
+                                                , { NullableUtils.TestValue(itens[i].orig) }
+                                                , { NullableUtils.TestValue(itens[i].CST) }
+                                                , { NullableUtils.TestValue(itens[i].modBC) }
+                                                , { NullableUtils.TestValue(itens[i].vBC) }
+                                                , { NullableUtils.TestValue(itens[i].pICMS) }
+                                                , { NullableUtils.TestValue(itens[i].vICMS) }
+                                                , { NullableUtils.TestValue(itens[i].cEnq) }
+                                                , '{ itens[i].CST_IPI }'
+                                                , '{ itens[i].CST_PIS }'
+                                                , { NullableUtils.TestValue(itens[i].vBC_PIS) }
+                                                , { NullableUtils.TestValue(itens[i].pPIS) }
+                                                , { NullableUtils.TestValue(itens[i].vPIS) }
+                                                , '{ itens[i].CST_COFINS }'
+                                                , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
+                                                , { NullableUtils.TestValue(itens[i].pCOFINS) }
+                                                , { NullableUtils.TestValue(itens[i].vCOFINS) }
+                                                , { nfeID })";
+                                                }
+                                                else
+                                                {
+                                                    query2 += $@", (
+                                                        { itens[i].nItem }
+                                                        , '{ itens[i].cProd }'
+                                                        , '{ itens[i].cEAN }'
+                                                        , '{ itens[i].xProd }'
+                                                        , { NullableUtils.TestValue(itens[i].NCM) }
+                                                        , { NullableUtils.TestValue(itens[i].CFOP) }
+                                                        , '{ itens[i].uCom }'
+                                                        , { NullableUtils.TestValue(itens[i].qCom) }
+                                                        , { NullableUtils.TestValue(itens[i].vUnCom) }
+                                                        , { NullableUtils.TestValue(itens[i].orig) }
+                                                        , { NullableUtils.TestValue(itens[i].CST) }
+                                                        , { NullableUtils.TestValue(itens[i].modBC) }
+                                                        , { NullableUtils.TestValue(itens[i].vBC) }
+                                                        , { NullableUtils.TestValue(itens[i].pICMS) }
+                                                        , { NullableUtils.TestValue(itens[i].vICMS) }
+                                                        , { NullableUtils.TestValue(itens[i].cEnq) }
+                                                        , '{ itens[i].CST_IPI }'
+                                                        , '{ itens[i].CST_PIS }'
+                                                        , { NullableUtils.TestValue(itens[i].vBC_PIS) }
+                                                        , { NullableUtils.TestValue(itens[i].pPIS) }
+                                                        , { NullableUtils.TestValue(itens[i].vPIS) }
+                                                        , '{ itens[i].CST_COFINS }'
+                                                        , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
+                                                        , { NullableUtils.TestValue(itens[i].pCOFINS) }
+                                                        , { NullableUtils.TestValue(itens[i].vCOFINS) }
+                                                        , { nfeID })";
+                                        }
+
+                                        if (i == itens.Count - 1)
+                                        {
+                                            query2 += ";";
+                                        }
+                                    }
+
+                                    cmd2.Transaction = transaction;
+                                    cmd2.CommandType = CommandType.Text;
+                                    cmd2.CommandText = query2;
+
+                                    rows = cmd2.ExecuteNonQuery();
+                                }
+
+                                transaction.Commit();
+                            }
+                        }
+                        catch (NpgsqlException ex)
+                        {
+                            transaction.Rollback();
+                            throw ex;
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw ex;
+                        }
+                    }
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
+                                {quote}ProcessoID{quote}
+                                , {quote}CEP{quote}
+                                , {quote}CEP_DEST{quote}
+                                , {quote}CNPJ{quote}
+                                , {quote}CNPJ_DEST{quote}
+                                , {quote}CPF_DEST{quote}
+                                , {quote}CRT{quote}
+                                , {quote}IE{quote}
+                                , {quote}IEST{quote}
+                                , {quote}UF{quote}
+                                , {quote}UF_DEST{quote}
+                                , {quote}cMun{quote}
+                                , {quote}cMun_DEST{quote}
+                                , {quote}cNF{quote}
+                                , {quote}cPais{quote}
+                                , {quote}cPais_DEST{quote}
+                                , {quote}cUF{quote}
+                                , {quote}dhEmi{quote}
+                                , {quote}dhSaiEnt{quote}
+                                , {quote}email_DEST{quote}
+                                , {quote}indPag{quote}
+                                , {quote}mod{quote}
+                                , {quote}nNF{quote}
+                                , {quote}natOp{quote}
+                                , {quote}nro{quote}
+                                , {quote}nro_DEST{quote}
+                                , {quote}serie{quote}
+                                , {quote}xBairro{quote}
+                                , {quote}xBairro_DEST{quote}
+                                , {quote}xFant{quote}
+                                , {quote}xLgr{quote}
+                                , {quote}xLgr_DEST{quote}
+                                , {quote}xMun{quote}
+                                , {quote}xMun_DEST{quote}
+                                , {quote}xNome{quote}
+                                , {quote}xNome_DEST{quote}
+                                , {quote}xPais{quote}
+                                , {quote}xPais_DEST{quote}
+                            ) VALUES (
+                                { nfe.ProcessoID }
+                                , '{ nfe.CEP }'
+                                , '{ nfe.CEP_DEST }'
+                                , '{ nfe.CNPJ }'
+                                , '{ nfe.CNPJ_DEST }'
+                                , '{ nfe.CPF_DEST }'
+                                , '{ nfe.CRT }'
+                                , '{ nfe.IE }'
+                                , '{ nfe.IEST }'
+                                , '{ nfe.UF }'
+                                , '{ nfe.UF_DEST }'
+                                , '{ nfe.cMun }'
+                                , '{ nfe.cMun_DEST }'
+                                , '{ nfe.cNF }'
+                                , '{ nfe.cPais }'
+                                , '{ nfe.cPais_DEST }'
+                                , '{ nfe.cUF }'
+                                , '{ nfe.dhEmi }'
+                                , '{ nfe.dhSaiEnt }'
+                                , '{ nfe.email_DEST }'
+                                , '{ nfe.indPag }'
+                                , '{ nfe.mod }'
+                                , '{ nfe.nNF }'
+                                , '{ nfe.natOp }'
+                                , '{ nfe.nro }'
+                                , '{ nfe.nro_DEST }'
+                                , '{ nfe.serie }'
+                                , '{ nfe.xBairro }'
+                                , '{ nfe.xBairro_DEST }'
+                                , '{ nfe.xFant }'
+                                , '{ nfe.xLgr }'
+                                , '{ nfe.xLgr_DEST }'
+                                , '{ nfe.xMun }'
+                                , '{ nfe.xMun_DEST }'
+                                , '{ nfe.xNome }'
+                                , '{ nfe.xNome_DEST }'
+                                , '{ nfe.xPais }'
+                                , '{ nfe.xPais_DEST }');";
+
+                        rows = cmd.ExecuteNonQuery();
+                    }
+
+                    conn.Close();
+                }
+
+                return rows > 0;
+            }
+            catch(Exception ex)
             {
                 throw ex;
             }
@@ -596,7 +921,7 @@ namespace DAO
                                 , {quote}xNome_DEST{quote} = '{ nfe.xNome_DEST }'
                                 , {quote}xPais{quote} = '{ nfe.xPais }'
                                 , {quote}xPais_DEST{quote} = '{ nfe.xPais_DEST }'
-                            WHERE {quote}cNF{quote} = { nfe.cNF };";
+                            WHERE {quote}ID{quote} = { nfe.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -616,7 +941,7 @@ namespace DAO
             }
         }
 
-        public bool Delete(int cNF)
+        public bool Delete(int id)
         {
             try
             {
@@ -629,7 +954,7 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"DELETE FROM {quote}NFe{quote}
-                            WHERE {quote}cNF{quote} = { cNF };";
+                            WHERE {quote}ID{quote} = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

@@ -23,11 +23,11 @@ namespace BLL
             }
         }
 
-        public async Task<NFe> Get(int cNF)
+        public async Task<NFe> Get(int id)
         {
             try
             {
-                return await nfeDAO.Get(cNF);
+                return await nfeDAO.Get(id);
             }
             catch (Exception ex)
             {
@@ -35,11 +35,23 @@ namespace BLL
             }
         }
 
-        public async Task<bool> Exists(int cNF)
+        public async Task<bool> Exists(int id)
         {
             try
             {
-                return await nfeDAO.Exists(cNF);
+                return await nfeDAO.Exists(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Exists(int cNF, int nNF)
+        {
+            try
+            {
+                return await nfeDAO.Exists(cNF, nNF);
             }
             catch (Exception ex)
             {
@@ -86,7 +98,7 @@ namespace BLL
                     email_DEST = nFeProc.NotaFiscalEletronica.InformacoesNFe.Destinatario.email,
                     indPag = nFeProc.NotaFiscalEletronica.InformacoesNFe.Identificacao.indPag,
                     mod = nFeProc.NotaFiscalEletronica.InformacoesNFe.Identificacao?.mod,
-                    nNF = nFeProc.NotaFiscalEletronica.InformacoesNFe.Identificacao?.nNF,
+                    nNF = nFeProc.NotaFiscalEletronica.InformacoesNFe.Identificacao.nNF,
                     natOp = nFeProc.NotaFiscalEletronica.InformacoesNFe.Identificacao?.natOp,
                     nro = nFeProc.NotaFiscalEletronica.InformacoesNFe.Emitente?.Endereco?.nro,
                     nro_DEST = nFeProc.NotaFiscalEletronica.InformacoesNFe.Destinatario?.Endereco?.nro,
@@ -105,7 +117,42 @@ namespace BLL
                     ProcessoID = processoID
                 };
 
-                return nfeDAO.InserWithoutObjReturn(nFe);
+                List<Item> itens = new List<Item>();
+
+                foreach (var detalhe in nFeProc.NotaFiscalEletronica.InformacoesNFe.Detalhe)
+                {
+                    itens.Add(new Item
+                    {
+                        nItem = detalhe.nItem,
+                        cProd = detalhe.Produto.cProd,
+                        cEAN = detalhe.Produto.cEAN,
+                        xProd = detalhe.Produto.xProd,
+                        NCM = detalhe.Produto.NCM,
+                        CFOP = detalhe.Produto.CFOP,
+                        uCom = detalhe.Produto.uCom,
+                        qCom = detalhe.Produto.qCom,
+                        vUnCom = detalhe.Produto.vUnCom,
+                        orig = detalhe.Imposto.ICMS.ICMS00?.orig,
+                        CST = detalhe.Imposto.ICMS.ICMS00?.CST,
+                        modBC = detalhe.Imposto.ICMS.ICMS00?.modBC,
+                        vBC = detalhe.Imposto.ICMS.ICMS00?.vBC,
+                        pICMS = detalhe.Imposto.ICMS.ICMS00?.pICMS,
+                        vICMS = detalhe.Imposto.ICMS.ICMS00?.vICMS,
+                        cEnq = detalhe.Imposto.IPI?.cEnq,
+                        CST_IPI = detalhe.Imposto.IPI?.IPINT?.CST,
+                        CST_PIS = detalhe.Imposto.PIS.PISAliq?.CST,
+                        vBC_PIS = detalhe.Imposto.PIS.PISAliq?.vBC,
+                        pPIS = detalhe.Imposto.PIS.PISAliq?.pPIS,
+                        vPIS = detalhe.Imposto.PIS.PISAliq?.vPIS,
+                        CST_COFINS = detalhe.Imposto.COFINS.COFINSAliq?.CST,
+                        vBC_COFINS = detalhe.Imposto.COFINS.COFINSAliq?.vBC,
+                        pCOFINS = detalhe.Imposto.COFINS.COFINSAliq?.pCOFINS,
+                        vCOFINS = detalhe.Imposto.COFINS.COFINSAliq?.vCOFINS,
+                        NFeID = nFe.ID
+                    });
+                }
+
+                return nfeDAO.InsertNFeItensTransaction(nFe, itens);
             }
             catch (Exception ex)
             {
@@ -126,11 +173,11 @@ namespace BLL
             }
         }
 
-        public bool Delete(int cNF)
+        public bool Delete(int id)
         {
             try
             {
-                return nfeDAO.Delete(cNF);
+                return nfeDAO.Delete(id);
             }
             catch (Exception ex)
             {

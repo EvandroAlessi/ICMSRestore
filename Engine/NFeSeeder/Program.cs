@@ -5,9 +5,11 @@ using CrossCutting.SerializationModels;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using static CrossCutting.LOG;
@@ -32,6 +34,8 @@ namespace NFeSeeder
                      .Build();
 
                 _ = new AppSettings(config);
+
+                CultureConfiguration.ConfigureCulture();
 
                 FindProcessFolders();
 
@@ -205,11 +209,7 @@ namespace NFeSeeder
             try
             {
                 var nfeService = new NFeService();
-                var itemService = new ItemService();
-                var processoService = new ProcessoService();
-
                 string[] filePaths = Directory.GetFiles(subDir);
-                bool allItemsAdded = false;
 
                 using (var serializable = new NFeSerialization())
                 {
@@ -223,45 +223,16 @@ namespace NFeSeeder
 
                             if (nfe?.NotaFiscalEletronica?.InformacoesNFe != null)
                             {
-                                if (nfeService.Insert(nfe, processoID))
-                                {
-                                    foreach (var detalhe in nfe.NotaFiscalEletronica.InformacoesNFe.Detalhe)
-                                    {
-                                        try
-                                        {
-                                            if (!itemService.Insert(detalhe, nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.cNF))
-                                            {
-                                                allItemsAdded = false;
-                                                break;
-                                            }
-                                            else
-                                            {
-                                                allItemsAdded = true;
-                                            }
-                                        }
-                                        catch (Exception ex)
-                                        {
-                                            allItemsAdded = false;
-                                            break;
-                                        }
-                                    }
+                                nfeService.Insert(nfe, processoID);
 
-                                    if (allItemsAdded)
-                                    {
-                                        File.Delete(filePath);
-                                    }
-                                    else
-                                    {
-                                        //DO Something
-                                    }
-                                }
+                                File.Delete(filePath);
                             }
                         }
                         catch (Exception ex)
                         {
-                            if (nfe?.NotaFiscalEletronica?.InformacoesNFe?.Identificacao?.cNF != null)
+                            if (nfe?.NotaFiscalEletronica?.InformacoesNFe?.Identificacao?.cNF != null && nfe?.NotaFiscalEletronica?.InformacoesNFe?.Identificacao?.nNF != null)
                             {
-                                var exists = nfeService.Exists(nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.cNF).Result;
+                                var exists = nfeService.Exists(nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.cNF, nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.nNF).Result;
 
                                 if (exists)
                                 {

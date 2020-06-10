@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CrossCutting;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -30,7 +31,8 @@ namespace ICMSRestore.API
 
             //services.AddSingleton<IConfiguration>(Configuration);
 
-            var appSettings = new CrossCutting.AppSettings(Configuration);
+            _ = new AppSettings(Configuration);
+            CultureConfiguration.ConfigureCulture();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>

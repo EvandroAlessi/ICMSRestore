@@ -40,14 +40,14 @@ namespace API.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cNF"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{cNF}")]
-        public async Task<IActionResult> Get(int cNF)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> Get(int id)
         {
             try
             {
-                var nfe = await nfeService.Get(cNF);
+                var nfe = await nfeService.Get(id);
 
                 if (nfe is null)
                 {
@@ -110,11 +110,11 @@ namespace API.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cNF"></param>
+        /// <param name="id"></param>
         /// <param name="nfe"></param>
         /// <returns></returns>
-        [HttpPut("{cNF}")]
-        public IActionResult Put(int cNF, [FromBody] NFe nfe)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] NFe nfe)
         {
             try
             {
@@ -129,13 +129,13 @@ namespace API.Controllers
 
                     return BadRequest(errors);
                 }
-                else if (nfe.cNF != cNF)
+                else if (nfe.ID != id)
                 {
                     return BadRequest("The ID in the object is different from the indicates in the URL.");
                 }
                 else
                 {
-                    bool exists = nfeService.Exists(cNF).Result;
+                    bool exists = nfeService.Exists(id).Result;
 
                     if (!exists)
                     {
@@ -166,14 +166,14 @@ namespace API.Controllers
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="cNF"></param>
+        /// <param name="id"></param>
         /// <returns></returns>
-        [HttpDelete("{cNF}")]
-        public IActionResult Delete(int cNF)
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
         {
             try
             {
-                bool exists = nfeService.Exists(cNF).Result;
+                bool exists = nfeService.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -181,7 +181,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = nfeService.Delete(cNF);
+                    bool deleted = nfeService.Delete(id);
 
                     if (deleted)
                     {

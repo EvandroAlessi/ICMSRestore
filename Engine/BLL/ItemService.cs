@@ -22,11 +22,11 @@ namespace BLL
             }
         }
 
-        public async Task<List<Item>> GetAll(int cNF)
+        public async Task<List<Item>> GetAll(int nfeID)
         {
             try
             {
-                return await itemDAO.GetAll(cNF);
+                return await itemDAO.GetAll(nfeID);
             }
             catch (Exception ex)
             {
@@ -34,11 +34,11 @@ namespace BLL
             }
         }
 
-        public async Task<Item> Get(int cNF, string cProd)
+        public async Task<Item> Get(int id)
         {
             try
             {
-                return await itemDAO.Get(cProd, cNF);
+                return await itemDAO.Get(id);
             }
             catch (Exception ex)
             {
@@ -46,11 +46,11 @@ namespace BLL
             }
         }
 
-        public async Task<bool> Exists(int cNF, string cProd)
+        public async Task<bool> Exists(int id)
         {
             try
             {
-                return await itemDAO.Exists(cProd, cNF);
+                return await itemDAO.Exists(id);
             }
             catch (Exception ex)
             {
@@ -70,7 +70,7 @@ namespace BLL
             }
         }
 
-        public bool Insert(CrossCutting.SerializationModels.Detalhe detalhe, int cNFe)
+        public bool Insert(CrossCutting.SerializationModels.Detalhe detalhe, int nfeID)
         {
             try
             {
@@ -101,7 +101,7 @@ namespace BLL
                     vBC_COFINS = detalhe.Imposto.COFINS.COFINSAliq?.vBC,
                     pCOFINS = detalhe.Imposto.COFINS.COFINSAliq?.pCOFINS,
                     vCOFINS = detalhe.Imposto.COFINS.COFINSAliq?.vCOFINS,
-                    cNF = cNFe
+                    NFeID = nfeID
                 };
 
                 return itemDAO.InserWithoutObjReturn(item);
@@ -124,11 +124,11 @@ namespace BLL
             }
         }
 
-        public bool Delete(int cNF, string cProd)
+        public bool Delete(int id)
         {
             try
             {
-                return itemDAO.Delete(cProd, cNF);
+                return itemDAO.Delete(id);
             }
             catch (Exception ex)
             {

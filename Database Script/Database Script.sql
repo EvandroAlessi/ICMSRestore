@@ -46,13 +46,10 @@ CREATE TABLE public."Itens"
     "cProd" character varying COLLATE pg_catalog."default" NOT NULL,
     "cEAN" character varying COLLATE pg_catalog."default",
     "xProd" character varying COLLATE pg_catalog."default",
-    "NCM" character varying COLLATE pg_catalog."default" NOT NULL,
-    "CFOP" character varying COLLATE pg_catalog."default" NOT NULL,
     "uCom" character varying COLLATE pg_catalog."default",
     "qCom" real,
     "vUnCom" real,
     orig integer,
-    "CST" character varying COLLATE pg_catalog."default" NOT NULL,
     "modBC" integer,
     "vBC" real,
     "pICMS" real,
@@ -67,10 +64,14 @@ CREATE TABLE public."Itens"
     "vBC_COFINS" real,
     "pCOFINS" real,
     "vCOFINS" real,
-    "cNF" integer NOT NULL,
-    CONSTRAINT "Prod_NFe_PK" PRIMARY KEY ("cProd", "cNF"),
-    CONSTRAINT "NFe_FK" FOREIGN KEY ("cNF")
-        REFERENCES public."NFe" ("cNF") MATCH SIMPLE
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "NFeID" integer NOT NULL,
+    "NCM" integer NOT NULL,
+    "CFOP" integer NOT NULL,
+    "CST" integer,
+    CONSTRAINT "ID" PRIMARY KEY ("ID"),
+    CONSTRAINT "NFe_FK" FOREIGN KEY ("NFeID")
+        REFERENCES public."NFe" ("ID") MATCH SIMPLE
         ON UPDATE CASCADE
         ON DELETE CASCADE
         NOT VALID
@@ -86,7 +87,7 @@ ALTER TABLE public."Itens"
 
 CREATE INDEX "CFOP_Index"
     ON public."Itens" USING btree
-    ("CFOP" COLLATE pg_catalog."default" ASC NULLS LAST)
+    ("CFOP" ASC NULLS LAST)
     TABLESPACE pg_default;
 -- Index: CST_Index
 
@@ -94,7 +95,7 @@ CREATE INDEX "CFOP_Index"
 
 CREATE INDEX "CST_Index"
     ON public."Itens" USING btree
-    ("CST" COLLATE pg_catalog."default" ASC NULLS LAST)
+    ("CST" ASC NULLS LAST)
     TABLESPACE pg_default;
 -- Index: NCM_Index
 
@@ -102,11 +103,124 @@ CREATE INDEX "CST_Index"
 
 CREATE INDEX "NCM_Index"
     ON public."Itens" USING btree
+    ("NCM" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+-- Trigger: Filter
+
+-- DROP TRIGGER "Filter" ON public."Itens";
+
+CREATE TRIGGER "Filter"
+    AFTER INSERT
+    ON public."Itens"
+    FOR EACH ROW
+    EXECUTE PROCEDURE public."Filter"();
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Table: public.ItensFiltrados
+
+-- DROP TABLE public."ItensFiltrados";
+
+CREATE TABLE public."ItensFiltrados"
+(
+    "cProd" character varying COLLATE pg_catalog."default" NOT NULL,
+    "xProd" character varying COLLATE pg_catalog."default",
+    "NCM" character varying COLLATE pg_catalog."default" NOT NULL,
+    "CFOP" character varying COLLATE pg_catalog."default" NOT NULL,
+    "uCom" character varying COLLATE pg_catalog."default",
+    "qCom" real,
+    "vUnCom" real,
+    orig integer,
+    "CST" character varying COLLATE pg_catalog."default" NOT NULL,
+    "vBC" real,
+    "pICMS" real,
+    "vICMS" real,
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "dhEmi" date NOT NULL,
+    "dhSaiEnt" character varying COLLATE pg_catalog."default" NOT NULL,
+    "nNF" character varying COLLATE pg_catalog."default" NOT NULL,
+    "cNF" integer NOT NULL,
+    "ProcessoID" integer NOT NULL,
+    "ItemID" integer NOT NULL,
+    CONSTRAINT "ItensFiltrados_pkey" PRIMARY KEY ("ID"),
+    CONSTRAINT "Item_FK" FOREIGN KEY ("ItemID")
+        REFERENCES public."Itens" ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
+        REFERENCES public."Processos" ("ID") MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."ItensFiltrados"
+    OWNER to postgres;
+-- Index: CFOP_Filtered_Index
+
+-- DROP INDEX public."CFOP_Filtered_Index";
+
+CREATE INDEX "CFOP_Filtered_Index"
+    ON public."ItensFiltrados" USING btree
+    ("CFOP" COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: CST_Filtered_Index
+
+-- DROP INDEX public."CST_Filtered_Index";
+
+CREATE INDEX "CST_Filtered_Index"
+    ON public."ItensFiltrados" USING btree
+    ("CST" COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: NCM_Filtered_Index
+
+-- DROP INDEX public."NCM_Filtered_Index";
+
+CREATE INDEX "NCM_Filtered_Index"
+    ON public."ItensFiltrados" USING btree
     ("NCM" COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
 
-	
+
+
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- Table: public.MVA
+
+-- DROP TABLE public."MVA";
+
+CREATE TABLE public."MVA"
+(
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "CEST" integer,
+    "NCM_SH" bigint NOT NULL,
+    "DESCRIÇÃO" character varying COLLATE pg_catalog."default",
+    "MVA_ST " real NOT NULL,
+    CONSTRAINT "MVA_pkey" PRIMARY KEY ("ID")
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."MVA"
+    OWNER to postgres;
+-- Index: MVA_NCM_Index
+
+-- DROP INDEX public."MVA_NCM_Index";
+
+CREATE INDEX "MVA_NCM_Index"
+    ON public."MVA" USING btree
+    ("NCM_SH" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 
 -- Table: public.NFe
 
@@ -129,12 +243,11 @@ CREATE TABLE public."NFe"
     "cPais" integer,
     "cPais_DEST" integer,
     "cUF" integer,
-    "dhEmi" date,
-    "dhSaiEnt" character varying COLLATE pg_catalog."default",
+    "dhEmi" date NOT NULL,
+    "dhSaiEnt" character varying COLLATE pg_catalog."default" NOT NULL,
     "email_DEST" character varying COLLATE pg_catalog."default",
     "indPag" integer,
     mod character varying COLLATE pg_catalog."default",
-    "nNF" character varying COLLATE pg_catalog."default",
     "natOp" character varying COLLATE pg_catalog."default",
     nro character varying COLLATE pg_catalog."default",
     "nro_DEST" "char",
@@ -152,7 +265,9 @@ CREATE TABLE public."NFe"
     "xPais_DEST" character varying COLLATE pg_catalog."default",
     "cNF" integer NOT NULL,
     "ProcessoID" integer NOT NULL,
-    CONSTRAINT "NFe_PK" PRIMARY KEY ("cNF"),
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "nNF" integer NOT NULL,
+    CONSTRAINT "PK_ID" PRIMARY KEY ("ID"),
     CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
         REFERENCES public."Processos" ("ID") MATCH SIMPLE
         ON UPDATE NO ACTION
@@ -164,6 +279,14 @@ TABLESPACE pg_default;
 
 ALTER TABLE public."NFe"
     OWNER to postgres;
+-- Index: cNF_Index
+
+-- DROP INDEX public."cNF_Index";
+
+CREATE INDEX "cNF_Index"
+    ON public."NFe" USING btree
+    ("cNF" ASC NULLS LAST)
+    TABLESPACE pg_default;
 -- Index: dhSaiEnt_Index
 
 -- DROP INDEX public."dhSaiEnt_Index";
@@ -172,6 +295,16 @@ CREATE INDEX "dhSaiEnt_Index"
     ON public."NFe" USING btree
     ("dhSaiEnt" COLLATE pg_catalog."default" DESC NULLS LAST)
     TABLESPACE pg_default;
+-- Index: nNF_Index
+
+-- DROP INDEX public."nNF_Index";
+
+CREATE INDEX "nNF_Index"
+    ON public."NFe" USING btree
+    ("nNF" ASC NULLS LAST)
+    TABLESPACE pg_default;
+
+
 	
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -200,3 +333,104 @@ TABLESPACE pg_default;
 
 ALTER TABLE public."Processos"
     OWNER to postgres;
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+-- Table: public.ProcessosUpload
+
+-- DROP TABLE public."ProcessosUpload";
+
+CREATE TABLE public."ProcessosUpload"
+(
+    "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
+    "ProcessoID" integer NOT NULL,
+    "QntArq" integer NOT NULL,
+    "Ativo" boolean NOT NULL DEFAULT true,
+    "PastaZip" character varying COLLATE pg_catalog."default" NOT NULL,
+    CONSTRAINT "PK" PRIMARY KEY ("ID"),
+    CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
+        REFERENCES public."Processos" ("ID") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE public."ProcessosUpload"
+    OWNER to postgres;
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+-- FUNCTION: public.Filter()
+
+-- DROP FUNCTION public."Filter"();
+
+CREATE FUNCTION public."Filter"()
+    RETURNS trigger
+    LANGUAGE 'plpgsql'
+    COST 100
+    VOLATILE NOT LEAKPROOF
+AS $BODY$DECLARE
+   nfe record;
+   accepted_cfop integer ARRAY;
+BEGIN
+accepted_cfop = '{1403,1409,1411,1415,2403,2409,2411,2415,5403,5405,5409,5411,5415,6403,6409,1411,2415}';
+
+IF NEW."CFOP" = ANY(accepted_cfop) THEN
+	SELECT INTO nfe 
+		"cNF"
+		, "nNF"
+		, "dhEmi"
+		, "dhSaiEnt"
+		, "ProcessoID" 
+	FROM public."NFe" 
+	WHERE public."NFe"."ID" = NEW."NFeID";
+
+	INSERT INTO public."ItensFiltrados"(
+			"cProd"
+			, "xProd"
+			, "NCM"
+			, "CFOP"
+			, "uCom"
+			, "qCom"
+			, "vUnCom"
+			, orig
+			, "CST"
+			, "vBC"
+			, "pICMS"
+			, "vICMS"
+			, "dhEmi"
+			, "dhSaiEnt"
+			, "nNF"
+			, "cNF"
+			, "ProcessoID"
+			, "ItemID")
+		VALUES (
+			NEW."cProd"
+			, NEW."xProd"
+			, NEW."NCM"
+			, NEW."CFOP"
+			, NEW."uCom"
+			, NEW."qCom"
+			, NEW."vUnCom"
+			, NEW.orig
+			, NEW."CST"
+			, NEW."vBC"
+			, NEW."pICMS"
+			, NEW."vICMS"
+			, nfe."dhEmi"
+			, nfe."dhSaiEnt"
+			, nfe."nNF"
+			, nfe."cNF"
+			, nfe."ProcessoID"
+			, NEW."ID");
+END IF;
+RETURN NULL;
+
+END$BODY$;
+
+ALTER FUNCTION public."Filter"()
+    OWNER TO postgres;
