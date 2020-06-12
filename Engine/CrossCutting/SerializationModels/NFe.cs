@@ -6,7 +6,8 @@ using System.Text;
 using System.Xml.Serialization;
 
 namespace CrossCutting.SerializationModels
-{    
+{
+    [XmlRoot("NFe", Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class NFe
     {
         [XmlElement(ElementName = "infNFe")]
@@ -14,9 +15,6 @@ namespace CrossCutting.SerializationModels
 
         public class InfNFe
         {
-            [XmlAttribute("Id")]
-            public string Id { get; set; }
-
             [XmlElement("ide")]
             public Identificacao Identificacao { get; set; }
 
@@ -25,6 +23,9 @@ namespace CrossCutting.SerializationModels
 
             [XmlElement("dest")]
             public Destinatario Destinatario { get; set; }
+
+            [XmlElement("total")]
+            public Total Total { get; set; }
 
             [XmlElement("det")]
             public List<Detalhe> Detalhe { get; set; }

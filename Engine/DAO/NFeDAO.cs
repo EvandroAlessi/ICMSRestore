@@ -15,6 +15,136 @@ namespace DAO
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
+        public string MakeInsertQuery(NFe nfe, bool hasReturn = false)
+        {
+            var query = $@"INSERT INTO {quote}NFe{ quote} (
+                                {quote}ProcessoID{quote}
+                                , {quote}CEP{quote}
+                                , {quote}CEP_DEST{quote}
+                                , {quote}CNPJ{quote}
+                                , {quote}CNPJ_DEST{quote}
+                                , {quote}CPF_DEST{quote}
+                                , {quote}CRT{quote}
+                                , {quote}IE{quote}
+                                , {quote}IEST{quote}
+                                , {quote}UF{quote}
+                                , {quote}UF_DEST{quote}
+                                , {quote}cMun{quote}
+                                , {quote}cMun_DEST{quote}
+                                , {quote}cNF{quote}
+                                , {quote}cPais{quote}
+                                , {quote}cPais_DEST{quote}
+                                , {quote}cUF{quote}
+                                , {quote}dhEmi{quote}
+                                , {quote}dhSaiEnt{quote}
+                                , {quote}email_DEST{quote}
+                                , {quote}indPag{quote}
+                                , {quote}mod{quote}
+                                , {quote}nNF{quote}
+                                , {quote}natOp{quote}
+                                , {quote}nro{quote}
+                                , {quote}nro_DEST{quote}
+                                , {quote}serie{quote}
+                                , {quote}xBairro{quote}
+                                , {quote}xBairro_DEST{quote}
+                                , {quote}xFant{quote}
+                                , {quote}xLgr{quote}
+                                , {quote}xLgr_DEST{quote}
+                                , {quote}xMun{quote}
+                                , {quote}xMun_DEST{quote}
+                                , {quote}xNome{quote}
+                                , {quote}xNome_DEST{quote}
+                                , {quote}xPais{quote}
+                                , {quote}xPais_DEST{quote}
+                                , {quote}vBC_TOTAL{quote}
+                                , {quote}vICMS_TOTAL{quote}
+                                , {quote}vICMSDeson_TOTAL{quote}
+                                , {quote}vFCP_TOTAL{quote}
+                                , {quote}vBCST_TOTAL{quote}
+                                , {quote}vST_TOTAL{quote}
+                                , {quote}vFCPST_TOTAL{quote}
+                                , {quote}vFCPSTRet_TOTAL{quote}
+                                , {quote}vProd_TOTAL{quote}
+                                , {quote}vFrete_TOTAL{quote}
+                                , {quote}vSeg_TOTAL{quote}
+                                , {quote}vDesc_TOTAL{quote}
+                                , {quote}vII_TOTAL{quote}
+                                , {quote}vIPI_TOTAL{quote}
+                                , {quote}vIPIDevol_TOTAL{quote}
+                                , {quote}vPIS_TOTAL{quote}
+                                , {quote}vCOFINS_TOTAL{quote}
+                                , {quote}vOutro_TOTAL{quote}
+                                , {quote}vNF_TOTAL{quote}
+                            ) VALUES (
+                                { nfe.ProcessoID }
+                                , '{ nfe.CEP }'
+                                , '{ nfe.CEP_DEST }'
+                                , '{ nfe.CNPJ }'
+                                , '{ nfe.CNPJ_DEST }'
+                                , '{ nfe.CPF_DEST }'
+                                , { NullableUtils.TestValue(nfe.CRT) }
+                                , '{ nfe.IE }'
+                                , '{ nfe.IEST }'
+                                , '{ nfe.UF }'
+                                , '{ nfe.UF_DEST }'
+                                , '{ nfe.cMun }'
+                                , '{ nfe.cMun_DEST }'
+                                , { NullableUtils.TestValue(nfe.cNF) }
+                                , { NullableUtils.TestValue(nfe.cPais) }
+                                , { NullableUtils.TestValue(nfe.cPais_DEST) }
+                                , { NullableUtils.TestValue(nfe.cUF) }
+                                , '{ nfe.dhEmi }'
+                                , '{ nfe.dhSaiEnt }'
+                                , '{ nfe.email_DEST }'
+                                , { NullableUtils.TestValue(nfe.indPag) }
+                                , '{ nfe.mod }'
+                                , { NullableUtils.TestValue(nfe.nNF) }
+                                , '{ nfe.natOp }'
+                                , '{ nfe.nro }'
+                                , '{ nfe.nro_DEST }'
+                                , { NullableUtils.TestValue(nfe.serie) }
+                                , '{ nfe.xBairro }'
+                                , '{ nfe.xBairro_DEST }'
+                                , '{ nfe.xFant }'
+                                , '{ nfe.xLgr }'
+                                , '{ nfe.xLgr_DEST }'
+                                , '{ nfe.xMun }'
+                                , '{ nfe.xMun_DEST }'
+                                , '{ nfe.xNome }'
+                                , '{ nfe.xNome_DEST }'
+                                , '{ nfe.xPais }'
+                                , '{ nfe.xPais_DEST }'
+                                , { NullableUtils.TestValue(nfe.vBC_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vICMS_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vICMSDeson_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vFCP_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vBCST_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vST_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vFCPST_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vFCPSTRet_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vProd_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vFrete_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vSeg_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vDesc_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vII_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vIPI_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vIPIDevol_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vPIS_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vCOFINS_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vOutro_TOTAL) }
+                                , { NullableUtils.TestValue(nfe.vNF_TOTAL) }
+                            )";
+
+            if (hasReturn)
+            {
+                query += $"RETURNING {quote}ID{ quote}";
+            }
+
+            query += ";";
+
+            return query;
+        }
+
         public NFe Make(NpgsqlDataReader reader)
         {
             return new NFe
@@ -57,6 +187,25 @@ namespace DAO
                 xNome_DEST = reader["xNome_DEST"]?.ToString(),
                 xPais = reader["xPais"]?.ToString(),
                 xPais_DEST = reader["xPais_DEST"]?.ToString(),
+                vBC_TOTAL = Convert.ToDouble(reader["vBC_TOTAL"]),
+                vICMS_TOTAL = Convert.ToDouble(reader["vICMS_TOTAL"]),
+                vICMSDeson_TOTAL = Convert.ToDouble(reader["vICMSDeson_TOTAL"]),
+                vFCP_TOTAL = Convert.ToDouble(reader["vFCP_TOTAL"]),
+                vBCST_TOTAL = Convert.ToDouble(reader["vBCST_TOTAL"]),
+                vST_TOTAL = Convert.ToDouble(reader["vST_TOTAL"]),
+                vFCPST_TOTAL = Convert.ToDouble(reader["vFCPST_TOTAL"]),
+                vFCPSTRet_TOTAL = Convert.ToDouble(reader["vFCPSTRet_TOTAL"]),
+                vProd_TOTAL = Convert.ToDouble(reader["vProd_TOTAL"]),
+                vFrete_TOTAL = Convert.ToDouble(reader["vFrete_TOTAL"]),
+                vSeg_TOTAL = Convert.ToDouble(reader["vSeg_TOTAL"]),
+                vDesc_TOTAL = Convert.ToDouble(reader["vDesc_TOTAL"]),
+                vII_TOTAL = Convert.ToDouble(reader["vII_TOTAL"]),
+                vIPI_TOTAL = Convert.ToDouble(reader["vIPI_TOTAL"]),
+                vIPIDevol_TOTAL = Convert.ToDouble(reader["vIPIDevol_TOTAL"]),
+                vPIS_TOTAL = Convert.ToDouble(reader["vPIS_TOTAL"]),
+                vCOFINS_TOTAL = Convert.ToDouble(reader["vCOFINS_TOTAL"]),
+                vOutro_TOTAL = Convert.ToDouble(reader["vOutro_TOTAL"]),
+                vNF_TOTAL = Convert.ToDouble(reader["vNF_TOTAL"]),
                 ProcessoID = Convert.ToInt32(reader["ProcessoID"])
             };
         }
@@ -223,7 +372,7 @@ namespace DAO
         {
             try
             {
-                int rows = 0;
+                object id;
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
@@ -231,93 +380,18 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}CEP{quote}
-                                , {quote}CEP_DEST{quote}
-                                , {quote}CNPJ{quote}
-                                , {quote}CNPJ_DEST{quote}
-                                , {quote}CPF_DEST{quote}
-                                , {quote}CRT{quote}
-                                , {quote}IE{quote}
-                                , {quote}IEST{quote}
-                                , {quote}UF{quote}
-                                , {quote}UF_DEST{quote}
-                                , {quote}cMun{quote}
-                                , {quote}cMun_DEST{quote}
-                                , {quote}cNF{quote}
-                                , {quote}cPais{quote}
-                                , {quote}cPais_DEST{quote}
-                                , {quote}cUF{quote}
-                                , {quote}dhEmi{quote}
-                                , {quote}dhSaiEnt{quote}
-                                , {quote}email_DEST{quote}
-                                , {quote}indPag{quote}
-                                , {quote}mod{quote}
-                                , {quote}nNF{quote}
-                                , {quote}natOp{quote}
-                                , {quote}nro{quote}
-                                , {quote}nro_DEST{quote}
-                                , {quote}serie{quote}
-                                , {quote}xBairro{quote}
-                                , {quote}xBairro_DEST{quote}
-                                , {quote}xFant{quote}
-                                , {quote}xLgr{quote}
-                                , {quote}xLgr_DEST{quote}
-                                , {quote}xMun{quote}
-                                , {quote}xMun_DEST{quote}
-                                , {quote}xNome{quote}
-                                , {quote}xNome_DEST{quote}
-                                , {quote}xPais{quote}
-                                , {quote}xPais_DEST{quote}
-                            ) VALUES (
-                                { nfe.ProcessoID }
-                                , '{ nfe.CEP }'
-                                , '{ nfe.CEP_DEST }'
-                                , '{ nfe.CNPJ }'
-                                , '{ nfe.CNPJ_DEST }'
-                                , '{ nfe.CPF_DEST }'
-                                , { nfe.CRT }
-                                , '{ nfe.IE }'
-                                , '{ nfe.IEST }'
-                                , '{ nfe.UF }'
-                                , '{ nfe.UF_DEST }'
-                                , '{ nfe.cMun }'
-                                , '{ nfe.cMun_DEST }'
-                                , { nfe.cNF }
-                                , { nfe.cPais }
-                                , { nfe.cPais_DEST }
-                                , { nfe.cUF }
-                                , '{ nfe.dhEmi }'
-                                , '{ nfe.dhSaiEnt }'
-                                , '{ nfe.email_DEST }'
-                                , { nfe.indPag }
-                                , '{ nfe.mod }'
-                                , '{ nfe.nNF }'
-                                , '{ nfe.natOp }'
-                                , '{ nfe.nro }'
-                                , '{ nfe.nro_DEST }'
-                                , { nfe.serie }
-                                , '{ nfe.xBairro }'
-                                , '{ nfe.xBairro_DEST }'
-                                , '{ nfe.xFant }'
-                                , '{ nfe.xLgr }'
-                                , '{ nfe.xLgr_DEST }'
-                                , '{ nfe.xMun }'
-                                , '{ nfe.xMun_DEST }'
-                                , '{ nfe.xNome }'
-                                , '{ nfe.xNome_DEST }'
-                                , '{ nfe.xPais }'
-                                , '{ nfe.xPais_DEST }');";
+                        cmd.CommandText = MakeInsertQuery(nfe, true);
 
-                        rows = cmd.ExecuteNonQuery();
+                        id = cmd.ExecuteScalar();
                     }
 
                     conn.Close();
                 }
 
-                if (rows > 0)
+                if (id != null && id.GetType() != typeof(DBNull))
                 {
+                    nfe.ID = (int)id;
+
                     return nfe;
                 }
                 else
@@ -353,85 +427,7 @@ namespace DAO
                             {
                                 cmd.Transaction = transaction;
                                 cmd.CommandType = CommandType.Text;
-                                cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
-                                            {quote}ProcessoID{quote}
-                                            , {quote}CEP{quote}
-                                            , {quote}CEP_DEST{quote}
-                                            , {quote}CNPJ{quote}
-                                            , {quote}CNPJ_DEST{quote}
-                                            , {quote}CPF_DEST{quote}
-                                            , {quote}CRT{quote}
-                                            , {quote}IE{quote}
-                                            , {quote}IEST{quote}
-                                            , {quote}UF{quote}
-                                            , {quote}UF_DEST{quote}
-                                            , {quote}cMun{quote}
-                                            , {quote}cMun_DEST{quote}
-                                            , {quote}cNF{quote}
-                                            , {quote}cPais{quote}
-                                            , {quote}cPais_DEST{quote}
-                                            , {quote}cUF{quote}
-                                            , {quote}dhEmi{quote}
-                                            , {quote}dhSaiEnt{quote}
-                                            , {quote}email_DEST{quote}
-                                            , {quote}indPag{quote}
-                                            , {quote}mod{quote}
-                                            , {quote}nNF{quote}
-                                            , {quote}natOp{quote}
-                                            , {quote}nro{quote}
-                                            , {quote}nro_DEST{quote}
-                                            , {quote}serie{quote}
-                                            , {quote}xBairro{quote}
-                                            , {quote}xBairro_DEST{quote}
-                                            , {quote}xFant{quote}
-                                            , {quote}xLgr{quote}
-                                            , {quote}xLgr_DEST{quote}
-                                            , {quote}xMun{quote}
-                                            , {quote}xMun_DEST{quote}
-                                            , {quote}xNome{quote}
-                                            , {quote}xNome_DEST{quote}
-                                            , {quote}xPais{quote}
-                                            , {quote}xPais_DEST{quote}
-                                        ) VALUES (
-                                            { nfe.ProcessoID }
-                                            , '{ nfe.CEP }'
-                                            , '{ nfe.CEP_DEST }'
-                                            , '{ nfe.CNPJ }'
-                                            , '{ nfe.CNPJ_DEST }'
-                                            , '{ nfe.CPF_DEST }'
-                                            , '{ nfe.CRT }'
-                                            , '{ nfe.IE }'
-                                            , '{ nfe.IEST }'
-                                            , '{ nfe.UF }'
-                                            , '{ nfe.UF_DEST }'
-                                            , '{ nfe.cMun }'
-                                            , '{ nfe.cMun_DEST }'
-                                            , '{ nfe.cNF }'
-                                            , '{ nfe.cPais }'
-                                            , '{ nfe.cPais_DEST }'
-                                            , '{ nfe.cUF }'
-                                            , '{ nfe.dhEmi }'
-                                            , '{ nfe.dhSaiEnt }'
-                                            , '{ nfe.email_DEST }'
-                                            , '{ nfe.indPag }'
-                                            , '{ nfe.mod }'
-                                            , '{ nfe.nNF }'
-                                            , '{ nfe.natOp }'
-                                            , '{ nfe.nro }'
-                                            , '{ nfe.nro_DEST }'
-                                            , '{ nfe.serie }'
-                                            , '{ nfe.xBairro }'
-                                            , '{ nfe.xBairro_DEST }'
-                                            , '{ nfe.xFant }'
-                                            , '{ nfe.xLgr }'
-                                            , '{ nfe.xLgr_DEST }'
-                                            , '{ nfe.xMun }'
-                                            , '{ nfe.xMun_DEST }'
-                                            , '{ nfe.xNome }'
-                                            , '{ nfe.xNome_DEST }'
-                                            , '{ nfe.xPais }'
-                                            , '{ nfe.xPais_DEST }')   
-                                    RETURNING {quote}ID{quote};";
+                                cmd.CommandText = MakeInsertQuery(nfe, true);
 
                                 var nfeID = (int)cmd.ExecuteScalar();
 
@@ -557,90 +553,6 @@ namespace DAO
                         }
                     }
 
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}CEP{quote}
-                                , {quote}CEP_DEST{quote}
-                                , {quote}CNPJ{quote}
-                                , {quote}CNPJ_DEST{quote}
-                                , {quote}CPF_DEST{quote}
-                                , {quote}CRT{quote}
-                                , {quote}IE{quote}
-                                , {quote}IEST{quote}
-                                , {quote}UF{quote}
-                                , {quote}UF_DEST{quote}
-                                , {quote}cMun{quote}
-                                , {quote}cMun_DEST{quote}
-                                , {quote}cNF{quote}
-                                , {quote}cPais{quote}
-                                , {quote}cPais_DEST{quote}
-                                , {quote}cUF{quote}
-                                , {quote}dhEmi{quote}
-                                , {quote}dhSaiEnt{quote}
-                                , {quote}email_DEST{quote}
-                                , {quote}indPag{quote}
-                                , {quote}mod{quote}
-                                , {quote}nNF{quote}
-                                , {quote}natOp{quote}
-                                , {quote}nro{quote}
-                                , {quote}nro_DEST{quote}
-                                , {quote}serie{quote}
-                                , {quote}xBairro{quote}
-                                , {quote}xBairro_DEST{quote}
-                                , {quote}xFant{quote}
-                                , {quote}xLgr{quote}
-                                , {quote}xLgr_DEST{quote}
-                                , {quote}xMun{quote}
-                                , {quote}xMun_DEST{quote}
-                                , {quote}xNome{quote}
-                                , {quote}xNome_DEST{quote}
-                                , {quote}xPais{quote}
-                                , {quote}xPais_DEST{quote}
-                            ) VALUES (
-                                { nfe.ProcessoID }
-                                , '{ nfe.CEP }'
-                                , '{ nfe.CEP_DEST }'
-                                , '{ nfe.CNPJ }'
-                                , '{ nfe.CNPJ_DEST }'
-                                , '{ nfe.CPF_DEST }'
-                                , '{ nfe.CRT }'
-                                , '{ nfe.IE }'
-                                , '{ nfe.IEST }'
-                                , '{ nfe.UF }'
-                                , '{ nfe.UF_DEST }'
-                                , '{ nfe.cMun }'
-                                , '{ nfe.cMun_DEST }'
-                                , '{ nfe.cNF }'
-                                , '{ nfe.cPais }'
-                                , '{ nfe.cPais_DEST }'
-                                , '{ nfe.cUF }'
-                                , '{ nfe.dhEmi }'
-                                , '{ nfe.dhSaiEnt }'
-                                , '{ nfe.email_DEST }'
-                                , '{ nfe.indPag }'
-                                , '{ nfe.mod }'
-                                , '{ nfe.nNF }'
-                                , '{ nfe.natOp }'
-                                , '{ nfe.nro }'
-                                , '{ nfe.nro_DEST }'
-                                , '{ nfe.serie }'
-                                , '{ nfe.xBairro }'
-                                , '{ nfe.xBairro_DEST }'
-                                , '{ nfe.xFant }'
-                                , '{ nfe.xLgr }'
-                                , '{ nfe.xLgr_DEST }'
-                                , '{ nfe.xMun }'
-                                , '{ nfe.xMun_DEST }'
-                                , '{ nfe.xNome }'
-                                , '{ nfe.xNome_DEST }'
-                                , '{ nfe.xPais }'
-                                , '{ nfe.xPais_DEST }');";
-
-                        rows = cmd.ExecuteNonQuery();
-                    }
-
                     conn.Close();
                 }
 
@@ -664,84 +576,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}CEP{quote}
-                                , {quote}CEP_DEST{quote}
-                                , {quote}CNPJ{quote}
-                                , {quote}CNPJ_DEST{quote}
-                                , {quote}CPF_DEST{quote}
-                                , {quote}CRT{quote}
-                                , {quote}IE{quote}
-                                , {quote}IEST{quote}
-                                , {quote}UF{quote}
-                                , {quote}UF_DEST{quote}
-                                , {quote}cMun{quote}
-                                , {quote}cMun_DEST{quote}
-                                , {quote}cNF{quote}
-                                , {quote}cPais{quote}
-                                , {quote}cPais_DEST{quote}
-                                , {quote}cUF{quote}
-                                , {quote}dhEmi{quote}
-                                , {quote}dhSaiEnt{quote}
-                                , {quote}email_DEST{quote}
-                                , {quote}indPag{quote}
-                                , {quote}mod{quote}
-                                , {quote}nNF{quote}
-                                , {quote}natOp{quote}
-                                , {quote}nro{quote}
-                                , {quote}nro_DEST{quote}
-                                , {quote}serie{quote}
-                                , {quote}xBairro{quote}
-                                , {quote}xBairro_DEST{quote}
-                                , {quote}xFant{quote}
-                                , {quote}xLgr{quote}
-                                , {quote}xLgr_DEST{quote}
-                                , {quote}xMun{quote}
-                                , {quote}xMun_DEST{quote}
-                                , {quote}xNome{quote}
-                                , {quote}xNome_DEST{quote}
-                                , {quote}xPais{quote}
-                                , {quote}xPais_DEST{quote}
-                            ) VALUES (
-                                { nfe.ProcessoID }
-                                , '{ nfe.CEP }'
-                                , '{ nfe.CEP_DEST }'
-                                , '{ nfe.CNPJ }'
-                                , '{ nfe.CNPJ_DEST }'
-                                , '{ nfe.CPF_DEST }'
-                                , '{ nfe.CRT }'
-                                , '{ nfe.IE }'
-                                , '{ nfe.IEST }'
-                                , '{ nfe.UF }'
-                                , '{ nfe.UF_DEST }'
-                                , '{ nfe.cMun }'
-                                , '{ nfe.cMun_DEST }'
-                                , '{ nfe.cNF }'
-                                , '{ nfe.cPais }'
-                                , '{ nfe.cPais_DEST }'
-                                , '{ nfe.cUF }'
-                                , '{ nfe.dhEmi }'
-                                , '{ nfe.dhSaiEnt }'
-                                , '{ nfe.email_DEST }'
-                                , '{ nfe.indPag }'
-                                , '{ nfe.mod }'
-                                , '{ nfe.nNF }'
-                                , '{ nfe.natOp }'
-                                , '{ nfe.nro }'
-                                , '{ nfe.nro_DEST }'
-                                , '{ nfe.serie }'
-                                , '{ nfe.xBairro }'
-                                , '{ nfe.xBairro_DEST }'
-                                , '{ nfe.xFant }'
-                                , '{ nfe.xLgr }'
-                                , '{ nfe.xLgr_DEST }'
-                                , '{ nfe.xMun }'
-                                , '{ nfe.xMun_DEST }'
-                                , '{ nfe.xNome }'
-                                , '{ nfe.xNome_DEST }'
-                                , '{ nfe.xPais }'
-                                , '{ nfe.xPais_DEST }');";
+                        cmd.CommandText = MakeInsertQuery(nfe);
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -761,6 +596,12 @@ namespace DAO
             }
         }
 
+        /// <summary>
+        /// Insert based on Deserialized xml objects
+        /// </summary>
+        /// <param name="nfe"></param>
+        /// <param name="processoID"></param>
+        /// <returns></returns>
         public bool Insert(CrossCutting.SerializationModels.NFeProc nfe, int processoID)
         {
             try

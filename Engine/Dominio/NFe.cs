@@ -80,12 +80,37 @@ namespace Dominio
         public string xMun_DEST { get; set; }
         public string UF_DEST { get; set; }
         public string CEP_DEST { get; set; }
-        public int cPais_DEST { get; set; }
+        public int? cPais_DEST { get; set; }
         public string xPais_DEST { get; set; }
 
         #endregion
 
         public string email_DEST { get; set; }
+
+        #endregion
+
+
+        #region Total
+
+        public double? vBC_TOTAL { get; set; }
+        public double? vICMS_TOTAL { get; set; }
+        public double? vICMSDeson_TOTAL { get; set; }
+        public double? vFCP_TOTAL { get; set; }
+        public double? vBCST_TOTAL { get; set; }
+        public double? vST_TOTAL { get; set; }
+        public double? vFCPST_TOTAL { get; set; }
+        public double? vFCPSTRet_TOTAL { get; set; }
+        public double? vProd_TOTAL { get; set; }
+        public double? vFrete_TOTAL { get; set; }
+        public double? vSeg_TOTAL { get; set; }
+        public double? vDesc_TOTAL { get; set; }
+        public double? vII_TOTAL { get; set; }
+        public double? vIPI_TOTAL { get; set; }
+        public double? vIPIDevol_TOTAL { get; set; }
+        public double? vPIS_TOTAL { get; set; }
+        public double? vCOFINS_TOTAL { get; set; }
+        public double? vOutro_TOTAL { get; set; }
+        public double? vNF_TOTAL { get; set; }
 
         #endregion
 

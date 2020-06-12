@@ -5,7 +5,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="EPPlus" Version="5.1.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+    <PackageReference Include="System.Data.OleDb" Version="4.7.1" />
     <PackageReference Include="System.IO.FileSystem.AccessControl" Version="4.7.0" />
   </ItemGroup>
 

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "K3J+bVxDac1IuTBNjALq0rzAz7mK5aq8xxLgBkuyp0+Q6uhj4RTp0WiGWWgEp2eRafGsjtt4cYW5okg+KadVRg==",
+  "dgSpecHash": "xe2ydhJsoboSeFwyiSHR2cs72nYINm2RqpZjcFLVfiygg+H4J9fgEZpxp5wBSAY1NIMcCBWjC830vm6iWcY1DQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\DAO\\DAO.csproj",
   "expectedPackageFiles": [
@@ -11,8 +11,7 @@
     "C:\\Users\\evand\\.nuget\\packages\\system.io.filesystem.accesscontrol\\4.7.0\\system.io.filesystem.accesscontrol.4.7.0.nupkg.sha512",
     "C:\\Users\\evand\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.6.0\\system.runtime.compilerservices.unsafe.4.6.0.nupkg.sha512",
     "C:\\Users\\evand\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
-    "C:\\Users\\evand\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512",
-    "C:\\Users\\evand\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\3.1.2\\microsoft.aspnetcore.app.ref.3.1.2.nupkg.sha512"
+    "C:\\Users\\evand\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
   ],
   "logs": []
 }

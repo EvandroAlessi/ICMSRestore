@@ -215,13 +215,20 @@ namespace NFeSeeder
                 {
                     foreach (var filePath in filePaths)
                     {
-                        var nfe = new NFeProc();
+                        var nfe = new NFe();
 
                         try
                         {
-                            nfe = serializable.GetObjectFromFile<NFeProc>(filePath);
+                            try
+                            {
+                                nfe = serializable.GetObjectFromFile<NFe>(filePath);
+                            }
+                            catch
+                            {
+                                nfe = serializable.GetObjectFromFile<NFeProc>(filePath)?.NotaFiscalEletronica;
+                            }
 
-                            if (nfe?.NotaFiscalEletronica?.InformacoesNFe != null)
+                            if (nfe?.InformacoesNFe != null)
                             {
                                 nfeService.Insert(nfe, processoID);
 
@@ -230,9 +237,9 @@ namespace NFeSeeder
                         }
                         catch (Exception ex)
                         {
-                            if (nfe?.NotaFiscalEletronica?.InformacoesNFe?.Identificacao?.cNF != null && nfe?.NotaFiscalEletronica?.InformacoesNFe?.Identificacao?.nNF != null)
+                            if (nfe?.InformacoesNFe?.Identificacao?.cNF != null && nfe?.InformacoesNFe?.Identificacao?.nNF != null)
                             {
-                                var exists = nfeService.Exists(nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.cNF, nfe.NotaFiscalEletronica.InformacoesNFe.Identificacao.nNF).Result;
+                                var exists = nfeService.Exists(nfe.InformacoesNFe.Identificacao.cNF, nfe.InformacoesNFe.Identificacao.nNF).Result;
 
                                 if (exists)
                                 {
