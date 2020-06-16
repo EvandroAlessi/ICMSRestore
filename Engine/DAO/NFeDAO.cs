@@ -75,6 +75,7 @@ namespace DAO
                                 , {quote}vCOFINS_TOTAL{quote}
                                 , {quote}vOutro_TOTAL{quote}
                                 , {quote}vNF_TOTAL{quote}
+                                , {quote}Entrada{quote}
                             ) VALUES (
                                 { nfe.ProcessoID }
                                 , '{ nfe.CEP }'
@@ -133,6 +134,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(nfe.vCOFINS_TOTAL) }
                                 , { NullableUtils.TestValue(nfe.vOutro_TOTAL) }
                                 , { NullableUtils.TestValue(nfe.vNF_TOTAL) }
+                                , { nfe.Entrada }
                             )";
 
             if (hasReturn)
@@ -327,7 +329,7 @@ namespace DAO
             }
         }
 
-        public async Task<bool> Exists(int cNF, int nNF)
+        public async Task<bool> Exists(int cNF, int nNF, int processoID)
         {
             try
             {
@@ -341,7 +343,8 @@ namespace DAO
                     {
                         cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}NFe{quote} 
                                 WHERE {quote}cNF{quote} = { cNF } 
-                                    AND {quote}nNF{quote} = { nNF } ;";
+                                    AND {quote}nNF{quote} = { nNF }
+                                    AND {quote}ProcessoID{quote} = { processoID } ;";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -431,6 +434,13 @@ namespace DAO
 
                                 var nfeID = (int)cmd.ExecuteScalar();
 
+                                if (nfeID <= 0)
+                                {
+                                    transaction.Rollback();
+
+                                    return false;
+                                }
+
                                 using (var cmd2 = conn.CreateCommand())
                                 {
                                     var query2 = "";
@@ -466,6 +476,7 @@ namespace DAO
                                                 , {quote}pCOFINS{quote}
                                                 , {quote}vCOFINS{quote}
                                                 , {quote}NFeID{quote}
+                                                , {quote}CSOSN{quote}
                                             ) VALUES (
                                                 { itens[i].nItem }
                                                 , '{ itens[i].cProd }'
@@ -492,37 +503,39 @@ namespace DAO
                                                 , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
                                                 , { NullableUtils.TestValue(itens[i].pCOFINS) }
                                                 , { NullableUtils.TestValue(itens[i].vCOFINS) }
-                                                , { nfeID })";
-                                                }
-                                                else
-                                                {
-                                                    query2 += $@", (
-                                                        { itens[i].nItem }
-                                                        , '{ itens[i].cProd }'
-                                                        , '{ itens[i].cEAN }'
-                                                        , '{ itens[i].xProd }'
-                                                        , { NullableUtils.TestValue(itens[i].NCM) }
-                                                        , { NullableUtils.TestValue(itens[i].CFOP) }
-                                                        , '{ itens[i].uCom }'
-                                                        , { NullableUtils.TestValue(itens[i].qCom) }
-                                                        , { NullableUtils.TestValue(itens[i].vUnCom) }
-                                                        , { NullableUtils.TestValue(itens[i].orig) }
-                                                        , { NullableUtils.TestValue(itens[i].CST) }
-                                                        , { NullableUtils.TestValue(itens[i].modBC) }
-                                                        , { NullableUtils.TestValue(itens[i].vBC) }
-                                                        , { NullableUtils.TestValue(itens[i].pICMS) }
-                                                        , { NullableUtils.TestValue(itens[i].vICMS) }
-                                                        , { NullableUtils.TestValue(itens[i].cEnq) }
-                                                        , '{ itens[i].CST_IPI }'
-                                                        , '{ itens[i].CST_PIS }'
-                                                        , { NullableUtils.TestValue(itens[i].vBC_PIS) }
-                                                        , { NullableUtils.TestValue(itens[i].pPIS) }
-                                                        , { NullableUtils.TestValue(itens[i].vPIS) }
-                                                        , '{ itens[i].CST_COFINS }'
-                                                        , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
-                                                        , { NullableUtils.TestValue(itens[i].pCOFINS) }
-                                                        , { NullableUtils.TestValue(itens[i].vCOFINS) }
-                                                        , { nfeID })";
+                                                , { nfeID }
+                                                , { NullableUtils.TestValue(itens[i].CSOSN) })";
+                                        }
+                                        else
+                                        {
+                                            query2 += $@", (
+                                                { itens[i].nItem }
+                                                , '{ itens[i].cProd }'
+                                                , '{ itens[i].cEAN }'
+                                                , '{ itens[i].xProd }'
+                                                , { NullableUtils.TestValue(itens[i].NCM) }
+                                                , { NullableUtils.TestValue(itens[i].CFOP) }
+                                                , '{ itens[i].uCom }'
+                                                , { NullableUtils.TestValue(itens[i].qCom) }
+                                                , { NullableUtils.TestValue(itens[i].vUnCom) }
+                                                , { NullableUtils.TestValue(itens[i].orig) }
+                                                , { NullableUtils.TestValue(itens[i].CST) }
+                                                , { NullableUtils.TestValue(itens[i].modBC) }
+                                                , { NullableUtils.TestValue(itens[i].vBC) }
+                                                , { NullableUtils.TestValue(itens[i].pICMS) }
+                                                , { NullableUtils.TestValue(itens[i].vICMS) }
+                                                , { NullableUtils.TestValue(itens[i].cEnq) }
+                                                , '{ itens[i].CST_IPI }'
+                                                , '{ itens[i].CST_PIS }'
+                                                , { NullableUtils.TestValue(itens[i].vBC_PIS) }
+                                                , { NullableUtils.TestValue(itens[i].pPIS) }
+                                                , { NullableUtils.TestValue(itens[i].vPIS) }
+                                                , '{ itens[i].CST_COFINS }'
+                                                , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
+                                                , { NullableUtils.TestValue(itens[i].pCOFINS) }
+                                                , { NullableUtils.TestValue(itens[i].vCOFINS) }
+                                                , { nfeID }
+                                                , { NullableUtils.TestValue(itens[i].CSOSN) })";
                                         }
 
                                         if (i == itens.Count - 1)
@@ -538,7 +551,10 @@ namespace DAO
                                     rows = cmd2.ExecuteNonQuery();
                                 }
 
-                                transaction.Commit();
+                                if (rows > 0)
+                                    transaction.Commit();
+                                else
+                                    transaction.Rollback();
                             }
                         }
                         catch (NpgsqlException ex)

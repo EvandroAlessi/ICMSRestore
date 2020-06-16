@@ -9,6 +9,8 @@ namespace CrossCutting
     /// </summary>
     public static class LOG
     {
+        private static object locker = new object();
+
         /// <summary>
         /// 
         /// </summary>
@@ -57,44 +59,53 @@ namespace CrossCutting
         /// <param name="func"></param>
         /// <param name="ex"></param>
         /// <param name="parametros"></param>
-        public static void Log(string func, Exception ex, dynamic parameters = null)
+        public static void Log(string func, Exception ex, dynamic parameters = null, bool repeated = false)
         {
             try
             {
-                var logPath = $"{ Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) }\\LOG";
-
-                PathControl.Create(logPath);
-
-                logPath = Path.Combine(logPath, "log.txt");
-
-                lock (ex)
+                lock (locker)
                 {
-                    using (StreamWriter stream = new StreamWriter(logPath, true))
+                    var logPath = $"{ Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) }\\LOG";
+
+                    PathControl.Create(logPath);
+
+                    logPath = Path.Combine(logPath, (repeated ? "REPEATED_FILES.txt" : "LOG_ERROR.txt"));
+
+                    lock (ex)
                     {
-                        lock (stream)
+                        using (FileStream file = new FileStream(logPath, FileMode.Append, FileAccess.Write, FileShare.None))
                         {
-                            stream.WriteLine("Data e Hora: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
-                            stream.WriteLine("Função: " + func);
-                            if (parameters != null)
+                            using (StreamWriter stream = new StreamWriter(file))
                             {
-                                stream.Write("Parametros: ");
+                                lock (stream)
+                                {
+                                    stream.WriteLine("Data e Hora: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+                                    stream.WriteLine("Função: " + func);
+                                    if (parameters != null)
+                                    {
+                                        stream.Write("Parametros: ");
 
-                                string aux = PropertyReader.GetAllParameters(parameters);
+                                        string aux = PropertyReader.GetAllParameters(parameters);
 
-                                stream.Write(aux);
-                                stream.WriteLine();
+                                        stream.Write(aux);
+                                        stream.WriteLine();
+                                    }
+                                    stream.WriteLine("Mensagem: " + ex?.Message);
+                                    stream.WriteLine("Stack Trace: " + ex?.StackTrace);
+                                    stream.WriteLine(new string('-', 100));
+                                    stream.WriteLine();
+
+                                    stream.Close();
+                                }
                             }
-                            stream.WriteLine("Mensagem: " + ex.Message);
-                            stream.WriteLine("Stack Trace: " + ex.StackTrace);
-                            stream.WriteLine(new string('-', 100));
-                            stream.WriteLine();
-
-                            stream.Close();
                         }
                     }
                 }
             }
-            catch { }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message + "\n\n\n");
+            }
         }
 
         /// <summary>

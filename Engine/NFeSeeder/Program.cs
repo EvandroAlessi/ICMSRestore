@@ -2,6 +2,7 @@
 using CrossCutting;
 using CrossCutting.Serializable;
 using CrossCutting.SerializationModels;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -172,6 +173,31 @@ namespace NFeSeeder
         }
 
 
+        public static void RemoveCompletedFolder(int processoID, string subDir)
+        {
+            try
+            {
+                processDirs[processoID].Remove(subDir);
+
+                if (Directory.GetFiles(subDir).Count() == 0)
+                {
+                    Directory.Delete(subDir);
+
+                    if (processDirs[processoID].Values.Count == 0)
+                    {
+                        var processPath = dirPaths.FirstOrDefault(x => Path.GetFileName(x).Equals(processoID.ToString()));
+
+                        processDirs.Remove(processoID);
+                        dirPaths.Remove(processPath);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
+            }
+        }
+
         public static void StartParallelWork()
         {
             try
@@ -189,8 +215,11 @@ namespace NFeSeeder
                                     processDirs[process.Key][subDir.Key] = true;
 
                                     Task.Run(() => {
-                                        DoWork(process.Key, subDir.Key);
-                                    });
+                                            DoWork(process.Key, subDir.Key);
+                                        })
+                                        .ContinueWith(t => {
+                                            RemoveCompletedFolder(process.Key, subDir.Key);
+                                        });
                                 }
                             }
                         }
@@ -210,11 +239,14 @@ namespace NFeSeeder
             {
                 var nfeService = new NFeService();
                 string[] filePaths = Directory.GetFiles(subDir);
+                bool entrada = subDir.Split("\\").Last().StartsWith("$@-");
 
                 using (var serializable = new NFeSerialization())
                 {
                     foreach (var filePath in filePaths)
                     {
+                        int triesCount = 0;
+                    start:
                         var nfe = new NFe();
 
                         try
@@ -230,66 +262,92 @@ namespace NFeSeeder
 
                             if (nfe?.InformacoesNFe != null)
                             {
-                                nfeService.Insert(nfe, processoID);
+                                var inserted = nfeService.Insert(nfe, processoID, entrada);
 
-                                File.Delete(filePath);
+                                if (inserted)
+                                {
+                                    File.Delete(filePath);
+                                }
+                                else if (triesCount < 2)
+                                {
+                                    triesCount++;
+
+                                    Thread.Sleep(100);
+
+                                    goto start;
+                                }
+                                else
+                                {
+                                    ControlErrorFiles(processoID, subDir, filePath);
+                                }
                             }
                         }
                         catch (Exception ex)
                         {
                             if (nfe?.InformacoesNFe?.Identificacao?.cNF != null && nfe?.InformacoesNFe?.Identificacao?.nNF != null)
                             {
-                                var exists = nfeService.Exists(nfe.InformacoesNFe.Identificacao.cNF, nfe.InformacoesNFe.Identificacao.nNF).Result;
+                                var exists = nfeService.Exists(nfe.InformacoesNFe.Identificacao.cNF, nfe.InformacoesNFe.Identificacao.nNF, processoID).Result;
 
                                 if (exists)
                                 {
+                                    var loggingRepeated = new
+                                    {
+                                        ProcessoID = processoID,
+                                        cNF = nfe.InformacoesNFe.Identificacao.cNF,
+                                        nNF = nfe.InformacoesNFe.Identificacao.nNF,
+                                        XmlFile = Path.GetFileName(filePath)
+                                    };
+
+                                    Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex, loggingRepeated, true);
+
                                     File.Delete(filePath);
 
                                     continue;
                                 }
                             }
 
-                            var logging = new
+                            if (triesCount < 2)
                             {
-                                ProcessoID = processoID,
-                                ZipFolder = Path.GetFileName(subDir),
-                                XmlFile = Path.GetFileName(filePath),
-                                FullPath = filePath
-                            };
+                                triesCount++;
 
-                            Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex, logging);
+                                Thread.Sleep(100);
 
-                            var errorpPath = Path.Combine(subDir, "Error");
+                                goto start;
+                            }
 
-                            PathControl.Create(errorpPath);
-
-                            File.Move(filePath, Path.Combine(errorpPath, Path.GetFileName(filePath)));
+                            ControlErrorFiles(processoID, subDir, filePath, ex);
                         }
                     }
-                }
-
-                if (Directory.GetFiles(subDir).Count() == 0)
-                {
-                    try
-                    {
-                        processDirs[processoID].Remove(subDir);
-
-                        if (processDirs[processoID].Values.Count == 0)
-                        {
-                            var processPath = dirPaths.FirstOrDefault(x => Path.GetFileName(x).Equals(processoID.ToString()));
-
-                            processDirs.Remove(processoID);
-                            dirPaths.Remove(processPath);
-                        }
-
-                        Directory.Delete(subDir);
-                    }
-                    catch { }
                 }
             }
             catch (Exception ex)
             {
                 Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
+            }
+        }
+
+        public static void ControlErrorFiles(int processoID, string subDir, string filePath, Exception ex = null)
+        {
+            try
+            {
+                var logging = new
+                {
+                    ProcessoID = processoID,
+                    ZipFolder = Path.GetFileName(subDir),
+                    XmlFile = Path.GetFileName(filePath),
+                    FullPath = filePath
+                };
+
+                Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex, logging);
+
+                var errorpPath = Path.Combine(subDir, "Error");
+
+                PathControl.Create(errorpPath);
+
+                File.Move(filePath, Path.Combine(errorpPath, Path.GetFileName(filePath)));
+            }
+            catch
+            {
                 throw ex;
             }
         }

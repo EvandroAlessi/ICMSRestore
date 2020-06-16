@@ -38,11 +38,10 @@ namespace Dominio
 
         #region Imposto
 
-        #region ICMS -> ICMS00
+        #region ICMS 
 
         public int? orig { get; set; }
-
-        [Required]
+        public int? CSOSN { get; set; }
         public int? CST { get; set; }
         public int? modBC { get; set; }
         public double? vBC { get; set; }

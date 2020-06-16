@@ -56,6 +56,11 @@ namespace ICMSRestore.API
                     }
                 });
             });
+
+            services.Configure<HostOptions>(option =>
+            {
+                option.ShutdownTimeout = System.TimeSpan.MaxValue;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

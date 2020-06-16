@@ -36,11 +36,12 @@ namespace API.Controllers
         /// <returns>An object list with name and file length</returns>
         [HttpPost("{processoID}")]
         [Consumes("multipart/form-data")]
-        public IActionResult Post([FromForm]List<IFormFile> files, int processoID)
+        [RequestFormLimits(ValueCountLimit = int.MaxValue)]
+        [RequestSizeLimit(long.MaxValue)]
+        public IActionResult Post([FromForm]List<IFormFile> files, int processoID, bool entrada = false)
         {
             try
             {
-                //var result = new List<FileUploadResult>();
                 List<ProcessoUpload> processosUpload = new List<ProcessoUpload>();
 
                 foreach (var file in files)
@@ -61,31 +62,6 @@ namespace API.Controllers
                         if (!file.FileName.EndsWith(".zip"))
                         {
                             return BadRequest("The send file isn't a .ZIP file, please, try again.");
-
-                            //if (file.FileName.EndsWith(".xml"))
-                            //{
-                            //    var filePath = Path.Combine(path, file.FileName);
-
-                            //    if (!System.IO.File.Exists(filePath))
-                            //    {
-                            //        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                            //        {
-                            //            await file.CopyToAsync(fileStream);
-
-                            //            var responseFile = new FileUploadResult()
-                            //            {
-                            //                Name = file.FileName,
-                            //                Length = file.Length
-                            //            };
-
-                            //            result.Add(responseFile);
-                            //        }
-                            //    }
-                            //    else
-                            //    {
-                            //        return BadRequest("This file already exists in our server.");
-                            //    }
-                            //}
                         }
 
                         //Save the files in our server
@@ -93,24 +69,16 @@ namespace API.Controllers
                         {
                             using (ZipArchive archive = new ZipArchive(stream))
                             {
-                                var zipDir = Path.Combine(path, Path.ChangeExtension(file.FileName, null));
+                                var zipDir = Path.Combine(path, (entrada ? "$@-" : "") + Path.ChangeExtension(file.FileName, null));
 
                                 PathControl.Create(zipDir);
 
-                                var entries = archive.Entries.Where(x => !string.IsNullOrWhiteSpace(x.Name));
+                                var entries = archive?.Entries?.Where(x => !string.IsNullOrWhiteSpace(x.Name));
 
                                 // One By One Code
                                 foreach (ZipArchiveEntry entry in entries)
                                 {
                                     entry.ExtractToFile(Path.Combine(zipDir, entry.Name), true);
-
-                                    //var responseFile = new FileUploadResult()
-                                    //{
-                                    //    Name = entry.Name,
-                                    //    Length = entry.Length
-                                    //};
-
-                                    //result.Add(responseFile);
                                 }
 
                                 var processoUploadService = new ProcessoUploadService();
@@ -141,17 +109,8 @@ namespace API.Controllers
                 }
                 else
                 {
-                    return BadRequest("Something wrong happened, please try again.");
+                    return BadRequest("Any file uploaded, please try again.");
                 }
-
-                //if (result.Count > 0)
-                //{
-                //    return Ok(result);
-                //}
-                //else
-                //{
-                //    return NoContent();
-                //}
             }
             catch (Exception ex)
             {

@@ -69,12 +69,8 @@ CREATE TABLE public."Itens"
     "NCM" integer NOT NULL,
     "CFOP" integer NOT NULL,
     "CST" integer,
-    CONSTRAINT "ID" PRIMARY KEY ("ID"),
-    CONSTRAINT "NFe_FK" FOREIGN KEY ("NFeID")
-        REFERENCES public."NFe" ("ID") MATCH SIMPLE
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
-        NOT VALID
+    "CSOSN" integer,
+    CONSTRAINT "ID" PRIMARY KEY ("ID")
 )
 
 TABLESPACE pg_default;
@@ -88,6 +84,14 @@ ALTER TABLE public."Itens"
 CREATE INDEX "CFOP_Index"
     ON public."Itens" USING btree
     ("CFOP" ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: CSOSN_Index
+
+-- DROP INDEX public."CSOSN_Index";
+
+CREATE INDEX "CSOSN_Index"
+    ON public."Itens" USING btree
+    ("CSOSN" ASC NULLS LAST)
     TABLESPACE pg_default;
 -- Index: CST_Index
 
@@ -120,21 +124,21 @@ CREATE TRIGGER "Filter"
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
--- Table: public.ItensFiltrados
+--- Table: public.ItensFiltrados
 
 -- DROP TABLE public."ItensFiltrados";
 
 CREATE TABLE public."ItensFiltrados"
 (
-    "cProd" character varying COLLATE pg_catalog."default" NOT NULL,
+    "cProd" character varying COLLATE pg_catalog."default",
     "xProd" character varying COLLATE pg_catalog."default",
-    "NCM" character varying COLLATE pg_catalog."default" NOT NULL,
-    "CFOP" character varying COLLATE pg_catalog."default" NOT NULL,
+    "NCM" character varying COLLATE pg_catalog."default",
+    "CFOP" character varying COLLATE pg_catalog."default",
     "uCom" character varying COLLATE pg_catalog."default",
     "qCom" real,
     "vUnCom" real,
     orig integer,
-    "CST" character varying COLLATE pg_catalog."default" NOT NULL,
+    "CST" character varying COLLATE pg_catalog."default",
     "vBC" real,
     "pICMS" real,
     "vICMS" real,
@@ -145,17 +149,13 @@ CREATE TABLE public."ItensFiltrados"
     "cNF" integer NOT NULL,
     "ProcessoID" integer NOT NULL,
     "ItemID" integer NOT NULL,
+    "CSOSN" integer,
+    "Entrada" boolean,
     CONSTRAINT "ItensFiltrados_pkey" PRIMARY KEY ("ID"),
-    CONSTRAINT "Item_FK" FOREIGN KEY ("ItemID")
-        REFERENCES public."Itens" ("ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
     CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
         REFERENCES public."Processos" ("ID") MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
 
 TABLESPACE pg_default;
@@ -170,6 +170,14 @@ CREATE INDEX "CFOP_Filtered_Index"
     ON public."ItensFiltrados" USING btree
     ("CFOP" COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
+-- Index: CSOSN_Filtered_Index
+
+-- DROP INDEX public."CSOSN_Filtered_Index";
+
+CREATE INDEX "CSOSN_Filtered_Index"
+    ON public."ItensFiltrados" USING btree
+    ("CSOSN" ASC NULLS LAST)
+    TABLESPACE pg_default;
 -- Index: CST_Filtered_Index
 
 -- DROP INDEX public."CST_Filtered_Index";
@@ -177,6 +185,14 @@ CREATE INDEX "CFOP_Filtered_Index"
 CREATE INDEX "CST_Filtered_Index"
     ON public."ItensFiltrados" USING btree
     ("CST" COLLATE pg_catalog."default" ASC NULLS LAST)
+    TABLESPACE pg_default;
+-- Index: Entrada_Filtered_Index
+
+-- DROP INDEX public."Entrada_Filtered_Index";
+
+CREATE INDEX "Entrada_Filtered_Index"
+    ON public."ItensFiltrados" USING btree
+    ("Entrada" ASC NULLS LAST)
     TABLESPACE pg_default;
 -- Index: NCM_Filtered_Index
 
@@ -245,8 +261,6 @@ CREATE TABLE public."NFe"
     "cPais" integer,
     "cPais_DEST" integer,
     "cUF" integer,
-    "dhEmi" date NOT NULL,
-    "dhSaiEnt" character varying COLLATE pg_catalog."default" NOT NULL,
     "email_DEST" character varying COLLATE pg_catalog."default",
     "indPag" integer,
     mod character varying COLLATE pg_catalog."default",
@@ -269,18 +283,48 @@ CREATE TABLE public."NFe"
     "ProcessoID" integer NOT NULL,
     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
     "nNF" integer NOT NULL,
+    "vBC_TOTAL" real,
+    "vICMS_TOTAL" real,
+    "vICMSDeson_TOTAL" real,
+    "vFCP_TOTAL" real,
+    "vBCST_TOTAL" real,
+    "vST_TOTAL" real,
+    "vFCPST_TOTAL" real,
+    "vFCPSTRet_TOTAL" real,
+    "vProd_TOTAL" real,
+    "vFrete_TOTAL" real,
+    "vSeg_TOTAL" real,
+    "vDesc_TOTAL" real,
+    "vII_TOTAL" real,
+    "vIPI_TOTAL" real,
+    "vIPIDevol_TOTAL" real,
+    "vPIS_TOTAL" real,
+    "vCOFINS_TOTAL" real,
+    "vOutro_TOTAL" real,
+    "vNF_TOTAL" real,
+    "Entrada" boolean DEFAULT false,
+    "dhSaiEnt" timestamp with time zone NOT NULL,
+    "dhEmi" timestamp with time zone NOT NULL,
     CONSTRAINT "PK_ID" PRIMARY KEY ("ID"),
+    CONSTRAINT "cNF_nNF_ProcessoID_Unique" UNIQUE ("cNF", "nNF", "ProcessoID"),
     CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
         REFERENCES public."Processos" ("ID") MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
-        NOT VALID
 )
 
 TABLESPACE pg_default;
 
 ALTER TABLE public."NFe"
     OWNER to postgres;
+-- Index: Entrada_Index
+
+-- DROP INDEX public."Entrada_Index";
+
+CREATE INDEX "Entrada_Index"
+    ON public."NFe" USING btree
+    ("Entrada" ASC NULLS LAST)
+    TABLESPACE pg_default;
 -- Index: cNF_Index
 
 -- DROP INDEX public."cNF_Index";
@@ -289,13 +333,21 @@ CREATE INDEX "cNF_Index"
     ON public."NFe" USING btree
     ("cNF" ASC NULLS LAST)
     TABLESPACE pg_default;
+-- Index: dhEmi_Index
+
+-- DROP INDEX public."dhEmi_Index";
+
+CREATE INDEX "dhEmi_Index"
+    ON public."NFe" USING btree
+    ("dhEmi" ASC NULLS LAST)
+    TABLESPACE pg_default;
 -- Index: dhSaiEnt_Index
 
 -- DROP INDEX public."dhSaiEnt_Index";
 
 CREATE INDEX "dhSaiEnt_Index"
     ON public."NFe" USING btree
-    ("dhSaiEnt" COLLATE pg_catalog."default" DESC NULLS LAST)
+    ("dhSaiEnt" ASC NULLS LAST)
     TABLESPACE pg_default;
 -- Index: nNF_Index
 

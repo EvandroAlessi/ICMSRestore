@@ -39,13 +39,18 @@ namespace CrossCutting
         /// <returns></returns>
         public static string GetAllParameters<TEntity>(TEntity parameter)
         {
-            var propriedades = parameter.GetType().GetProperties();
             string parameterString = "";
 
-            foreach (var prop in propriedades)
+            try
             {
-                parameterString += $"{ prop.Name} = { prop.GetValue(parameter) }; ";
+                var propriedades = parameter.GetType().GetProperties();
+
+                foreach (var prop in propriedades)
+                {
+                    parameterString += $"{ prop.Name} = { prop.GetValue(parameter) }; ";
+                }
             }
+            catch { }
 
             return parameterString;
         }

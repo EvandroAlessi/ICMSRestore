@@ -12,16 +12,32 @@ namespace ICMSRestore.API
 {
     public class Program
     {
+        //public static void Main(string[] args)
+        //{
+        //    CreateHostBuilder(args).Build().Run();
+        //}
+
+        //public static IHostBuilder CreateHostBuilder(string[] args) =>
+        //    Host.CreateDefaultBuilder(args)
+        //        .ConfigureWebHostDefaults(webBuilder =>
+        //        {
+        //            webBuilder.UseStartup<Startup>();
+        //        });
+
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateWebHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            WebHost.CreateDefaultBuilder(args)
+                .UseStartup<Startup>()
+                .UseKestrel(serverOptions =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    serverOptions.Limits.MaxResponseBufferSize = long.MaxValue;
+                    serverOptions.Limits.MaxRequestBodySize = long.MaxValue;
+                    serverOptions.Limits.KeepAliveTimeout = TimeSpan.FromHours(1);
+                    serverOptions.Limits.RequestHeadersTimeout = TimeSpan.FromHours(1);
                 });
     }
 }
