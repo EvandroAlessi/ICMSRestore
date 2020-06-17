@@ -30,7 +30,7 @@ namespace CrossCutting
 
             return aux;
         }
-        
+
         /// <summary>
         /// 
         /// </summary>

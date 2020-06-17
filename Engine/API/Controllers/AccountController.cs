@@ -1,14 +1,11 @@
 ﻿using API.Models;
 using API.Repositories;
 using API.Services;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -48,9 +45,9 @@ namespace API.Controllers
             // Retorna os dados
             return Ok(new
             {
-                user = new 
+                user = new
                 {
-                     user,
+                    user,
                     token
                 }
             });

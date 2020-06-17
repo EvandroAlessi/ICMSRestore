@@ -5,7 +5,6 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,36 +17,36 @@ namespace DAO
 
         public Item Make(NpgsqlDataReader reader)
         {
-            return  new Item
-                {
-                    nItem = Convert.ToInt32(reader["nItem"]),
-                    cProd = reader["cProd"]?.ToString(),
-                    cEAN = reader["cEAN"]?.ToString(),
-                    xProd = reader["xProd"]?.ToString(),
-                    NCM = Convert.ToInt32(reader["NCM"]),
-                    CFOP = Convert.ToInt32(reader["CFOP"]),
-                    uCom = reader["uCom"]?.ToString(),
-                    qCom = Convert.ToDouble(reader["qCom"]),
-                    vUnCom = Convert.ToDouble(reader["vUnCom"]),
-                    orig = Convert.ToInt32(reader["orig"]),
-                    CST = Convert.ToInt32(reader["CST"]),
-                    modBC = Convert.ToInt32(reader["modBC"]),
-                    vBC = Convert.ToDouble(reader["vBC"]),
-                    pICMS = Convert.ToDouble(reader["pICMS"]),
-                    vICMS = Convert.ToDouble(reader["vICMS"]),
-                    cEnq = Convert.ToInt32(reader["cEnq"]),
-                    CST_IPI = reader["CST_IPI"]?.ToString(),
-                    CST_PIS = reader["CST_PIS"]?.ToString(),
-                    vBC_PIS = Convert.ToDouble(reader["vBC_PIS"]),
-                    pPIS = Convert.ToDouble(reader["pPIS"]),
-                    vPIS = Convert.ToDouble(reader["vPIS"]),
-                    CST_COFINS = reader["CST_COFINS"]?.ToString(),
-                    vBC_COFINS = Convert.ToDouble(reader["vBC_COFINS"]),
-                    pCOFINS = Convert.ToDouble(reader["pCOFINS"]),
-                    vCOFINS = Convert.ToDouble(reader["vCOFINS"]),
-                    NFeID = Convert.ToInt32(reader["NFeID"]),
-                    ID = Convert.ToInt32(reader["ID"])
-                };
+            return new Item
+            {
+                nItem = Convert.ToInt32(reader["nItem"]),
+                cProd = reader["cProd"]?.ToString(),
+                cEAN = reader["cEAN"]?.ToString(),
+                xProd = reader["xProd"]?.ToString(),
+                NCM = Convert.ToInt32(reader["NCM"]),
+                CFOP = Convert.ToInt32(reader["CFOP"]),
+                uCom = reader["uCom"]?.ToString(),
+                qCom = Convert.ToDouble(reader["qCom"]),
+                vUnCom = Convert.ToDouble(reader["vUnCom"]),
+                orig = Convert.ToInt32(reader["orig"]),
+                CST = Convert.ToInt32(reader["CST"]),
+                modBC = Convert.ToInt32(reader["modBC"]),
+                vBC = Convert.ToDouble(reader["vBC"]),
+                pICMS = Convert.ToDouble(reader["pICMS"]),
+                vICMS = Convert.ToDouble(reader["vICMS"]),
+                cEnq = Convert.ToInt32(reader["cEnq"]),
+                CST_IPI = reader["CST_IPI"]?.ToString(),
+                CST_PIS = reader["CST_PIS"]?.ToString(),
+                vBC_PIS = Convert.ToDouble(reader["vBC_PIS"]),
+                pPIS = Convert.ToDouble(reader["pPIS"]),
+                vPIS = Convert.ToDouble(reader["vPIS"]),
+                CST_COFINS = reader["CST_COFINS"]?.ToString(),
+                vBC_COFINS = Convert.ToDouble(reader["vBC_COFINS"]),
+                pCOFINS = Convert.ToDouble(reader["pCOFINS"]),
+                vCOFINS = Convert.ToDouble(reader["vCOFINS"]),
+                NFeID = Convert.ToInt32(reader["NFeID"]),
+                ID = Convert.ToInt32(reader["ID"])
+            };
         }
 
         public async Task<Pagination> GetPagination(int skip = 0, int take = 30, Dictionary<string, string> filters = null)

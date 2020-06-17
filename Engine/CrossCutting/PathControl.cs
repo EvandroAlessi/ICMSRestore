@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Threading;
@@ -16,7 +15,7 @@ namespace CrossCutting
             {
                 Directory.CreateDirectory(path);
             }
-            
+
             Thread.EndCriticalRegion();
         }
 
@@ -32,12 +31,12 @@ namespace CrossCutting
 
             dSecurity.AddAccessRule(
                 new FileSystemAccessRule(
-                    new SecurityIdentifier(WellKnownSidType.WorldSid, null), 
-                    FileSystemRights.FullControl, 
-                    InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit, 
+                    new SecurityIdentifier(WellKnownSidType.WorldSid, null),
+                    FileSystemRights.FullControl,
+                    InheritanceFlags.ObjectInherit | InheritanceFlags.ContainerInherit,
                     PropagationFlags.NoPropagateInherit, AccessControlType.Allow
                 ));
-            
+
             dInfo.SetAccessControl(dSecurity);
         }
     }

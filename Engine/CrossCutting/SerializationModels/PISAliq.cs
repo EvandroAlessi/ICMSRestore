@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CrossCutting.SerializationModels
+﻿namespace CrossCutting.SerializationModels
 {
     public class PISAliq
     {

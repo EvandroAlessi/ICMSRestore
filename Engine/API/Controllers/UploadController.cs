@@ -1,5 +1,4 @@
-﻿using API.Models;
-using BLL;
+﻿using BLL;
 using CrossCutting;
 using Dominio;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -40,7 +38,7 @@ namespace API.Controllers
         [Consumes("multipart/form-data")]
         [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [RequestSizeLimit(long.MaxValue)]
-        public IActionResult Post([FromForm]List<IFormFile> files, int processoID, bool entrada = false)
+        public IActionResult Post([FromForm] List<IFormFile> files, int processoID, bool entrada = false)
         {
             try
             {

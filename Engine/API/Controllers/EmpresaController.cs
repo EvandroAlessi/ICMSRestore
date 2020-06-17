@@ -1,5 +1,4 @@
 ﻿using BLL;
-using CrossCutting.Models;
 using Dominio;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -25,7 +24,7 @@ namespace API.Controllers
         {
             try
             {
-                var response = new 
+                var response = new
                 {
                     Companies = await empresaService.GetAll(page, take, filters),
                     Pagination = await empresaService.GetPagination(page, take, filters)

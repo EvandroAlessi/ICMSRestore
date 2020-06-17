@@ -3,7 +3,6 @@ using DAO;
 using Dominio;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BLL
@@ -30,7 +29,7 @@ namespace BLL
         {
             try
             {
-                int skip = (page - 1) * take; 
+                int skip = (page - 1) * take;
 
                 return await empresaDAO.GetAll(skip, take, filters);
             }

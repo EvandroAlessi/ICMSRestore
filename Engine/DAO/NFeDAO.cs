@@ -5,8 +5,6 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace DAO
@@ -624,7 +622,7 @@ namespace DAO
 
                 return rows > 0;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

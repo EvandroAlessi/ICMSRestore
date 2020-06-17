@@ -100,7 +100,7 @@ namespace ICMSRestore.API
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMS RESTORE API V1"); 
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMS RESTORE API V1");
                 //c.RoutePrefix = string.Empty;
             });
 

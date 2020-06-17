@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Uploader.Models
+﻿namespace Uploader.Models
 {
     public class FileUploadResult
     {

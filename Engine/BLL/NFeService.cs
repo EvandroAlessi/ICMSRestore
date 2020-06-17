@@ -1,11 +1,10 @@
-﻿using Dominio;
+﻿using CrossCutting.Models;
 using DAO;
+using Dominio;
 using System;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.Extensions.Configuration;
 using System.Linq;
-using CrossCutting.Models;
+using System.Threading.Tasks;
 
 namespace BLL
 {

@@ -2,11 +2,9 @@
 using CrossCutting;
 using CrossCutting.Serializable;
 using CrossCutting.SerializationModels;
-using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -214,10 +212,12 @@ namespace NFeSeeder
                                 {
                                     processDirs[process.Key][subDir.Key] = true;
 
-                                    Task.Run(() => {
-                                            DoWork(process.Key, subDir.Key);
-                                        })
-                                        .ContinueWith(t => {
+                                    Task.Run(() =>
+                                    {
+                                        DoWork(process.Key, subDir.Key);
+                                    })
+                                        .ContinueWith(t =>
+                                        {
                                             RemoveCompletedFolder(process.Key, subDir.Key);
                                         });
                                 }

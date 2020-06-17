@@ -1,10 +1,10 @@
-﻿using System;
+﻿using API.Models;
+using CrossCutting;
+using Microsoft.IdentityModel.Tokens;
+using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using API.Models;
-using CrossCutting;
-using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
 {
