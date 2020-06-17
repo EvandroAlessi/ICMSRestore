@@ -1,4 +1,5 @@
-﻿using DAO;
+﻿using CrossCutting.Models;
+using DAO;
 using Dominio;
 using System;
 using System.Collections.Generic;
@@ -11,11 +12,27 @@ namespace BLL
     {
         private static readonly EmpresaDAO empresaDAO = new EmpresaDAO();
 
-        public async Task<List<Empresa>> GetAll()
+        public async Task<Pagination> GetPagination(int page = 1, int take = 30, Dictionary<string, string> filters = null)
         {
             try
             {
-                return await empresaDAO.GetAll();
+                int skip = (page - 1) * take;
+
+                return await empresaDAO.GetPagination(skip, take, filters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<Empresa>> GetAll(int page = 1, int take = 30, Dictionary<string, string> filters = null)
+        {
+            try
+            {
+                int skip = (page - 1) * take; 
+
+                return await empresaDAO.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {

@@ -1,0 +1,80 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-align-justify mr-2"></i>
+                        <span>Empresas</span>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" (click)="toggleFilter()"><i
+								class="fa fa-filter mr-1"></i>Filtrar</button>
+                        <a class="btn btn-success" routerLink="{{ route }}/create"><i class="fa fa-edit mr-1"></i>Incluir</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="filter-container" [collapse]="!showFilter">
+                        <div class="card border-0">
+                            <div class="card-body pb-0 pt-1">
+                                <form class="form-inline justify-content-center" action="" method="post">
+                                    <div class="form-group mr-1 ml-1">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Conteúdo</span>
+                                            </div>
+                                            <input type="text" id="content" name="content" [(ngModel)]="filters.content" class="form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-actions mb-0">
+                                        <button type="button" class="btn btn-primary mr-1 ml-1" (click)="filter()"><i
+												class="fa fa-filter mr-1"></i>Filtrar</button>
+                                        <button type="button" type="button" class="btn btn-danger mr-1" (click)="unfilter()"><i
+												class="fa fa-ban mr-1"></i>Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped text-center mobile-table">
+                        <thead>
+                            <tr>
+                                <th class="xs-column">Código</th>
+                                <th>Nome</th>
+                                <th>Descrição</th>
+                                <th class="md-column">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let department of departments">
+                                <td data-th="Código" class="xs-column">{{ department.id }}</td>
+                                <td data-th="Nome">{{ department.name }}</td>
+                                <td data-th="Email">{{ department.description }}</td>
+                                <td data-th="Ações" class="sm-column">
+                                    <a class="btn btn-success m-1" routerLink="{{ route }}/edit/{{ department.id }}"><i
+											class="fa fa-edit mr-1"></i>Editar</a>
+                                    <button type="button" class="btn btn-danger m-1" (click)="delete(department.id)"><i
+											class="fa fa-trash-o mr-1"></i>Remover</button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="departments.length == 0">
+                                <td colspan="5">Nenhum Registro Encontrado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <nav *ngIf="pagination && pagination.last_page > 1">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item" [class.disabled]="pagination.current_page == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
+
+                            <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == pagination.current_page"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
+
+                            <li class="page-item" [class.disabled]="pagination.last_page == pagination.current_page"><a (click)="paginate(pagination.last_page)" class="page-link">Última</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+</div>

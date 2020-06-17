@@ -18,11 +18,17 @@ namespace API.Controllers
 
         // GET: api/<ProcessoController>
         [HttpGet]
-        public async Task<List<Processo>> Get()
+        public async Task<dynamic> Get(int page = 1, int take = 30, [FromQuery] Dictionary<string, string> filters = null)
         {
             try
             {
-                return await processoService.GetAll();
+                var response = new
+                {
+                    Processes = await processoService.GetAll(page, take, filters),
+                    Pagination = await processoService.GetPagination(page, take, filters)
+                };
+
+                return response;
             }
             catch (Exception ex)
             {

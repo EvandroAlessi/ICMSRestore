@@ -1,0 +1,41 @@
+<div class="app-body">
+    <main class="main d-flex align-items-center" style="background-color: rgba(0, 0, 0, 0.4);">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 mx-auto">
+                    <div class="card-group d-flex align-item-stretch">
+                        <div class="card p-4">
+                            <div class="card-body">
+                                <form class="d-flex flex-column justify-content-between" style="height: 100%;padding-bottom: 30px !important;
+                                padding-top: 30px !important;" method="" novalidate="">
+                                    <h2 class="text-center mb-4 p-0" style="margin-bottom: 50px !important;">
+                                        <img src="assets/img/logo.png" width="150px">
+                                    </h2>
+                                    <div class="mb-4">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="icon-user"></i></span>
+                                            </div>
+                                            <input type="email" class="form-control" placeholder="Email" name="email" [(ngModel)]="user.username" required style="height: 50px;">
+                                        </div>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text"><i class="icon-lock"></i></span>
+                                            </div>
+                                            <input type="password" class="form-control" placeholder="Senha" [(ngModel)]="user.password" name="password" required style="height: 50px;">
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-top: 30px !important;">
+                                        <div class="col-12 text-center">
+                                            <button type="button" class="btn btn-primary px-4" style="padding: 15px 40px !important;text-transform: uppercase;width: 100%;" (click)="login()">Acessar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

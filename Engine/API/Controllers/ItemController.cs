@@ -20,11 +20,17 @@ namespace API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<Item>> Get()
+        public async Task<dynamic> Get(int page = 1, int take = 30, [FromQuery] Dictionary<string, string> filters = null)
         {
             try
             {
-                return await itemService.GetAll();
+                var response = new
+                {
+                    Items = await itemService.GetAll(page, take, filters),
+                    Pagination = await itemService.GetPagination(page, take, filters)
+                };
+
+                return response;
             }
             catch (Exception ex)
             {

@@ -1,17 +1,16 @@
-﻿using System;
+﻿using BLL;
+using CrossCutting.Models;
+using Dominio;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using BLL;
-using Dominio;
-using Microsoft.AspNetCore.Mvc;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/companies")]
     public class EmpresaController : ControllerBase
     {
         private static readonly EmpresaService empresaService = new EmpresaService();
@@ -22,11 +21,17 @@ namespace API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<Empresa>> Get()
+        public async Task<dynamic> Get(int page = 1, int take = 30, [FromQuery] Dictionary<string, string> filters = null)
         {
             try
             {
-                return await empresaService.GetAll();
+                var response = new 
+                {
+                    Companies = await empresaService.GetAll(page, take, filters),
+                    Pagination = await empresaService.GetPagination(page, take, filters)
+                };
+
+                return response;
             }
             catch (Exception ex)
             {

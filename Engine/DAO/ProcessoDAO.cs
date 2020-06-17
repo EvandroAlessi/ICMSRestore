@@ -1,4 +1,5 @@
 ﻿using CrossCutting;
+using CrossCutting.Models;
 using Dominio;
 using Npgsql;
 using System;
@@ -26,7 +27,52 @@ namespace DAO
             };
         }
 
-        public async Task<List<Processo>> GetAll()
+        public async Task<Pagination> GetPagination(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
+        {
+            try
+            {
+                Pagination pagination = new Pagination();
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Empresas{quote} 
+                                            { DynamicWhere.BuildFilters(filters) }
+                                            LIMIT { take } 
+                                            OFFSET { skip };";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                pagination.Count = reader.GetInt32(0);
+                                pagination.PageCount = (pagination.Count / take) + 1;
+                                pagination.PageSize = take;
+
+                                break;
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return pagination;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<Processo>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
         {
             try
             {
@@ -38,7 +84,10 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Processos{ quote};";
+                        cmd.CommandText = $@"SELECT * FROM {quote}Processos{ quote}
+                                            { DynamicWhere.BuildFilters(filters) }
+                                            LIMIT { take } 
+                                            OFFSET { skip };";
 
                         using (var reader = cmd.ExecuteReader())
                         {

@@ -20,11 +20,17 @@ namespace API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<ProcessoUpload>> Get(int? processoID = null)
+        public async Task<dynamic> Get(int page = 1, int take = 30, [FromQuery] Dictionary<string, string> filters = null)
         {
             try
             {
-                return processoID is null ? await processoUploadService.GetAll() : await processoUploadService.GetAll((int)processoID);
+                var response = new
+                {
+                    UploadProcesses = await processoUploadService.GetAll(page, take, filters),
+                    Pagination = await processoUploadService.GetPagination(page, take, filters)
+                };
+
+                return response;
             }
             catch (Exception ex)
             {

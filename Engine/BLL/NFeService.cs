@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
+using CrossCutting.Models;
 
 namespace BLL
 {
@@ -12,11 +13,27 @@ namespace BLL
     {
         private static readonly NFeDAO nfeDAO = new NFeDAO();
 
-        public async Task<List<NFe>> GetAll()
+        public async Task<Pagination> GetPagination(int page = 1, int take = 30, Dictionary<string, string> filters = null)
         {
             try
             {
-                return await nfeDAO.GetAll();
+                int skip = (page - 1) * take;
+
+                return await nfeDAO.GetPagination(skip, take, filters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<NFe>> GetAll(int page = 1, int take = 30, Dictionary<string, string> filters = null)
+        {
+            try
+            {
+                int skip = (page - 1) * take;
+
+                return await nfeDAO.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {

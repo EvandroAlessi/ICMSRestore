@@ -24,11 +24,17 @@ namespace API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<List<NFe>> Get()
+        public async Task<dynamic> Get(int page = 1, int take = 30, [FromQuery] Dictionary<string, string> filters = null)
         {
             try
             {
-                return await nfeService.GetAll();
+                var response = new
+                {
+                    Invoices = await nfeService.GetAll(page, take, filters),
+                    Pagination = await nfeService.GetPagination(page, take, filters)
+                };
+
+                return response;
             }
             catch (Exception ex)
             {
