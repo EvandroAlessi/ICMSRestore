@@ -13,7 +13,7 @@ const routes: Routes = [
         path: ':id',
         component: EditComponent,
         data: {
-          title: 'Editar Departamento',
+          title: 'Editar Empresa',
         },
       },
     ],

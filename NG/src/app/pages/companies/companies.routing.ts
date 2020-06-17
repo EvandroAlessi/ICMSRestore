@@ -5,7 +5,7 @@ const routes: Routes = [
   {
     path: '',
     data: {
-      title: 'Departamentos',
+      title: 'Empresas',
     },
     children: [
       {

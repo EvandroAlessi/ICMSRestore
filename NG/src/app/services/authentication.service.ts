@@ -12,7 +12,6 @@ export class AuthenticationService {
   constructor(private router: Router, private http: HttpClient) {}
 
   login(credentials): Promise<any> {
-    console.log(credentials);
     return this.http
       .post<any>(`${this.api}/login`, credentials, {})
       .pipe(

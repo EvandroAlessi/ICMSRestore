@@ -23,7 +23,10 @@
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">Conteúdo</span>
                                             </div>
-                                            <input type="text" id="content" name="content" [(ngModel)]="filters.content" class="form-control">
+                                            <input type="text" id="content" name="CNPJ" [(ngModel)]="filters.cnpj" class="form-control" placeholder="CNPJ" title="CNPJ">
+                                            <input type="text" id="content" name="Nome" [(ngModel)]="filters.nome" class="form-control" placeholder="Nome" title="Nome">
+                                            <input type="text" id="content" name="Cidade" [(ngModel)]="filters.cidade" class="form-control" placeholder="Cidade" title="Cidade">
+                                            <input type="text" id="content" name="UF" [(ngModel)]="filters.uf" class="form-control" placeholder="UF" title="UF">
                                         </div>
                                     </div>
                                     <div class="form-group form-actions mb-0">
@@ -39,25 +42,29 @@
                     <table class="table table-bordered table-striped text-center mobile-table">
                         <thead>
                             <tr>
-                                <th class="xs-column">Código</th>
+                                <!-- <th class="xs-column">Código</th> -->
+                                <th>CNPJ</th>
                                 <th>Nome</th>
-                                <th>Descrição</th>
+                                <th>Cidade</th>
+                                <th>UF</th>
                                 <th class="md-column">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let department of departments">
-                                <td data-th="Código" class="xs-column">{{ department.id }}</td>
-                                <td data-th="Nome">{{ department.name }}</td>
-                                <td data-th="Email">{{ department.description }}</td>
+                            <tr *ngFor="let company of companies">
+                                <!-- <td data-th="Código" class="xs-column">{{ company.id }}</td> -->
+                                <td data-th="CNPJ">{{ company.cnpj }}</td>
+                                <td data-th="Nome">{{ company.nome }}</td>
+                                <td data-th="Cidade">{{ company.cidade }}</td>
+                                <td data-th="UF">{{ company.uf }}</td>
                                 <td data-th="Ações" class="sm-column">
-                                    <a class="btn btn-success m-1" routerLink="{{ route }}/edit/{{ department.id }}"><i
+                                    <a class="btn btn-success m-1" routerLink="{{ route }}/edit/{{ company.id }}"><i
 											class="fa fa-edit mr-1"></i>Editar</a>
-                                    <button type="button" class="btn btn-danger m-1" (click)="delete(department.id)"><i
+                                    <button type="button" class="btn btn-danger m-1" (click)="delete(company)"><i
 											class="fa fa-trash-o mr-1"></i>Remover</button>
                                 </td>
                             </tr>
-                            <tr *ngIf="departments.length == 0">
+                            <tr *ngIf="companies.length == 0">
                                 <td colspan="5">Nenhum Registro Encontrado</td>
                             </tr>
                         </tbody>

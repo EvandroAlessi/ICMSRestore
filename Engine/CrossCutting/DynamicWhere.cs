@@ -21,7 +21,16 @@ namespace CrossCutting
                 if (filter.Key == "page" || filter.Key == "take")
                     continue;
 
-                conditions.Add($"{ quote + filter.Key + quote } =  '{ filter.Value }'");
+                var isNumber = decimal.TryParse(filter.Value, out _);
+
+                if (!isNumber)
+                {
+                    conditions.Add($"{ quote + filter.Key + quote } ILIKE  '%{ filter.Value }%'");
+                }
+                else
+                {
+                    conditions.Add($"{ quote + filter.Key + quote } =  '{ filter.Value }'");
+                }
             }
 
             return conditions.Count > 0 

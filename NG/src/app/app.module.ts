@@ -29,6 +29,7 @@ import { ResponseInterceptor } from './interceptors/response.interpceptor';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { NgxMaskModule, IConfig } from 'ngx-mask';
 export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
+
 @NgModule({
   imports: [
     BrowserModule,

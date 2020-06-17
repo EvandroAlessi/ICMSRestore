@@ -13,8 +13,12 @@ export class ListComponent implements OnInit {
   public route: string = '/companies';
   public showFilter: boolean = false;
   public filters: any = {
-    content: '',
+    cnpj: '',
+    nome: '',
+    cidade: '',
+    uf: '',
     page: 1,
+    take: 10
   };
   public pagination: any = {};
   public companies: any = [];
@@ -40,13 +44,13 @@ export class ListComponent implements OnInit {
   }
 
   list() {
-    this.companyService.getAll(this.filters.page, 30).subscribe((response) => {
-      this.companies = response.list;
+    this.companyService.getAll(this.filters).subscribe((response) => {
+      this.companies = response.companies;
       this.pagination = response.pagination;
 
-      const end = this.pagination.current_page + 4 > this.pagination.last_page
-          ? this.pagination.last_page
-          : this.pagination.current_page + 4;
+      const end = this.filters.page + 4 > this.pagination.count
+          ? this.pagination.count
+          : this.filters.page + 4;
 
       const start = end - 9 < 1 
           ? 1 
@@ -60,27 +64,29 @@ export class ListComponent implements OnInit {
     });
   }
 
-  delete(id) {
+  delete(company) {
     this.modalService
-      .show(ConfirmDialogComponent, {
-        initialState: {
-          message: 'Deseja realmente excluir o registro código ' + id + '?',
-          note: 'Esta ação não poderá ser desfeita.',
-        },
-      })
-      .content.onClose.subscribe((result) => {
-        // if (result) {
-        //   this.departmentService
-        //     .delete(id)
-        //     .then((response) => {
-        //       this.toast.success(response.message, 'Sucesso!');
-        //       this.list();
-        //     })
-        //     .catch((response) => {
-        //       this.toast.error(response.error.message, 'Erro!');
-        //     });
-        // }
-      });
+        .show(ConfirmDialogComponent, {
+          initialState: {
+            message: 'Deseja realmente excluir a empresa ' + company.nome + ', CNPJ ' + company.cnpj + '?',
+            note: 'Esta ação não poderá ser desfeita.',
+          },
+        })
+        .content.onClose.subscribe((result) => {
+          if (result) {
+            this.companyService
+              .delete(company.id)
+              .subscribe((response) => {
+                  this.toast.success("Empresa excluida.", 'Sucesso!');
+
+                  this.companies = this.companies.filter(obj => obj !== company);
+                },
+                (err) => {
+                  this.toast.error(err.error, 'Erro!');
+                }
+              );
+          }
+        });
   }
 
   toggleFilter() {
@@ -92,7 +98,7 @@ export class ListComponent implements OnInit {
   }
 
   unfilter() {
-    this.filters.content = '';
+    this.filters.content = [];
     this.toggleFilter();
     this.paginate(1);
   }
@@ -100,6 +106,7 @@ export class ListComponent implements OnInit {
   paginate(page) {
     const params = [];
     this.filters.page = page;
+
     for (const key in this.filters) {
       if (this.filters[key]) {
         params[key] = this.filters[key];

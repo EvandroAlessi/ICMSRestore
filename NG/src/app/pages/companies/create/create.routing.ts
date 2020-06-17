@@ -13,7 +13,7 @@ const routes: Routes = [
         path: '',
         component: CreateComponent,
         data: {
-          title: 'Incluir Departamento',
+          title: 'Incluir Empresa',
         },
       },
     ],

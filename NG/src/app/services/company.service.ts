@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import { Router } from '@angular/router';
@@ -15,23 +15,42 @@ export class CompanyService {
   constructor(private router: Router
       , private http: HttpClient) {}
 
-    get(id: number){
-        return this.http.get<any>(this.api + id);
+    get(id){
+        return this.http.get<any>(this.api + '/' + id);
     }
 
-    getAll(): Observable<any> {
-        return this.http.get<any>(this.api);
+    getAll(filters): Observable<any> {
+        console.log(filters);
+        let params = new HttpParams();
+
+        params = params.append('page', filters.page);
+        params = params.append('take', filters.take);
+
+        if (filters.cnpj) {
+            params = params.append('CNPJ', filters.cnpj);
+        }
+
+        if (filters.nome) {
+            params = params.append('Nome', filters.nome);
+        }
+
+        if (filters.cidade) {
+            params = params.append('Cidade', filters.cidade);
+        }
+        
+        console.log(params);
+        return this.http.get<any>(this.api, { params: params });
     }
 
     post(company: any) {
         return this.http.post(this.api, company);
     }
 
-    put(company: any, id: number) {
-        return this.http.put(this.api + id, company);
+    put(id, company: any) {
+        return this.http.put(this.api  + '/' + id, company);
     }
 
-    delete(id: number) {
-        return this.http.delete(this.api + id);
+    delete(id) {
+        return this.http.delete(this.api  + '/' + id);
     }
 }
