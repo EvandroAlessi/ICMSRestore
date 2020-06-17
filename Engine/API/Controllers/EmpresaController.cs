@@ -27,7 +27,7 @@ namespace API.Controllers
                 var response = new
                 {
                     Companies = await empresaService.GetAll(page, take, filters),
-                    Pagination = await empresaService.GetPagination(page, take, filters)
+                    Pagination = await empresaService.GetPagination(take, filters)
                 };
 
                 return response;

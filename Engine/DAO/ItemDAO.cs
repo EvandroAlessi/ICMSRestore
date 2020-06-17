@@ -4,6 +4,7 @@ using Dominio;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,37 +20,37 @@ namespace DAO
         {
             return new Item
             {
-                nItem = Convert.ToInt32(reader["nItem"]),
+                nItem = reader.GetFieldValue<int>("nItem"),
                 cProd = reader["cProd"]?.ToString(),
                 cEAN = reader["cEAN"]?.ToString(),
                 xProd = reader["xProd"]?.ToString(),
-                NCM = Convert.ToInt32(reader["NCM"]),
-                CFOP = Convert.ToInt32(reader["CFOP"]),
+                NCM = reader.GetFieldValue<int>("NCM"),
+                CFOP = reader.GetFieldValue<int>("CFOP"),
                 uCom = reader["uCom"]?.ToString(),
-                qCom = Convert.ToDouble(reader["qCom"]),
-                vUnCom = Convert.ToDouble(reader["vUnCom"]),
-                orig = Convert.ToInt32(reader["orig"]),
-                CST = Convert.ToInt32(reader["CST"]),
-                modBC = Convert.ToInt32(reader["modBC"]),
-                vBC = Convert.ToDouble(reader["vBC"]),
-                pICMS = Convert.ToDouble(reader["pICMS"]),
-                vICMS = Convert.ToDouble(reader["vICMS"]),
-                cEnq = Convert.ToInt32(reader["cEnq"]),
+                qCom = reader.GetFieldValue<double?>("qCom"),
+                vUnCom = reader.GetFieldValue<double?>("vUnCom"),
+                orig = reader.GetFieldValue<int?>("orig"),
+                CST = reader.GetFieldValue<int?>("CST"),
+                modBC = reader.GetFieldValue<int?>("modBC"),
+                vBC = reader.GetFieldValue<double?>("vBC"),
+                pICMS = reader.GetFieldValue<double?>("pICMS"),
+                vICMS = reader.GetFieldValue<double?>("vICMS"),
+                cEnq = reader.GetFieldValue<int?>("cEnq"),
                 CST_IPI = reader["CST_IPI"]?.ToString(),
                 CST_PIS = reader["CST_PIS"]?.ToString(),
-                vBC_PIS = Convert.ToDouble(reader["vBC_PIS"]),
-                pPIS = Convert.ToDouble(reader["pPIS"]),
-                vPIS = Convert.ToDouble(reader["vPIS"]),
+                vBC_PIS = reader.GetFieldValue<double?>("vBC_PIS"),
+                pPIS = reader.GetFieldValue<double?>("pPIS"),
+                vPIS = reader.GetFieldValue<double?>("vPIS"),
                 CST_COFINS = reader["CST_COFINS"]?.ToString(),
-                vBC_COFINS = Convert.ToDouble(reader["vBC_COFINS"]),
-                pCOFINS = Convert.ToDouble(reader["pCOFINS"]),
-                vCOFINS = Convert.ToDouble(reader["vCOFINS"]),
-                NFeID = Convert.ToInt32(reader["NFeID"]),
-                ID = Convert.ToInt32(reader["ID"])
+                vBC_COFINS = reader.GetFieldValue<double?>("vBC_COFINS"),
+                pCOFINS = reader.GetFieldValue<double?>("pCOFINS"),
+                vCOFINS = reader.GetFieldValue<double?>("vCOFINS"),
+                NFeID = reader.GetFieldValue<int>("NFeID"),
+                ID = reader.GetFieldValue<int>("ID")
             };
         }
 
-        public async Task<Pagination> GetPagination(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
+        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
         {
             try
             {
@@ -61,10 +62,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Empresas{quote} 
-                                            { DynamicWhere.BuildFilters(filters) }
-                                            LIMIT { take } 
-                                            OFFSET { skip };";
+                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Itens{quote} 
+                                            { DynamicWhere.BuildFilters(filters) };";
 
                         using (var reader = cmd.ExecuteReader())
                         {

@@ -31,7 +31,7 @@ namespace API.Controllers
                 var response = new
                 {
                     MVAs = await mvaService.GetAll(page, take, filters),
-                    Pagination = await mvaService.GetPagination(page, take, filters)
+                    Pagination = await mvaService.GetPagination(take, filters)
                 };
 
                 return response;

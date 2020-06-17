@@ -24,7 +24,9 @@ namespace CrossCutting
                 conditions.Add($"{ quote + filter.Key + quote } =  '{ filter.Value }'");
             }
 
-            return " WHERE " + string.Join(" AND ", conditions);
+            return conditions.Count > 0 
+                ? " WHERE " + string.Join(" AND ", conditions) 
+                : string.Empty;
         }
     }
 }

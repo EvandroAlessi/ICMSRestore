@@ -26,7 +26,7 @@ namespace DAO
             };
         }
 
-        public async Task<Pagination> GetPagination(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
+        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
         {
             try
             {
@@ -38,10 +38,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Empresas{quote} 
-                                            { DynamicWhere.BuildFilters(filters) }
-                                            LIMIT { take } 
-                                            OFFSET { skip };";
+                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Processos{quote} 
+                                            { DynamicWhere.BuildFilters(filters) };";
 
                         using (var reader = cmd.ExecuteReader())
                         {

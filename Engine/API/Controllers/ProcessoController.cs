@@ -25,7 +25,7 @@ namespace API.Controllers
                 var response = new
                 {
                     Processes = await processoService.GetAll(page, take, filters),
-                    Pagination = await processoService.GetPagination(page, take, filters)
+                    Pagination = await processoService.GetPagination(take, filters)
                 };
 
                 return response;

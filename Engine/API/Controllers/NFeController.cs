@@ -29,7 +29,7 @@ namespace API.Controllers
                 var response = new
                 {
                     Invoices = await nfeService.GetAll(page, take, filters),
-                    Pagination = await nfeService.GetPagination(page, take, filters)
+                    Pagination = await nfeService.GetPagination(take, filters)
                 };
 
                 return response;

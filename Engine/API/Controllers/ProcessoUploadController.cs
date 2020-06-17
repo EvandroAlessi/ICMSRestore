@@ -27,7 +27,7 @@ namespace API.Controllers
                 var response = new
                 {
                     UploadProcesses = await processoUploadService.GetAll(page, take, filters),
-                    Pagination = await processoUploadService.GetPagination(page, take, filters)
+                    Pagination = await processoUploadService.GetPagination(take, filters)
                 };
 
                 return response;
