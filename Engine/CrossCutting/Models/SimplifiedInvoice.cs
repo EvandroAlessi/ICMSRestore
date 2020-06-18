@@ -9,6 +9,7 @@ namespace CrossCutting.Models
         public int ProcessoID { get; set; }
 
         public string CNPJ { get; set; }
+        public bool Entrada { get; set; }
 
         public int cNF { get; set; }
         public int nNF { get; set; }

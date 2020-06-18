@@ -40,8 +40,9 @@
                         <thead>
                             <tr>
                                 <th>CNPJ</th>
-                                <th>cNf</th>
-                                <th>nNf</th>
+                                <th>Tipo</th>
+                                <th>cNF</th>
+                                <th>nNF</th>
                                 <th>Data Emissão</th>
                                 <th>Data Saida/Entrada</th>
                                 <th>Valor Total</th>
@@ -52,6 +53,7 @@
                         <tbody>
                             <tr *ngFor="let invoice of invoices">
                                 <td data-th="CNPJ">{{ invoice.cnpj }}</td>
+                                <td data-th="Processo">{{ invoice.entrada == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td>
                                 <td data-th="cNf">{{ invoice.cNF }}</td>
                                 <td data-th="nNf">{{ invoice.nNF }}</td>
                                 <td data-th="Data Emissão">{{ invoice.dhEmi }}</td>
@@ -59,23 +61,40 @@
                                 <td data-th="Valor Total">{{ invoice.vNF_TOTAL }}</td>
                                 <td data-th="Processo">{{ invoice.processoID }}</td>
                                 <td data-th="Ações" class="sm-column">
-                                    <a class="btn btn-success m-1" (click)="details(invoice)">
+                                    <a class="btn btn-success m-1" routerLink="{{ route }}/details/{{ invoice.id }}">
                                         <i class="fa fa-info-circle mr-1"></i>Detalhes
                                     </a>
                                 </td>
                             </tr>
                             <tr *ngIf="invoices.length == 0">
-                                <td colspan="7">Nenhum Registro Encontrado</td>
+                                <td colspan="8">Nenhum Registro Encontrado</td>
                             </tr>
                         </tbody>
                     </table>
-                    <nav *ngIf="pagination && pagination.pageCount > 1">
-                        <ul class="pagination justify-content-center mb-0">
-                            <li class="page-item" [class.disabled]="filters.page == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
+                    <nav *ngIf="pagination && pagination.pageCount > 1" class="row">
+                        <div class="col-md-2">
+                            <div class="btn-group" dropdown [dropup]="true">
+                                <button id="button-dropup" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-dropup">
+                                  {{ filters.take }} <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
+                                    role="menu" aria-labelledby="button-dropup">
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(5)">5</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(10)">10</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(30)">30</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(50)">50</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(100)">100</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(500)">500</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(1000)">1000</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul class="pagination justify-content-end mb-0 col-md-10">
+                            <li class="page-item" [class.disabled]="pagination.currentPage == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
 
-                            <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == filters.page"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
+                            <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == pagination.currentPage"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
 
-                            <li class="page-item" [class.disabled]="pagination.pageCount == filters.page"><a (click)="paginate(pagination.pageCount)" class="page-link">Última</a></li>
+                            <li class="page-item" [class.disabled]="pagination.pageCount == pagination.currentPage"><a (click)="paginate(pagination.pageCount)" class="page-link">Última</a></li>
                         </ul>
                     </nav>
                 </div>

@@ -5,6 +5,7 @@ import { InvoiceService } from '../../../services/invoice.service';
 
 @Component({
   selector: 'app-edit',
+  styleUrls: ['./details.component.scss'],
   templateUrl: './details.component.html',
 })
 export class DetailsComponent implements OnInit {

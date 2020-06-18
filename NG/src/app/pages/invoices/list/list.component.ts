@@ -6,6 +6,7 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { InvoiceService } from '../../../services/invoice.service';
 @Component({
   selector: 'app-list',
+  styleUrls: ['./list.component.scss'],
   templateUrl: './list.component.html',
 })
 export class ListComponent implements OnInit {
@@ -17,7 +18,7 @@ export class ListComponent implements OnInit {
     cidade: '',
     uf: '',
     page: 1,
-    take: 8
+    take: 5
   };
   public pagination: any = {};
   public invoices: any = [];
@@ -57,6 +58,11 @@ export class ListComponent implements OnInit {
 
   toggleFilter() {
     this.showFilter = !this.showFilter;
+  }
+
+  changePageSize(size) {
+    this.filters.take = size;
+    this.list();
   }
 
   filter() {

@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private api = environment.api.url + "/account";
+  private api = environment.api.url + "/accounts";
 
   constructor(private router: Router, private http: HttpClient) {}
 
