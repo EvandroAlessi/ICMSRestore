@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 
-export class CompanyService {
-  private api = environment.api.url + "/companies";
+export class InvoiceService {
+  private api = environment.api.url + "/invoices";
 
   constructor(private router: Router
       , private http: HttpClient) {}
@@ -44,6 +44,33 @@ export class CompanyService {
         
         console.log(params);
         return this.http.get<any>(this.api, { params: params });
+    }
+
+    getAllSimplify(filters): Observable<any> {
+        console.log(filters);
+        let params = new HttpParams();
+
+        params = params.append('page', filters.page);
+        params = params.append('take', filters.take);
+
+        if (filters.cnpj) {
+            params = params.append('CNPJ', filters.cnpj);
+        }
+
+        if (filters.nome) {
+            params = params.append('Nome', filters.nome);
+        }
+
+        if (filters.cidade) {
+            params = params.append('Cidade', filters.cidade);
+        }
+
+        if (filters.uf) {
+            params = params.append('UF', filters.uf);
+        }
+        
+        console.log(params);
+        return this.http.get<any>(this.api + '/simplify', { params: params });
     }
 
     post(company: any) {

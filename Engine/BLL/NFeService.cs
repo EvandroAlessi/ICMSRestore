@@ -12,11 +12,11 @@ namespace BLL
     {
         private static readonly NFeDAO nfeDAO = new NFeDAO();
 
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
+        public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await nfeDAO.GetPagination(take, filters);
+                return await nfeDAO.GetPagination("NFe", page, take, filters);
             }
             catch (Exception ex)
             {
@@ -31,6 +31,20 @@ namespace BLL
                 int skip = (page - 1) * take;
 
                 return await nfeDAO.GetAll(skip, take, filters);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<SimplifiedInvoice>> GetAllSimplify(int page = 1, int take = 30, Dictionary<string, string> filters = null)
+        {
+            try
+            {
+                int skip = (page - 1) * take;
+
+                return await nfeDAO.GetAllSimplify(skip, take, filters);
             }
             catch (Exception ex)
             {

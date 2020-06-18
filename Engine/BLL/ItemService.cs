@@ -11,11 +11,11 @@ namespace BLL
     {
         private readonly ItemDAO itemDAO = new ItemDAO();
 
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
+        public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await itemDAO.GetPagination(take, filters);
+                return await itemDAO.GetPagination("Itens", page, take, filters);
             }
             catch (Exception ex)
             {

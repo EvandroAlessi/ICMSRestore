@@ -11,11 +11,11 @@ namespace BLL
     {
         private static readonly MVADAO mvaDAO = new MVADAO();
 
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
+        public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await mvaDAO.GetPagination(take, filters);
+                return await mvaDAO.GetPagination("MVA", page, take, filters);
             }
             catch (Exception ex)
             {

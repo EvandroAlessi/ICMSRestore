@@ -58,16 +58,16 @@ export const routes: Routes = [
       },
       {
         path: 'processes',
-        loadChildren: () =>
-          import('./pages/companies/companies.module').then(
-            (m) => m.CompaniesModule
+        loadChildren: () => import('./pages/invoices/invoices.module')
+          .then(
+            (m) => m.InvoicesModule
           ),
       },
       {
         path: 'invoices',
-        loadChildren: () =>
-          import('./pages/companies/companies.module').then(
-            (m) => m.CompaniesModule
+        loadChildren: () => import('./pages/invoices/invoices.module')
+          .then(
+            (m) => m.InvoicesModule
           ),
       },
       {

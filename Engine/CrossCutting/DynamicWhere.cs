@@ -14,7 +14,7 @@ namespace CrossCutting
                 return string.Empty;
             }
 
-            List<String> conditions = new List<String>();
+            List<string> conditions = new List<string>();
 
             foreach (var filter in filters)
             {

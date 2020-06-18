@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/invoices")]
     [ApiController]
     public class NFeController : ControllerBase
     {
@@ -29,7 +29,26 @@ namespace API.Controllers
                 var response = new
                 {
                     Invoices = await nfeService.GetAll(page, take, filters),
-                    Pagination = await nfeService.GetPagination(take, filters)
+                    Pagination = await nfeService.GetPagination(page, take, filters)
+                };
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpGet("simplify")]
+        public async Task<dynamic> GetSimplify(int page = 1, int take = 30, [FromQuery] Dictionary<string, string> filters = null)
+        {
+            try
+            {
+                var response = new
+                {
+                    Invoices = await nfeService.GetAllSimplify(page, take, filters),
+                    Pagination = await nfeService.GetPagination(page, take, filters)
                 };
 
                 return response;

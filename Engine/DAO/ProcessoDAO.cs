@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class ProcessoDAO
+    public class ProcessoDAO : PaginationBuilder
     {
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
-        public Processo Make(NpgsqlDataReader reader)
+        public Processo BuildObject(NpgsqlDataReader reader)
         {
             return new Processo
             {
@@ -24,49 +24,6 @@ namespace DAO
                 FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
                 EmpresaID = Convert.ToInt32(reader["EmpresaID"])
             };
-        }
-
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
-        {
-            try
-            {
-                Pagination pagination = new Pagination();
-
-                using (var conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Processos{quote} 
-                                            { DynamicWhere.BuildFilters(filters) };";
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                pagination.Count = reader.GetInt32(0);
-                                pagination.PageCount = (pagination.Count / take) + 1;
-                                pagination.PageSize = take;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    await conn.CloseAsync();
-                }
-
-                return pagination;
-            }
-            catch (NpgsqlException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
 
         public async Task<List<Processo>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
@@ -83,6 +40,7 @@ namespace DAO
                     {
                         cmd.CommandText = $@"SELECT * FROM {quote}Processos{ quote}
                                             { DynamicWhere.BuildFilters(filters) }
+                                            ORDER BY {quote}ID{ quote} desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -92,7 +50,7 @@ namespace DAO
 
                             while (reader.Read())
                             {
-                                list.Add(Make(reader));
+                                list.Add(BuildObject(reader));
                             }
                         }
                     }
@@ -133,7 +91,7 @@ namespace DAO
 
                             while (reader.Read())
                             {
-                                processo = Make(reader);
+                                processo = BuildObject(reader);
                             }
                         }
                     }

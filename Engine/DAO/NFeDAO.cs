@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class NFeDAO
+    public class NFeDAO : PaginationBuilder
     {
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
-        public string MakeInsertQuery(NFe nfe, bool hasReturn = false)
+        public string BuildInsertQuery(NFe nfe, bool hasReturn = false)
         {
             var query = $@"INSERT INTO {quote}NFe{ quote} (
                                 {quote}ProcessoID{quote}
@@ -146,7 +146,7 @@ namespace DAO
             return query;
         }
 
-        public NFe Make(NpgsqlDataReader reader)
+        public NFe BuildObject(NpgsqlDataReader reader)
         {
             return new NFe
             {
@@ -165,10 +165,10 @@ namespace DAO
                 cMun_DEST = reader["cMun_DEST"]?.ToString(),
                 cNF = Convert.ToInt32(reader["cNF"]),
                 cPais = Convert.ToInt32(reader["cPais"]),
-                cPais_DEST = Convert.ToInt32(reader["cPais_DEST"]),
+                cPais_DEST = reader.GetFieldValue<int?>("cPais_DEST"),
                 cUF = Convert.ToInt32(reader["cUF"]),
                 dhEmi = Convert.ToDateTime(reader["dhEmi"]),
-                dhSaiEnt = Convert.ToDateTime(reader["dhSaiEnt"]),
+                dhSaiEnt = reader.GetFieldValue<DateTime?>("dhSaiEnt"),
                 email_DEST = reader["email_DEST"]?.ToString(),
                 indPag = Convert.ToInt32(reader["indPag"]),
                 mod = reader["mod"]?.ToString(),
@@ -188,72 +188,43 @@ namespace DAO
                 xNome_DEST = reader["xNome_DEST"]?.ToString(),
                 xPais = reader["xPais"]?.ToString(),
                 xPais_DEST = reader["xPais_DEST"]?.ToString(),
-                vBC_TOTAL = Convert.ToDouble(reader["vBC_TOTAL"]),
-                vICMS_TOTAL = Convert.ToDouble(reader["vICMS_TOTAL"]),
-                vICMSDeson_TOTAL = Convert.ToDouble(reader["vICMSDeson_TOTAL"]),
-                vFCP_TOTAL = Convert.ToDouble(reader["vFCP_TOTAL"]),
-                vBCST_TOTAL = Convert.ToDouble(reader["vBCST_TOTAL"]),
-                vST_TOTAL = Convert.ToDouble(reader["vST_TOTAL"]),
-                vFCPST_TOTAL = Convert.ToDouble(reader["vFCPST_TOTAL"]),
-                vFCPSTRet_TOTAL = Convert.ToDouble(reader["vFCPSTRet_TOTAL"]),
-                vProd_TOTAL = Convert.ToDouble(reader["vProd_TOTAL"]),
-                vFrete_TOTAL = Convert.ToDouble(reader["vFrete_TOTAL"]),
-                vSeg_TOTAL = Convert.ToDouble(reader["vSeg_TOTAL"]),
-                vDesc_TOTAL = Convert.ToDouble(reader["vDesc_TOTAL"]),
-                vII_TOTAL = Convert.ToDouble(reader["vII_TOTAL"]),
-                vIPI_TOTAL = Convert.ToDouble(reader["vIPI_TOTAL"]),
-                vIPIDevol_TOTAL = Convert.ToDouble(reader["vIPIDevol_TOTAL"]),
-                vPIS_TOTAL = Convert.ToDouble(reader["vPIS_TOTAL"]),
-                vCOFINS_TOTAL = Convert.ToDouble(reader["vCOFINS_TOTAL"]),
-                vOutro_TOTAL = Convert.ToDouble(reader["vOutro_TOTAL"]),
-                vNF_TOTAL = Convert.ToDouble(reader["vNF_TOTAL"]),
+                vBC_TOTAL = reader.GetFieldValue<double?>("vBC_TOTAL"),
+                vICMS_TOTAL = reader.GetFieldValue<double?>("vICMS_TOTAL"),
+                vICMSDeson_TOTAL = reader.GetFieldValue<double?>("vICMSDeson_TOTAL"),
+                vFCP_TOTAL = reader.GetFieldValue<double?>("vFCP_TOTAL"),
+                vBCST_TOTAL = reader.GetFieldValue<double?>("vBCST_TOTAL"),
+                vST_TOTAL = reader.GetFieldValue<double?>("vST_TOTAL"),
+                vFCPST_TOTAL = reader.GetFieldValue<double?>("vFCPST_TOTAL"),
+                vFCPSTRet_TOTAL = reader.GetFieldValue<double?>("vFCPSTRet_TOTAL"),
+                vProd_TOTAL = reader.GetFieldValue<double?>("vProd_TOTAL"),
+                vFrete_TOTAL = reader.GetFieldValue<double?>("vFrete_TOTAL"),
+                vSeg_TOTAL = reader.GetFieldValue<double?>("vSeg_TOTAL"),
+                vDesc_TOTAL = reader.GetFieldValue<double?>("vDesc_TOTAL"),
+                vII_TOTAL = reader.GetFieldValue<double?>("vII_TOTAL"),
+                vIPI_TOTAL = reader.GetFieldValue<double?>("vIPI_TOTAL"),
+                vIPIDevol_TOTAL = reader.GetFieldValue<double?>("vIPIDevol_TOTAL"),
+                vPIS_TOTAL = reader.GetFieldValue<double?>("vPIS_TOTAL"),
+                vCOFINS_TOTAL = reader.GetFieldValue<double?>("vCOFINS_TOTAL"),
+                vOutro_TOTAL = reader.GetFieldValue<double?>("vOutro_TOTAL"),
+                vNF_TOTAL = reader.GetFieldValue<double?>("vNF_TOTAL"),
                 ProcessoID = Convert.ToInt32(reader["ProcessoID"])
             };
         }
 
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
+        public SimplifiedInvoice BuildSimplifiedObject(NpgsqlDataReader reader)
         {
-            try
+            return new SimplifiedInvoice
             {
-                Pagination pagination = new Pagination();
-
-                using (var conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}NFe{quote} 
-                                            { DynamicWhere.BuildFilters(filters) }";
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                pagination.Count = reader.GetInt32(0);
-                                pagination.PageCount = (pagination.Count / take) + 1;
-                                pagination.PageSize = take;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    await conn.CloseAsync();
-                }
-
-                return pagination;
-            }
-            catch (NpgsqlException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+                ID = Convert.ToInt32(reader["id"]),
+                ProcessoID = Convert.ToInt32(reader["ProcessoID"]),
+                cNF = Convert.ToInt32(reader["cNF"]),
+                dhEmi = Convert.ToDateTime(reader["dhEmi"]),
+                dhSaiEnt = reader.GetFieldValue<DateTime?>("dhSaiEnt"),
+                nNF = Convert.ToInt32(reader["nNF"]),
+                vNF_TOTAL = reader.GetFieldValue<double?>("vNF_TOTAL"),
+                CNPJ = reader["CNPJ"]?.ToString()
+            };
         }
-
 
         public async Task<List<NFe>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
         {
@@ -269,6 +240,7 @@ namespace DAO
                     {
                         cmd.CommandText = $@"SELECT * FROM {quote}NFe{ quote}
                                             { DynamicWhere.BuildFilters(filters) }
+                                            ORDER BY {quote}ID{ quote} desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -276,7 +248,49 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                list.Add(Make(reader));
+                                list.Add(BuildObject(reader));
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return list;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<List<SimplifiedInvoice>> GetAllSimplify(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
+        {
+            try
+            {
+                var list = new List<SimplifiedInvoice>();
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT * FROM {quote}NFe{ quote}
+                                            { DynamicWhere.BuildFilters(filters) }
+                                            ORDER BY {quote}ID{ quote} desc
+                                            LIMIT { take } 
+                                            OFFSET { skip };";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                list.Add(BuildSimplifiedObject(reader));
                             }
                         }
                     }
@@ -315,7 +329,7 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                nfe = Make(reader);
+                                nfe = BuildObject(reader);
                             }
                         }
                     }
@@ -429,7 +443,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = MakeInsertQuery(nfe, true);
+                        cmd.CommandText = BuildInsertQuery(nfe, true);
 
                         id = cmd.ExecuteScalar();
                     }
@@ -476,7 +490,7 @@ namespace DAO
                             {
                                 cmd.Transaction = transaction;
                                 cmd.CommandType = CommandType.Text;
-                                cmd.CommandText = MakeInsertQuery(nfe, true);
+                                cmd.CommandText = BuildInsertQuery(nfe, true);
 
                                 var nfeID = (int)cmd.ExecuteScalar();
 
@@ -638,7 +652,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = MakeInsertQuery(nfe);
+                        cmd.CommandText = BuildInsertQuery(nfe);
 
                         rows = cmd.ExecuteNonQuery();
                     }

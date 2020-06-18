@@ -4,35 +4,24 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
+  HttpHeaders,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+function addToken(request: HttpRequest<any>, token: string): HttpRequest<any> {
+  return request.clone({
+    headers: new HttpHeaders({ "Authorization" : `Bearer ${ token }`})
+  });
+}
+
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const user = JSON.parse(localStorage.getItem('user'));
 
     if (user && user.token) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `${user.token}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      });
-    } else {
-      request = request.clone({
-        setHeaders: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-      });
-    }
+      request = addToken(request, user.token);
+    } 
     
     return next.handle(request);
   }

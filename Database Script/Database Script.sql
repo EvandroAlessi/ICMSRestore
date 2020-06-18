@@ -70,7 +70,12 @@ CREATE TABLE public."Itens"
     "CFOP" integer NOT NULL,
     "CST" integer,
     "CSOSN" integer,
-    CONSTRAINT "ID" PRIMARY KEY ("ID")
+    CONSTRAINT "ID" PRIMARY KEY ("ID"),
+    CONSTRAINT "NFe_FK" FOREIGN KEY ("NFeID")
+        REFERENCES public."NFe" ("ID") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
 )
 
 TABLESPACE pg_default;
@@ -124,7 +129,7 @@ CREATE TRIGGER "Filter"
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
---- Table: public.ItensFiltrados
+-- Table: public.ItensFiltrados
 
 -- DROP TABLE public."ItensFiltrados";
 
@@ -152,10 +157,16 @@ CREATE TABLE public."ItensFiltrados"
     "CSOSN" integer,
     "Entrada" boolean,
     CONSTRAINT "ItensFiltrados_pkey" PRIMARY KEY ("ID"),
+    CONSTRAINT "Item_FK" FOREIGN KEY ("ItemID")
+        REFERENCES public."Itens" ("ID") MATCH SIMPLE
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID,
     CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
         REFERENCES public."Processos" ("ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
 )
 
 TABLESPACE pg_default;
@@ -303,7 +314,7 @@ CREATE TABLE public."NFe"
     "vOutro_TOTAL" real,
     "vNF_TOTAL" real,
     "Entrada" boolean DEFAULT false,
-    "dhSaiEnt" timestamp with time zone NOT NULL,
+    "dhSaiEnt" timestamp with time zone,
     "dhEmi" timestamp with time zone NOT NULL,
     CONSTRAINT "PK_ID" PRIMARY KEY ("ID"),
     CONSTRAINT "cNF_nNF_ProcessoID_Unique" UNIQUE ("cNF", "nNF", "ProcessoID"),
@@ -430,57 +441,72 @@ CREATE FUNCTION public."Filter"()
 AS $BODY$DECLARE
    nfe record;
    accepted_cfop integer ARRAY;
+   accepted_cst integer ARRAY;
+   accepted_csosn integer ARRAY;
 BEGIN
-accepted_cfop = '{1403,1409,1411,1415,2403,2409,2411,2415,5403,5405,5409,5411,5415,6403,6409,1411,2415}';
+accepted_cfop = '{1403, 1409, 1411, 1415, 2403, 2409, 2411, 2415, 5403, 5405, 5409, 5411, 5415, 6403, 6409, 1411, 2415}';
+accepted_cst = '{0, 60, 70}';
+accepted_csosn = '{201, 202, 203, 500}';
 
-IF NEW."CFOP" = ANY(accepted_cfop) THEN
-	SELECT INTO nfe 
-		"cNF"
-		, "nNF"
-		, "dhEmi"
-		, "dhSaiEnt"
-		, "ProcessoID" 
-	FROM public."NFe" 
-	WHERE public."NFe"."ID" = NEW."NFeID";
-
-	INSERT INTO public."ItensFiltrados"(
-			"cProd"
-			, "xProd"
-			, "NCM"
-			, "CFOP"
-			, "uCom"
-			, "qCom"
-			, "vUnCom"
-			, orig
-			, "CST"
-			, "vBC"
-			, "pICMS"
-			, "vICMS"
+IF NEW.orig = 0 AND (NEW."CST" is not null OR NEW."CSOSN" is not null) 
+THEN
+	IF (NEW."CST" = ANY(accepted_cst) 
+			OR NEW."CSOSN" = ANY(accepted_csosn))
+		AND NEW."CFOP" = ANY(accepted_cfop) 
+	THEN
+		SELECT INTO nfe 
+			"cNF"
+			, "nNF"
 			, "dhEmi"
 			, "dhSaiEnt"
-			, "nNF"
-			, "cNF"
-			, "ProcessoID"
-			, "ItemID")
-		VALUES (
-			NEW."cProd"
-			, NEW."xProd"
-			, NEW."NCM"
-			, NEW."CFOP"
-			, NEW."uCom"
-			, NEW."qCom"
-			, NEW."vUnCom"
-			, NEW.orig
-			, NEW."CST"
-			, NEW."vBC"
-			, NEW."pICMS"
-			, NEW."vICMS"
-			, nfe."dhEmi"
-			, nfe."dhSaiEnt"
-			, nfe."nNF"
-			, nfe."cNF"
-			, nfe."ProcessoID"
-			, NEW."ID");
+			, "Entrada" 
+			, "ProcessoID" 
+		FROM public."NFe" 
+		WHERE public."NFe"."ID" = NEW."NFeID";
+
+		INSERT INTO public."ItensFiltrados"(
+				"cProd"
+				, "xProd"
+				, "NCM"
+				, "CFOP"
+				, "uCom"
+				, "qCom"
+				, "vUnCom"
+				, orig
+				, "CST"
+				, "vBC"
+				, "pICMS"
+				, "vICMS"
+				, "dhEmi"
+				, "dhSaiEnt"
+				, "nNF"
+				, "cNF"
+				, "Entrada"
+				, "CSOSN"
+				, "ProcessoID"
+				, "ItemID")
+			VALUES (
+				NEW."cProd"
+				, NEW."xProd"
+				, NEW."NCM"
+				, NEW."CFOP"
+				, NEW."uCom"
+				, NEW."qCom"
+				, NEW."vUnCom"
+				, NEW.orig
+				, NEW."CST"
+				, NEW."vBC"
+				, NEW."pICMS"
+				, NEW."vICMS"
+				, nfe."dhEmi"
+				, nfe."dhSaiEnt"
+				, nfe."nNF"
+				, nfe."cNF"
+				, nfe."Entrada"
+				, NEW."CSOSN"
+				, nfe."ProcessoID"
+				, NEW."ID");
+	END IF;
 END IF;
 RETURN NULL;
 

@@ -1,0 +1,108 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-align-justify mr-2"></i>
+                        <span>Notas Fiscais</span>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" (click)="toggleFilter()"><i
+								class="fa fa-filter mr-1"></i>Filtrar</button>
+                        <!-- <a class="btn btn-success" routerLink="{{ route }}/create"><i class="fa fa-edit mr-1"></i>Incluir</a> -->
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="filter-container" [collapse]="!showFilter">
+                        <div class="card border-0">
+                            <div class="card-body pb-0 pt-1">
+                                <form class="form-inline justify-content-center" action="" method="post">
+                                    <div class="form-group mr-1 ml-1">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">CNPJ</span>
+                                            </div>
+                                            <input type="text" id="content" name="CNPJ" [(ngModel)]="filters.cnpj" class="form-control" placeholder="CNPJ" title="CNPJ">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-actions mb-0">
+                                        <button type="button" class="btn btn-primary mr-1 ml-1" (click)="filter()"><i
+												class="fa fa-filter mr-1"></i>Filtrar</button>
+                                        <button type="button" type="button" class="btn btn-danger mr-1" (click)="unfilter()"><i
+												class="fa fa-ban mr-1"></i>Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-hover table-bordered table-striped text-center mobile-table">
+                        <thead>
+                            <tr>
+                                <th>CNPJ</th>
+                                <th>cNf</th>
+                                <th>nNf</th>
+                                <th>Data Emissão</th>
+                                <th>Data Saida/Entrada</th>
+                                <th>Valor Total</th>
+                                <th>Processo</th>
+                                <th class="md-column">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let invoice of invoices">
+                                <td data-th="CNPJ">{{ invoice.cnpj }}</td>
+                                <td data-th="cNf">{{ invoice.cNF }}</td>
+                                <td data-th="nNf">{{ invoice.nNF }}</td>
+                                <td data-th="Data Emissão">{{ invoice.dhEmi }}</td>
+                                <td data-th="Data Saida/Entrada">{{ invoice.dhSaiEnt }}</td>
+                                <td data-th="Valor Total">{{ invoice.vNF_TOTAL }}</td>
+                                <td data-th="Processo">{{ invoice.processoID }}</td>
+                                <td data-th="Ações" class="sm-column">
+                                    <a class="btn btn-success m-1" (click)="details(invoice)">
+                                        <i class="fa fa-info-circle mr-1"></i>Detalhes
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr *ngIf="invoices.length == 0">
+                                <td colspan="7">Nenhum Registro Encontrado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <nav *ngIf="pagination && pagination.pageCount > 1">
+                        <ul class="pagination justify-content-center mb-0">
+                            <li class="page-item" [class.disabled]="filters.page == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
+
+                            <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == filters.page"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
+
+                            <li class="page-item" [class.disabled]="pagination.pageCount == filters.page"><a (click)="paginate(pagination.pageCount)" class="page-link">Última</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+</div>
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <app-edit></app-edit>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+</div> -->

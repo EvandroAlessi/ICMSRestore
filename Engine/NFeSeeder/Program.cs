@@ -216,14 +216,14 @@ namespace NFeSeeder
                                     {
                                         DoWork(process.Key, subDir.Key);
                                     })
-                                        .ContinueWith(t =>
-                                        {
-                                            RemoveCompletedFolder(process.Key, subDir.Key);
-                                        });
+                                    .ContinueWith(t =>
+                                    {
+                                        RemoveCompletedFolder(process.Key, subDir.Key);
+                                    });
                                 }
                             }
                         }
-                        catch (Exception ex) { }
+                        catch () { }
                     }
                 }
             }

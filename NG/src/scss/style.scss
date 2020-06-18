@@ -6,3 +6,35 @@
 @import "custom";
 // Toast Plugin
 @import "~ngx-toastr/toastr";
+
+// body, html {
+//     height: 100%;
+// }
+
+.container-fluid > app-dashboard {
+    min-height: fit-content;
+}
+
+td > .m-1 {
+    margin: unset !important;
+}
+
+.main {
+    ol[class="breadcrumb"] {
+        margin: 0;
+    }
+}
+
+.row > .col-lg-12 {
+    padding: 10px 15px 0px 15px;
+
+    > .card {
+        margin-bottom: 0;
+    }
+}
+
+@media screen and (max-width: 1370px) and (min-width: 880px){
+    td > .m-1:not(:last-child)  {
+        margin-bottom: 0.25rem !important;
+    }
+}

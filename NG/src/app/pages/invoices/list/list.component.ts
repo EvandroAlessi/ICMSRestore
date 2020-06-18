@@ -3,14 +3,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
-import { CompanyService } from '../../../services/company.service';
-
+import { InvoiceService } from '../../../services/invoice.service';
 @Component({
   selector: 'app-list',
   templateUrl: './list.component.html',
 })
 export class ListComponent implements OnInit {
-  public route: string = '/companies';
+  public route: string = '/invoices';
   public showFilter: boolean = false;
   public filters: any = {
     cnpj: '',
@@ -18,18 +17,18 @@ export class ListComponent implements OnInit {
     cidade: '',
     uf: '',
     page: 1,
-    take: 10
+    take: 8
   };
   public pagination: any = {};
-  public companies: any = [];
+  public invoices: any = [];
 
   constructor(
     private routerActived: ActivatedRoute,
     private router: Router,
     private modalService: BsModalService,
     private toast: ToastrService,
-    private companyService: CompanyService
-  ) {}
+    private invoiceService: InvoiceService
+  ) {  }
 
   ngOnInit() {
     this.routerActived.queryParams.subscribe((params) => {
@@ -44,35 +43,16 @@ export class ListComponent implements OnInit {
   }
 
   list() {
-    this.companyService.getAll(this.filters).subscribe((response) => {
-      this.companies = response.companies;
+    this.invoiceService.getAllSimplify(this.filters).subscribe((response) => {
+      this.invoices = response.invoices;
       this.pagination = response.pagination;
+
+      console.log(response);
     });
   }
 
-  delete(company) {
-    this.modalService
-        .show(ConfirmDialogComponent, {
-          initialState: {
-            message: 'Deseja realmente excluir a empresa ' + company.nome + ', CNPJ ' + company.cnpj + '?',
-            note: 'Esta ação não poderá ser desfeita.',
-          },
-        })
-        .content.onClose.subscribe((result) => {
-          if (result) {
-            this.companyService
-              .delete(company.id)
-              .subscribe((response) => {
-                  this.toast.success("Empresa excluida.", 'Sucesso!');
-
-                  this.companies = this.companies.filter(obj => obj !== company);
-                },
-                (err) => {
-                  this.toast.error(err.error, 'Erro!');
-                }
-              );
-          }
-        });
+  details(invoice){
+    // this.modalService.show();
   }
 
   toggleFilter() {
@@ -89,7 +69,7 @@ export class ListComponent implements OnInit {
     this.paginate(1);
   }
 
-  paginate(page) {
+  paginate(page: number) {
     const params = [];
     this.filters.page = page;
 
@@ -98,6 +78,7 @@ export class ListComponent implements OnInit {
         params[key] = this.filters[key];
       }
     }
+    
     this.router.navigate([this.route], { queryParams: params });
   }
 }

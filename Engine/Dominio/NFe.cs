@@ -30,7 +30,7 @@ namespace Dominio
         public DateTime dhEmi { get; set; }
 
         [Required]
-        public DateTime dhSaiEnt { get; set; }
+        public DateTime? dhSaiEnt { get; set; }
 
         #endregion
 

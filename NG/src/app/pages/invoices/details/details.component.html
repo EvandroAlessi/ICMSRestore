@@ -1,0 +1,360 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-edit mr-2"></i>
+                        <span>Detalhes Nota Fiscal</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">ID</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.iD" name="iD" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cUF</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cUF" name="cUF" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cNF</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cNF" name="cNF" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">natOp</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.natOp" name="natOp" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">indPag</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.indPag" name="indPag" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">mod</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.mod" name="mod" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">serie</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.serie" name="serie" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">nNF</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.nNF" name="nNF" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">dhEmi</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.dhEmi" name="dhEmi" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">dhSaiEnt</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.dhSaiEnt" name="dhSaiEnt" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">CNPJ</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cNPJ" name="cNPJ" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xNome</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xNome" name="xNome" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xFant</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xFant" name="xFant" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xLgr</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xLgr" name="xLgr" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">nro</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.nro" name="nro" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xBairro</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xBairro" name="xBairro" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cMun</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cMun" name="cMun" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xMun</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xMun" name="xMun" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">UF</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.uF" name="uF" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">CEP</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cEP" name="cEP" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cPais</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cPais" name="cPais" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xPais</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xPais" name="xPais" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">IE</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.IE" name="IE" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">IEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.IEST" name="IEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">CRT</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cRT" name="cRT" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cNPJ_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cNPJ_DEST" name="cNPJ_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cPF_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cPF_DEST" name="cPF_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xNome_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xNome_DEST" name="xNome_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xLgr_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xLgr_DEST" name="xLgr_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">nro_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.nro_DEST" name="nro_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xBairro_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xBairro_DEST" name="xBairro_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cMun_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cMun_DEST" name="cMun_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">xMun_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.xMun_DEST" name="xMun_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">UF_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.uF_DEST" name="uF_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">CEP_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cEP_DEST" name="cEP_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">cPais_DEST</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.cPais_DEST" name="cPais_DEST" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vBC_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vBC_TOTAL" name="vBC_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vICMS_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vICMS_TOTAL" name="vICMS_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vICMSDeson_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vICMSDeson_TOTAL" name="vICMSDeson_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vFCP_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vFCP_TOTAL" name="vFCP_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vBCST_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vBCST_TOTAL" name="vBCST_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vST_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vST_TOTAL" name="vST_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vFCPST_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vFCPST_TOTAL" name="vFCPST_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vFCPSTRet_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vFCPSTRet_TOTAL" name="vFCPSTRet_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vProd_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vProd_TOTAL" name="vProd_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vFrete_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vFrete_TOTAL" name="vFrete_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vSeg_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vSeg_TOTAL" name="vSeg_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vDesc_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vDesc_TOTAL" name="vDesc_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vII_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vII_TOTAL" name="vII_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vIPI_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vIPI_TOTAL" name="vIPI_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vIPIDevol_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vIPIDevol_TOTAL" name="vIPIDevol_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vPIS_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vPIS_TOTAL" name="vPIS_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vCOFINS_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vCOFINS_TOTAL" name="vCOFINS_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vOutro_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vOutro_TOTAL" name="vOutro_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">vNF_TOTAL</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.vNF_TOTAL" name="vNF_TOTAL" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">Processo ID</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.processoID" name="processoID" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="text-input">Entrada</label>
+                            <div class="col-md-9">
+                                <input type="text" class="form-control" [(ngModel)]="invoice.entrada" name="entrada" disabled>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

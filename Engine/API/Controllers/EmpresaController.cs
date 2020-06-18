@@ -1,5 +1,6 @@
 ﻿using BLL;
 using Dominio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/companies")]
     public class EmpresaController : ControllerBase
@@ -27,7 +29,7 @@ namespace API.Controllers
                 var response = new
                 {
                     Companies = await empresaService.GetAll(page, take, filters),
-                    Pagination = await empresaService.GetPagination(take, filters)
+                    Pagination = await empresaService.GetPagination(page, take, filters)
                 };
 
                 return response;

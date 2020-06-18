@@ -11,11 +11,11 @@ namespace BLL
     {
         private static readonly EmpresaDAO empresaDAO = new EmpresaDAO();
 
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
+        public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await empresaDAO.GetPagination(take, filters);
+                return await empresaDAO.GetPagination("Empresas", page, take, filters);
             }
             catch (Exception ex)
             {

@@ -11,12 +11,12 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class ItemDAO
+    public class ItemDAO : PaginationBuilder
     {
         static string connString = AppSettings.ConnectionString;
         const string quote = "\"";
 
-        public Item Make(NpgsqlDataReader reader)
+        public Item BuildObject(NpgsqlDataReader reader)
         {
             return new Item
             {
@@ -50,49 +50,6 @@ namespace DAO
             };
         }
 
-        public async Task<Pagination> GetPagination(int take = 30, Dictionary<string, string> filters = null)
-        {
-            try
-            {
-                Pagination pagination = new Pagination();
-
-                using (var conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = $@"SELECT Count(*) FROM {quote}Itens{quote} 
-                                            { DynamicWhere.BuildFilters(filters) };";
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                pagination.Count = reader.GetInt32(0);
-                                pagination.PageCount = (pagination.Count / take) + 1;
-                                pagination.PageSize = take;
-
-                                break;
-                            }
-                        }
-                    }
-
-                    await conn.CloseAsync();
-                }
-
-                return pagination;
-            }
-            catch (NpgsqlException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-
         public async Task<List<Item>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
         {
             try
@@ -107,6 +64,7 @@ namespace DAO
                     {
                         cmd.CommandText = $@"SELECT * FROM {quote}Itens{quote}
                                             { DynamicWhere.BuildFilters(filters) }
+                                            ORDER BY {quote}ID{ quote} desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -114,7 +72,7 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                list.Add(Make(reader));
+                                list.Add(BuildObject(reader));
                             }
                         }
                     }
@@ -153,7 +111,7 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                list.Add(Make(reader));
+                                list.Add(BuildObject(reader));
                             }
                         }
                     }
@@ -192,7 +150,7 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                item = Make(reader);
+                                item = BuildObject(reader);
                             }
                         }
                     }

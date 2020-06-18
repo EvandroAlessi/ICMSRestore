@@ -4,9 +4,10 @@ import {
   HttpHandler,
   HttpEvent,
   HttpInterceptor,
+  HttpResponse,
 } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, tap } from 'rxjs/operators';
 import { AuthenticationService } from '../services/authentication.service';
 import { ToastrService } from 'ngx-toastr';
 
@@ -17,11 +18,14 @@ export class ResponseInterceptor implements HttpInterceptor {
     private toast: ToastrService
   ) {}
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(tap(event => {
+        if (event instanceof HttpResponse) {
+          event = event.clone({ body: this.modifyBody(event.body) })
+        }   
+
+        return event;
+      }),
       catchError((err) => {
         if (err.status == 500) {
           this.toast.error(
@@ -50,5 +54,25 @@ export class ResponseInterceptor implements HttpInterceptor {
         return throwError(err);
       })
     );
+  }
+  
+  private modifyBody(body: any) {
+    if(body.pagination) {
+      const end = body.pagination.currentPage + 4 > body.pagination.pageCount
+          ? body.pagination.pageCount
+          : body.pagination.currentPage + 4;
+
+      const start = end - 9 < 1 
+          ? 1 
+          : end - 9;
+
+      body.pagination.pages = [];
+
+      for (let i = start; i <= end; i++) {
+        body.pagination.pages.push(i);
+      }
+    }
+
+    return body;
   }
 }

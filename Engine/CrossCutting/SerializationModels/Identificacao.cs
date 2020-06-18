@@ -12,7 +12,7 @@ namespace CrossCutting.SerializationModels
         public int serie { get; set; }
         public int nNF { get; set; }
         public DateTime dhEmi { get; set; }
-        public DateTime dhSaiEnt { get; set; }
+        public DateTime? dhSaiEnt { get; set; }
 
     }
 }
