@@ -15,9 +15,9 @@ using System.Linq;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
     [Authorize]
+    [ApiController]
+    [Route("api/upload")]
     public class UploadController : ControllerBase
     {
         private readonly ILogger<UploadController> _logger;

@@ -1,6 +1,7 @@
 ﻿using BLL;
 using CrossCutting;
 using Dominio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/processes")]
     public class ProcessoController : ControllerBase
     {
         private static readonly ProcessoService processoService = new ProcessoService();

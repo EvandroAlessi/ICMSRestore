@@ -1,6 +1,7 @@
 ﻿using BLL;
 using CrossCutting;
 using Dominio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,8 +13,9 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/mva")]
     public class MVAController : ControllerBase
     {
         private static readonly MVAService mvaService = new MVAService();

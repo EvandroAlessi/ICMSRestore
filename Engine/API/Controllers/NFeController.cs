@@ -1,5 +1,6 @@
 ﻿using BLL;
 using Dominio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,9 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/invoices")]
+    [Authorize]
     [ApiController]
+    [Route("api/invoices")]
     public class NFeController : ControllerBase
     {
         private static readonly NFeService nfeService = new NFeService();

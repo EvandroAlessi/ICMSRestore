@@ -1,5 +1,6 @@
 ﻿using BLL;
 using Dominio;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,9 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
+    [Route("api/items")]
     public class ItemController : ControllerBase
     {
         private static readonly ItemService itemService = new ItemService();

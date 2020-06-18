@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/accounts")]
     public class AccountController : ControllerBase
     {
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] User model)
+        public IActionResult Login([FromBody] User model)
         {
             if (!ModelState.IsValid)
             {
@@ -34,7 +34,7 @@ namespace API.Controllers
 
             // Verifica se o usuário existe
             if (user is null)
-                return NotFound(new { message = "Usuário ou senha inválidos" });
+                return NotFound("Verify your user and password!");
 
             // Gera o Token
             var token = TokenService.GenerateToken(user);
