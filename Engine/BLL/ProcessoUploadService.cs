@@ -63,6 +63,18 @@ namespace BLL
             }
         }
 
+        public async Task<ProcessoUpload> Get(int processoID, string zipPath)
+        {
+            try
+            {
+                return await processoUploadDAO.Get(processoID, zipPath);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public double GetState(ProcessoUpload processoUpload)
         {
             try

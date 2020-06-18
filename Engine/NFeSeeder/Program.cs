@@ -188,6 +188,25 @@ namespace NFeSeeder
                         processDirs.Remove(processoID);
                         dirPaths.Remove(processPath);
                     }
+
+                    var processoUplService = new ProcessoUploadService();
+
+                    var processoUpload = processoUplService.Get(processoID, subDir).Result;
+
+                    processoUpload.Ativo = false;
+
+                    var edited = processoUplService.Edit(processoUpload);
+
+                    if (!edited)
+                    {
+                        Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }",
+                            message: "Erro ao realizar update", 
+                            parameters: new
+                            {
+                                ProcessoID = processoID,
+                                PastaZip = subDir,
+                            });
+                    }
                 }
             }
             catch (Exception ex)
@@ -223,7 +242,7 @@ namespace NFeSeeder
                                 }
                             }
                         }
-                        catch () { }
+                        catch { }
                     }
                 }
             }
@@ -298,7 +317,10 @@ namespace NFeSeeder
                                         XmlFile = Path.GetFileName(filePath)
                                     };
 
-                                    Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex, loggingRepeated, true);
+                                    Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", 
+                                        ex: ex,
+                                        parameters: loggingRepeated, 
+                                        repeated: true);
 
                                     File.Delete(filePath);
 

@@ -145,6 +145,46 @@ namespace DAO
             }
         }
 
+        public async Task<ProcessoUpload> Get(int processoID, string zipPath)
+        {
+            try
+            {
+                ProcessoUpload processoUpload = null;
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote} 
+                                WHERE {quote}ProcessoID{quote} = { processoID }
+                                    AND {quote}PastaZip{quote} = '{ zipPath }';";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                processoUpload = BuildObject(reader);
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return processoUpload;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<bool> Exists(int id)
         {
             try
@@ -249,9 +289,9 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"UPDATE {quote}ProcessosUpload{quote} SET
-                                {quote}ProcessoID{quote} = '{ processoUpload.ProcessoID }'
+                                {quote}ProcessoID{quote} = { processoUpload.ProcessoID }
                                 , {quote}PastaZip{quote} = '{ processoUpload.PastaZip }'
-                                , {quote}QntArq{quote} = '{ processoUpload.QntArq }'
+                                , {quote}QntArq{quote} = { processoUpload.QntArq }
                                 , {quote}Ativo{quote} = '{ processoUpload.Ativo }'
                             WHERE {quote}ID{quote} = { processoUpload.ID };";
 
