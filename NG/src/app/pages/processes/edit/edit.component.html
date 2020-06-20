@@ -1,0 +1,281 @@
+<tabset>
+    <tab heading="Uploads" (click)="getUploadProcesses()">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <span>Uploads</span>
+                </div>
+                <div>
+                    <button class="btn btn-success" (click)="openModal(template)"><i class="fa fa-edit mr-1"></i>Incluir Arquivos</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <table class="table table-hover table-bordered table-striped text-center mobile-table">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Data Inicio</th>
+                            <th>Ativo</th>
+                            <th>Nome do ZIP</th>
+                            <th>Total de Arquivos</th>
+                            <th>Arquivos com Erro</th>
+                            <th class="md-column">Processado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let uploadProcess of uploadProcesses">
+                            <td data-th="Tipo">{{ uploadProcess.entrada == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td>
+                            <td data-th="Data Inicio">{{ uploadProcess.dataInicio | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
+                            <td data-th="Ativo">{{ uploadProcess.ativo}}</td>
+                            <td data-th="Nome do ZIP">{{ uploadProcess.pastaZip.substring(uploadProcess.pastaZip.lastIndexOf('\\') + 1) }}</td>
+                            <td data-th="Total de Arquivos">{{ uploadProcess.qntArq }}</td>
+                            <td data-th="Arquivos com Erro">{{ uploadProcess.errorFiles }}</td>
+                            <td data-th="Processado" class="sm-column">
+                                <a *ngIf="uploadProcess.percent == 100; else elseBlock" class="btn btn-success m-1">Concluído</a>
+                                <ng-template #elseBlock>
+                                    <a class="btn btn-primary m-1">{{ uploadProcess.percent | number:'2.0-0'}}%</a>
+                                </ng-template>
+                            </td>
+                        </tr>
+                        <tr *ngIf="uploadProcesses.length == 0">
+                            <td colspan="7">Nenhum Registro Encontrado!</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </tab>
+    <tab heading="Dados" id="tab1">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <i class="fa fa-edit mr-2"></i>
+                                <span>Editar Processo</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <form class="form-horizontal">
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label" for="text-input">Nome</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" [class.is-invalid]="errors?.nome" [(ngModel)]="process.nome" name="nome" placeholder="Nome">
+                                        <div class="invalid-feedback" *ngFor="let error of errors?.nome">
+                                            {{ error }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label" for="text-input">Início Periodo</label>
+                                    <div class="col-md-10">
+                                        <input type="date" class="form-control" [class.is-invalid]="errors?.inicioPeriodo" [ngModel]="process.inicioPeriodo | date:'yyyy-MM-dd'" (ngModelChange)="process.inicioPeriodo = $event" name="inicioPeriodo" placeholder="Início Periodo">
+                                        <div class="invalid-feedback" *ngFor="let error of errors?.inicioPeriodo">
+                                            {{ error }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label" for="text-input">Fim Periodo</label>
+                                    <div class="col-md-10">
+                                        <input type="date" class="form-control" [class.is-invalid]="errors?.fimPeriodo" [ngModel] ="process.fimPeriodo | date:'yyyy-MM-dd'" (ngModelChange)="process.fimPeriodo = $event" name="fimPeriodo" placeholder="Fim Periodo">
+                                        <div class="invalid-feedback" *ngFor="let error of errors?.fimPeriodo">
+                                            {{ error }}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-md-2 col-form-label" for="text-input">Empresa</label>
+                                    <div class="col-md-10">
+                                        <input type="text" class="form-control" [class.is-invalid]="errors?.empresaID" [(ngModel)]="process.empresaID" name="empresaID" placeholder="Empresa" >
+                                        <div class="invalid-feedback" *ngFor="let error of errors?.empresaID">
+                                            {{ error }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="card-footer text-center">
+                            <button type="button" class="btn btn-success" (click)="save()">
+                                <i class="fa fa-check mr-1"></i>Salvar
+                            </button>
+                            <button type="button" class="btn btn-danger" (click)="cancel()">
+                                <i class="fa fa-ban mr-1"></i>Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading="Itens Filtrados">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <span>Itens Filtrados</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover table-bordered table-striped text-center mobile-table">
+                                <thead>
+                                    <tr>
+                                        <th>ProcessoID</th>
+                                        <th>ItemID</th>
+                                        <th>Entrada</th>
+                                        <!-- <th>cProd</th> -->
+                                        <th>xProd</th>
+                                        <th>NCM</th>
+                                        <th>orig</th>
+                                        <th>CFOP</th>
+                                        <th>CST</th>
+                                        <th>CSOSN</th>
+                                        <th>vICMS</th>
+                                        <!-- <th>cNF</th> -->
+                                        <th>Data Emissão</th>
+                                        <!-- <th>Data Saida/Entrada</th> -->
+                                        <th class="md-column">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of filteredItems">
+                                        <td data-th="ProcessoID">{{ item.processoID }}</td>
+                                        <td data-th="ItemID">{{ item.itemID }}</td>
+                                        <td data-th="Entrada">{{ item.entrada == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td>
+                                        <!-- <td data-th="cProd">{{ item.cProd }}</td> -->
+                                        <td data-th="xProd">{{ item.xProd }}</td>
+                                        <td data-th="NCM">{{ item.ncm }}</td>
+                                        <td data-th="orig">{{ item.orig }}</td>
+                                        <td data-th="CFOP">{{ item.cfop }}</td>
+                                        <td data-th="CST">{{ item.cst }}</td>
+                                        <td data-th="CSOSN">{{ item.csosn }}</td>
+                                        <td data-th="vICMS">{{ item.vICMS }}</td>
+                                        <!-- <td data-th="cNF">{{ item.cNF }}</td> -->
+                                        <td data-th="Data Emissão">{{ item.dhEmi | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
+                                        <!-- <td data-th="Data Saida/Entrada">{{ item.dhSaiEnt | date: 'dd/MM/yyyy hh:mm:ss' }}</td> -->
+                                        <td data-th="Ações" class="sm-column">
+                                            <a class="btn btn-success m-1" routerLink="{{ route }}/edit/{{ item.id }}">
+                                                <i class="fa fa-edit mr-1"></i>Editar
+                                            </a>
+                                            <button type="button" class="btn btn-danger m-1" (click)="delete(item)">
+                                                <i class="fa fa-trash-o mr-1"></i>Remover
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    <tr *ngIf="filteredItems.length == 0">
+                                        <td colspan="12">Nenhum Registro Encontrado</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <nav *ngIf="pagination && pagination.pageCount > 1" class="row">
+                                <div class="col-md-2">
+                                    <div class="btn-group" dropdown [dropup]="true">
+                                        <button id="button-dropup" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-dropup" title="Quanita de itens por página">
+                                          {{ filters.take }} <span class="caret"></span>
+                                        </button>
+                                        <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-dropup" title="Itens por página">
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(5)">5</a></li>
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(10)">10</a></li>
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(30)">30</a></li>
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(50)">50</a></li>
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(100)">100</a></li>
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(500)">500</a></li>
+                                            <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(1000)">1000</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                                <ul class="pagination justify-content-end mb-0 col-md-10">
+                                    <li class="page-item" [class.disabled]="pagination.currentPage == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
+        
+                                    <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == pagination.currentPage"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
+        
+                                    <li class="page-item" [class.disabled]="pagination.pageCount == pagination.currentPage"><a (click)="paginate(pagination.pageCount)" class="page-link">Última</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </tab>
+    <tab heading="Processamento">Basic content 2</tab>
+    <tab heading="Resultados">Basic content 2</tab>
+</tabset>
+
+<ng-template #template>
+    <div class="modal-header">
+      <h4 class="modal-title pull-left">Selecione os arquivos para Upload</h4>
+      <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="container" appDnd (fileDropped)="onFileDropped($event)">
+            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" accept=".zip"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="63" height="64" viewBox="0 0 63 64">
+                <g fill="#3B454F" fill-rule="nonzero">
+                    <path
+                        d="M42.656 15.135a1.953 1.953 0 0 1-1.391-.578L31.5 4.795l-9.765 9.762a1.97 1.97 0 1 1-2.785-2.785L30.106.616a1.97 1.97 0 0 1 2.785 0l11.157 11.156a1.97 1.97 0 0 1-1.392 3.363z" />
+                    <path
+                        d="M31.5 36.791a1.97 1.97 0 0 1-1.969-1.969V2.01a1.97 1.97 0 0 1 3.938 0v32.812a1.97 1.97 0 0 1-1.969 1.969z" />
+                    <path
+                        d="M55.781 63.041H7.22A7.225 7.225 0 0 1 0 55.822V41.385a4.599 4.599 0 0 1 4.594-4.594h7.234a4.567 4.567 0 0 1 4.402 3.276l2.814 9.382a.658.658 0 0 0 .628.467h23.656a.658.658 0 0 0 .628-.467l2.814-9.385a4.572 4.572 0 0 1 4.402-3.273h7.234A4.599 4.599 0 0 1 63 41.385v14.437a7.225 7.225 0 0 1-7.219 7.219zM4.594 40.729a.656.656 0 0 0-.657.656v14.437a3.286 3.286 0 0 0 3.282 3.282H55.78a3.286 3.286 0 0 0 3.282-3.282V41.385a.656.656 0 0 0-.657-.656h-7.234a.65.65 0 0 0-.628.467L47.73 50.58a4.628 4.628 0 0 1-4.402 3.274H19.672a4.567 4.567 0 0 1-4.402-3.276l-2.814-9.382a.65.65 0 0 0-.628-.467H4.594z" />
+                </g>
+            </svg>
+        
+            <h3>Puxar e Soltar</h3>
+            <h3>ou</h3>
+            <label for="fileDropRef">Pesquisar Arquivos</label>
+        </div>
+        <div class="files-list">
+            <div class="single-file" *ngFor="let file of files; let i = index">
+                <div class="file-icon" style="width: 50px">
+                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                        x="0px" y="0px" viewBox="0 0 58 58" style="enable-background:new 0 0 58 58;" xml:space="preserve">
+                        <polygon style="fill:#EDEADA;" points="51.5,14 37.5,0 6.5,0 6.5,58 51.5,58 " />
+                        <g>
+                            <path style="fill:#CEC9AE;"
+                                d="M16.5,23h25c0.552,0,1-0.447,1-1s-0.448-1-1-1h-25c-0.552,0-1,0.447-1,1S15.948,23,16.5,23z" />
+                            <path style="fill:#CEC9AE;"
+                                d="M16.5,15h10c0.552,0,1-0.447,1-1s-0.448-1-1-1h-10c-0.552,0-1,0.447-1,1S15.948,15,16.5,15z" />
+                            <path style="fill:#CEC9AE;"
+                                d="M41.5,29h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,29,41.5,29z" />
+                            <path style="fill:#CEC9AE;"
+                                d="M41.5,37h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,37,41.5,37z" />
+                            <path style="fill:#CEC9AE;"
+                                d="M41.5,45h-25c-0.552,0-1,0.447-1,1s0.448,1,1,1h25c0.552,0,1-0.447,1-1S42.052,45,41.5,45z" />
+                        </g>
+                        <polygon style="fill:#CEC9AE;" points="37.5,0 37.5,14 51.5,14 " />
+                    </svg>
+                </div>
+                <div class="info">
+                    <h4 class="name">
+                        {{ file?.name }}
+                    </h4>
+                    <p class="size">
+                        {{ formatBytes(file?.size) }}
+                    </p>
+                    <app-progress [progress]="file?.progress"></app-progress>
+                </div>
+        
+                <div class="delete" (click)="deleteFile(i)" title="Remover Arquivo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="18" viewBox="0 0 14 18">
+                        <path fill="#ff0000" fill-rule="nonzero"
+                            d="M1 16c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H3c-1.1 0-2 .9-2 2v10zm3.17-7.83a.996.996 0 0 1 1.41 0L7 9.59l1.42-1.42a.996.996 0 1 1 1.41 1.41L8.41 11l1.42 1.42a.996.996 0 1 1-1.41 1.41L7 12.41l-1.42 1.42a.996.996 0 1 1-1.41-1.41L5.59 11 4.17 9.58a.996.996 0 0 1 0-1.41zM10.5 1L9.79.29C9.61.11 9.35 0 9.09 0H4.91c-.26 0-.52.11-.7.29L3.5 1H1c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1h-2.5z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" aria-label="Close" (click)="modalRef.hide()">
+            <i class="fa fa-ban mr-1"></i>Cancelar
+        </button>
+        <button type="button" class="btn btn-success" (click)="onConfirm()">
+            <i class="fa fa-check mr-1"></i>Enviar
+        </button>
+    </div>
+  </ng-template>

@@ -127,7 +127,7 @@ namespace BLL
             }
         }
 
-        public bool Edit(Item item)
+        public Item Edit(Item item)
         {
             try
             {

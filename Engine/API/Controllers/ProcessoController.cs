@@ -150,15 +150,15 @@ namespace API.Controllers
                         }
                         else
                         {
-                            bool edited = processoService.Edit(processo);
+                            var editedProcess = processoService.Edit(processo);
 
-                            if (edited)
+                            if (editedProcess is null)
                             {
-                                return NoContent();
+                                return BadRequest("Can't complete the edit process, please verify the data send.");
                             }
                             else
                             {
-                                return BadRequest("Can't complete the edit process, please verify the data send.");
+                                return Ok(editedProcess);
                             }
                         }
                     }

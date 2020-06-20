@@ -8,6 +8,8 @@ import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dial
 import { SharedModule } from '../../shared/shared.module';
 import { ListRouting } from './list.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
+import { DetailsComponent } from '../details/details.component';
+import { DetailsModule } from '../details/details.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -18,8 +20,9 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
     SharedModule,
     FormsModule,
     BsDropdownModule,
+    DetailsModule,
     CollapseModule.forRoot(),
   ],
-  entryComponents: [ConfirmDialogComponent],
+  entryComponents: [ConfirmDialogComponent, DetailsComponent],
 })
 export class ListModule {}

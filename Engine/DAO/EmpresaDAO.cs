@@ -197,7 +197,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(Empresa empresa)
+        public Empresa Edit(Empresa empresa)
         {
             try
             {
@@ -222,7 +222,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0;
+                return rows > 0 ? empresa : null;
             }
             catch (NpgsqlException ex)
             {

@@ -40,6 +40,40 @@ namespace API.Controllers
             }
         }
 
+        [Route("/api/processes/{processID}/upload-processes")]
+        [HttpGet]
+        public async Task<dynamic> GetByProcess(int processID)
+        {
+            try
+            {
+                dynamic uploadProcesses = new List<dynamic>();
+
+
+                foreach (var uploadProcess in await processoUploadService.GetAll(processID))
+                {
+                    uploadProcesses.Add(new
+                    {
+                        uploadProcess.Ativo,
+                        uploadProcess.DataInicio,
+                        uploadProcess.Entrada,
+                        uploadProcess.ID,
+                        uploadProcess.PastaZip,
+                        uploadProcess.ProcessoID,
+                        uploadProcess.QntArq,
+                        percent = processoUploadService.GetState(uploadProcess),
+                        errorFiles = processoUploadService.GetErrorFiles(uploadProcess.PastaZip),
+                    });
+                }
+
+
+                return uploadProcesses;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         // GET api/<ProcessoUploadController>/5
         /// <summary>
         /// 
@@ -73,15 +107,19 @@ namespace API.Controllers
         {
             try
             {
-                var processoUpload = await processoUploadService.Get(id);
+                var uploadProcess = await processoUploadService.Get(id);
 
-                if (processoUpload is null)
+                if (uploadProcess is null)
                 {
                     return NotFound();
                 }
                 else
                 {
-                    return Ok(processoUploadService.GetState(processoUpload));
+                    return Ok(new
+                        {
+                            percent = processoUploadService.GetState(uploadProcess),
+                            errorFiles = processoUploadService.GetErrorFiles(uploadProcess.PastaZip),
+                        });
                 }
             }
             catch (Exception ex)
@@ -169,15 +207,15 @@ namespace API.Controllers
                     }
                     else
                     {
-                        bool edited = processoUploadService.Edit(processoUpload);
+                        var editedProcessoUpload = processoUploadService.Edit(processoUpload);
 
-                        if (edited)
+                        if (editedProcessoUpload is null)
                         {
-                            return NoContent();
+                            return BadRequest("Can't complete the edit process, please verify the data send.");
                         }
                         else
                         {
-                            return BadRequest("Can't complete the edit process, please verify the data send.");
+                            return Ok(editedProcessoUpload);
                         }
                     }
                 }

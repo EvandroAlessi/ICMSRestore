@@ -4,6 +4,7 @@ using Dominio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Writers;
 using System;
 using System.Collections.Generic;
 using System.Data.OleDb;
@@ -232,15 +233,15 @@ namespace API.Controllers
                     }
                     else
                     {
-                        bool edited = mvaService.Edit(mva);
+                        var editedMVA = mvaService.Edit(mva);
 
-                        if (edited)
+                        if (editedMVA is null)
                         {
-                            return NoContent();
+                            return BadRequest("Can't complete the edit process, please verify the data send.");
                         }
                         else
                         {
-                            return BadRequest("Can't complete the edit process, please verify the data send.");
+                            return Ok(editedMVA);
                         }
                     }
                 }

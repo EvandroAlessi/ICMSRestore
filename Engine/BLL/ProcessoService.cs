@@ -73,7 +73,7 @@ namespace BLL
             }
         }
 
-        public bool Edit(Processo processo)
+        public Processo Edit(Processo processo)
         {
             try
             {

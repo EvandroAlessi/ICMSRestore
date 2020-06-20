@@ -53,32 +53,31 @@
                         <tbody>
                             <tr *ngFor="let invoice of invoices">
                                 <td data-th="CNPJ">{{ invoice.cnpj }}</td>
-                                <td data-th="Processo">{{ invoice.entrada == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td>
+                                <td data-th="Tipo">{{ invoice.entrada == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td>
                                 <td data-th="cNf">{{ invoice.cNF }}</td>
                                 <td data-th="nNf">{{ invoice.nNF }}</td>
-                                <td data-th="Data Emissão">{{ invoice.dhEmi }}</td>
-                                <td data-th="Data Saida/Entrada">{{ invoice.dhSaiEnt }}</td>
+                                <td data-th="Data Emissão">{{ invoice.dhEmi | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
+                                <td data-th="Data Saida/Entrada">{{ invoice.dhSaiEnt | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
                                 <td data-th="Valor Total">{{ invoice.vNF_TOTAL }}</td>
                                 <td data-th="Processo">{{ invoice.processoID }}</td>
                                 <td data-th="Ações" class="sm-column">
-                                    <a class="btn btn-success m-1" routerLink="{{ route }}/details/{{ invoice.id }}">
+                                    <button class="btn btn-success m-1" (click)="details(invoice.id)">
                                         <i class="fa fa-info-circle mr-1"></i>Detalhes
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                             <tr *ngIf="invoices.length == 0">
-                                <td colspan="8">Nenhum Registro Encontrado</td>
+                                <td colspan="9">Nenhum Registro Encontrado</td>
                             </tr>
                         </tbody>
                     </table>
                     <nav *ngIf="pagination && pagination.pageCount > 1" class="row">
                         <div class="col-md-2">
                             <div class="btn-group" dropdown [dropup]="true">
-                                <button id="button-dropup" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-dropup">
+                                <button id="button-dropup" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-dropup" title="Quanita de itens por página">
                                   {{ filters.take }} <span class="caret"></span>
                                 </button>
-                                <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu"
-                                    role="menu" aria-labelledby="button-dropup">
+                                <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-dropup" title="Itens por página">
                                     <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(5)">5</a></li>
                                     <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(10)">10</a></li>
                                     <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(30)">30</a></li>
@@ -100,28 +99,5 @@
                 </div>
             </div>
         </div>
-        <!--/.col-->
     </div>
-    <!--/.row-->
 </div>
-
-<!-- Modal -->
-<!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <app-edit></app-edit>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-</div> -->

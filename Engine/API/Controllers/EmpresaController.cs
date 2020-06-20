@@ -147,15 +147,15 @@ namespace API.Controllers
                     }
                     else
                     {
-                        bool edited = empresaService.Edit(empresa);
+                        var editedCompany = empresaService.Edit(empresa);
 
-                        if (edited)
+                        if (editedCompany is null)
                         {
-                            return NoContent();
+                            return BadRequest("Can't complete the edit process, please verify the data send.");
                         }
                         else
                         {
-                            return BadRequest("Can't complete the edit process, please verify the data send.");
+                            return Ok(editedCompany);
                         }
                     }
                 }

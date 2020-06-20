@@ -1,9 +1,9 @@
 ﻿using CrossCutting;
-using CrossCutting.Models;
 using Dominio;
 using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 
 namespace DAO
@@ -22,6 +22,7 @@ namespace DAO
                 ProcessoID = Convert.ToInt32(reader["ProcessoID"]),
                 QntArq = Convert.ToInt32(reader["QntArq"]),
                 Ativo = Convert.ToBoolean(reader["Ativo"]),
+                DataInicio = reader.GetFieldValue<DateTime?>("DataInicio"),
             };
         }
 
@@ -37,9 +38,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{ quote}
+                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote}
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY {quote}ID{quote} desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -79,8 +80,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{ quote}
-                                WHERE {quote}ProcessoID{quote}= { processoID };";
+                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote}
+                                WHERE {quote}ProcessoID{quote} = { processoID }
+                                ORDER BY {quote}ID{quote} desc;";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -242,11 +244,15 @@ namespace DAO
                                 , {quote}PastaZip{quote}
                                 , {quote}QntArq{quote}
                                 , {quote}Ativo{quote}
+                                , {quote}DataInicio{quote}
+                                , {quote}Entrada{quote}
                             ) VALUES (
-                                '{ processoUpload.ProcessoID }'
+                                { processoUpload.ProcessoID }
                                 , '{ processoUpload.PastaZip }'
-                                , '{ processoUpload.QntArq }'
-                                , '{ processoUpload.Ativo }')
+                                , { processoUpload.QntArq }
+                                , '{ processoUpload.Ativo }'
+                                , '{ processoUpload.DataInicio ?? DateTime.Now }'
+                                , '{ processoUpload.Entrada }')
                             RETURNING {quote}ID{quote};";
 
                         id = cmd.ExecuteScalar();
@@ -276,7 +282,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(ProcessoUpload processoUpload)
+        public ProcessoUpload Edit(ProcessoUpload processoUpload)
         {
             try
             {
@@ -293,6 +299,7 @@ namespace DAO
                                 , {quote}PastaZip{quote} = '{ processoUpload.PastaZip }'
                                 , {quote}QntArq{quote} = { processoUpload.QntArq }
                                 , {quote}Ativo{quote} = '{ processoUpload.Ativo }'
+                                , {quote}DataInicio{quote} = '{ processoUpload.DataInicio }'
                             WHERE {quote}ID{quote} = { processoUpload.ID };";
 
                         rows = cmd.ExecuteNonQuery();
@@ -301,7 +308,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0;
+                return rows > 0 ? processoUpload : null;
             }
             catch (NpgsqlException ex)
             {

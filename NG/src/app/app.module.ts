@@ -21,7 +21,7 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ChartsModule } from 'ng2-charts';
 import { ToastrModule } from 'ngx-toastr';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { UserGuard } from './guards/user.guard';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RequestInterceptor } from './interceptors/request.interceptor';
@@ -46,6 +46,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ChartsModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     ToastrModule.forRoot({
       timeOut: 4000,
@@ -61,7 +62,7 @@ export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
     ContainerComponent,
     NotFoundComponent,
     ErrorComponent,
-    LoginComponent,
+    LoginComponent
   ],
   entryComponents: [],
   providers: [

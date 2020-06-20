@@ -16,11 +16,12 @@ export class AuthenticationService {
       .post<any>(`${this.api}/login`, credentials, {})
       .pipe(
         map((response) => {
-          console.log(response);
           if (response && response.user && response.user.token) {
             localStorage.setItem('user', JSON.stringify(response.user));
+
             window.dispatchEvent(new CustomEvent('user:login'));
           }
+
           return response;
         })
       )
@@ -34,22 +35,26 @@ export class AuthenticationService {
       .then(() => {
         localStorage.removeItem('user');
         window.dispatchEvent(new CustomEvent('user:logout'));
+
         this.router.navigate(['/login']);
       })
       .catch(() => {
         localStorage.removeItem('user');
         window.dispatchEvent(new CustomEvent('user:logout'));
+
         this.router.navigate(['/login']);
       });
   }
 
   getUser() {
     let user = JSON.parse(localStorage.getItem('usuario'));
+
     if (!user) {
       user = {
         name: 'Usuário',
       };
     }
+    
     return user;
   }
 }

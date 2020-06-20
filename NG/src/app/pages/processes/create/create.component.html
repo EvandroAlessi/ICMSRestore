@@ -1,0 +1,59 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-edit mr-2"></i>
+                        <span>Incluir Processo</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="text-input">Nome</label>
+                            <div class="col-md-10">
+                                <input type="text" class="form-control" [class.is-invalid]="errors?.nome" [(ngModel)]="process.Nome" name="nome" placeholder="Nome">
+                                <div class="invalid-feedback" *ngFor="let error of errors?.nome">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="text-input">Início Periodo</label>
+                            <div class="col-md-10">
+                                <input type="date" class="form-control" [class.is-invalid]="errors['$.inicioPeriodo']" [ngModel]="process.FnicioPeriodo | date:'yyyy-MM-dd'" (ngModelChange)="process.inicioPeriodo = $event" name="inicioPeriodo" placeholder="Início Periodo">
+                                <div class="invalid-feedback" *ngFor="let error of errors['$.inicioPeriodo']">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="text-input">Fim Periodo</label>
+                            <div class="col-md-10">
+                                <input type="date" class="form-control" [class.is-invalid]="errors['$.fimPeriodo']" [ngModel] ="process.FimPeriodo | date:'yyyy-MM-dd'" (ngModelChange)="process.fimPeriodo = $event" name="fimPeriodo" placeholder="Fim Periodo">
+                                <div class="invalid-feedback" *ngFor="let error of errors['$.fimPeriodo']">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-md-2 col-form-label" for="text-input">Empresa</label>
+                            <div class="col-md-10">
+                                <input type="number" class="form-control" [class.is-invalid]="errors['$.empresaID']" [(ngModel)]="process.EmpresaID" name="EmpresaID" placeholder="Empresa" >
+                                <div class="invalid-feedback" *ngFor="let error of errors['$.empresaID']">
+                                    {{ error }}
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center">
+                    <button type="button" class="btn btn-success" (click)="save()"><i class="fa fa-check mr-1"></i>Salvar</button>
+                    <button type="button" class="btn btn-danger" (click)="cancel()"><i
+							class="fa fa-ban mr-1"></i>Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

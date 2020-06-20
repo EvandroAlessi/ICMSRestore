@@ -7,6 +7,7 @@ import { ListComponent } from './list.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ListRouting } from './list.routing';
+import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 
 @NgModule({
   declarations: [ListComponent],
@@ -15,6 +16,7 @@ import { ListRouting } from './list.routing';
     RouterModule,
     ListRouting,
     SharedModule,
+    BsDropdownModule,
     FormsModule,
     CollapseModule.forRoot(),
   ],

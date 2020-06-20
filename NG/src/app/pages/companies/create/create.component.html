@@ -11,37 +11,37 @@
                 <div class="card-body">
                     <form class="form-horizontal">
                         <div class="form-group row">
-                            <label class="col-md-3 col-form-label" for="text-input">CNPJ</label>
-                            <div class="col-md-9">
+                            <label class="col-md-2 col-form-label" for="text-input">CNPJ</label>
+                            <div class="col-md-10">
                                 <input type="text" class="form-control" [class.is-invalid]="errors?.cnpj" placeholder="CNPJ" [(ngModel)]="company.cnpj" name="cnpj">
-                                <div class="invalid-feedback" *ngFor="let error of errors.cnpj">
+                                <div class="invalid-feedback" *ngFor="let error of errors?.cnpj">
                                     {{ error }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-form-label" for="text-input">Nome</label>
-                            <div class="col-md-9">
+                            <label class="col-md-2 col-form-label" for="text-input">Nome</label>
+                            <div class="col-md-10">
                                 <input type="text" class="form-control" [class.is-invalid]="errors?.nome" placeholder="Nome" [(ngModel)]="company.nome" name="nome">
-                                <div class="invalid-feedback" *ngFor="let error of errors.nome">
+                                <div class="invalid-feedback" *ngFor="let error of errors?.nome">
                                     {{ error }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-form-label" for="text-input">Cidade</label>
-                            <div class="col-md-9">
+                            <label class="col-md-2 col-form-label" for="text-input">Cidade</label>
+                            <div class="col-md-10">
                                 <input type="text" class="form-control" [class.is-invalid]="errors?.cidade" placeholder="Cidade" [(ngModel)]="company.cidade" name="cidade">
-                                <div class="invalid-feedback" *ngFor="let error of errors.cidade">
+                                <div class="invalid-feedback" *ngFor="let error of errors?.cidade">
                                     {{ error }}
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-md-3 col-form-label" for="text-input">UF</label>
-                            <div class="col-md-9">
+                            <label class="col-md-2 col-form-label" for="text-input">UF</label>
+                            <div class="col-md-10">
                                 <input type="text" class="form-control" [class.is-invalid]="errors?.uf" placeholder="UF" [(ngModel)]="company.uf" name="uf">
-                                <div class="invalid-feedback" *ngFor="let error of errors.uf">
+                                <div class="invalid-feedback" *ngFor="let error of errors?.uf">
                                     {{ error }}
                                 </div>
                             </div>

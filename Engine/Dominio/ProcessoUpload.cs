@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Dominio
 {
@@ -18,5 +19,9 @@ namespace Dominio
 
         [Required]
         public bool Ativo { get; set; }
+
+        public DateTime? DataInicio { get; set; }
+
+        public bool Entrada { get; set; }
     }
 }

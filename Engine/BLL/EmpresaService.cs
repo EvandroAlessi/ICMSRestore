@@ -73,7 +73,7 @@ namespace BLL
             }
         }
 
-        public bool Edit(Empresa empresa)
+        public Empresa Edit(Empresa empresa)
         {
             try
             {

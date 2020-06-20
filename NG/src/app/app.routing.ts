@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { Routes, RouterModule, ExtraOptions } from '@angular/router';
 import { ContainerComponent } from './pages/base/container/container.component';
 import { UserGuard } from './guards/user.guard';
 import { LoginComponent } from './pages/base/login/login.component';
@@ -58,9 +58,9 @@ export const routes: Routes = [
       },
       {
         path: 'processes',
-        loadChildren: () => import('./pages/invoices/invoices.module')
+        loadChildren: () => import('./pages/processes/processes.module')
           .then(
-            (m) => m.InvoicesModule
+            (m) => m.ProcessesModule
           ),
       },
       {

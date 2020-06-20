@@ -18,7 +18,7 @@ export class ListComponent implements OnInit {
     cidade: '',
     uf: '',
     page: 1,
-    take: 10
+    take: 5
   };
   public pagination: any = {};
   public companies: any = [];
@@ -54,7 +54,7 @@ export class ListComponent implements OnInit {
     this.modalService
         .show(ConfirmDialogComponent, {
           initialState: {
-            message: 'Deseja realmente excluir a empresa ' + company.nome + ', CNPJ ' + company.cnpj + '?',
+            message: 'Deseja realmente excluir a empresa "' + company.nome + '", CNPJ "' + company.cnpj + '"?',
             note: 'Esta ação não poderá ser desfeita.',
           },
         })
@@ -73,6 +73,20 @@ export class ListComponent implements OnInit {
               );
           }
         });
+  }
+
+  changePageSize(size) {
+    let take = (Number)(this.filters.take);
+    let page = (Number)(this.filters.page);
+
+    let lastItem = (Number)(page*take);
+
+    if(lastItem > size) {
+      this.filters.page = Math.floor(lastItem / size);
+    }
+
+    this.filters.take = size;
+    this.paginate(this.filters.page);
   }
 
   toggleFilter() {

@@ -13,7 +13,7 @@ namespace Dominio
 
         public string Nome { get; set; }
 
-        public DateTime DataCriacao { get; set; }
+        public DateTime? DataCriacao { get; set; }
 
         [Required]
         public DateTime InicioPeriodo { get; set; }

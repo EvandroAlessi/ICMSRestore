@@ -46,7 +46,7 @@ namespace API.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        [HttpGet("{cNf}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
             try
@@ -147,15 +147,15 @@ namespace API.Controllers
                     }
                     else
                     {
-                        bool edited = itemService.Edit(item);
+                        var editedItem = itemService.Edit(item);
 
-                        if (edited)
+                        if (editedItem is null)
                         {
-                            return NoContent();
+                            return BadRequest("Can't complete the edit process, please verify the data send.");
                         }
                         else
                         {
-                            return BadRequest("Can't complete the edit process, please verify the data send.");
+                            return Ok(editedItem);
                         }
                     }
                 }

@@ -282,7 +282,7 @@ namespace BLL
         }
 
 
-        public bool Edit(NFe nfe)
+        public NFe Edit(NFe nfe)
         {
             try
             {

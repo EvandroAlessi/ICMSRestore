@@ -73,7 +73,7 @@ namespace BLL
             }
         }
 
-        public bool Edit(MVA mva)
+        public MVA Edit(MVA mva)
         {
             try
             {

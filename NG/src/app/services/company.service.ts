@@ -1,8 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,17 +8,11 @@ import { Observable } from 'rxjs';
 })
 
 export class CompanyService {
-  private api = environment.api.url + "/companies";
+    private api = environment.api.url + "/companies";
 
-  constructor(private router: Router
-      , private http: HttpClient) {}
-
-    get(id){
-        return this.http.get<any>(this.api + '/' + id);
-    }
+    constructor(private http: HttpClient) {}
 
     getAll(filters): Observable<any> {
-        console.log(filters);
         let params = new HttpParams();
 
         params = params.append('page', filters.page);
@@ -42,8 +34,11 @@ export class CompanyService {
             params = params.append('UF', filters.uf);
         }
         
-        console.log(params);
         return this.http.get<any>(this.api, { params: params });
+    }
+
+    get(id){
+        return this.http.get<any>(this.api + '/' + id);
     }
 
     post(company: any) {

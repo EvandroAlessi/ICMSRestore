@@ -157,18 +157,13 @@ namespace DAO
             {
                 object id;
 
-                if (processo.DataCriacao == null)
-                {
-                    processo.DataCriacao = DateTime.Now;
-                }
-
                 using (var conn = new NpgsqlConnection(connString))
                 {
                     conn.Open();
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}Processos{ quote} (
+                        cmd.CommandText = $@"INSERT INTO {quote}Processos{quote} (
                                 {quote}EmpresaID{quote}
                                 , {quote}Nome{quote}
                                 , {quote}DataCriacao{quote}
@@ -177,7 +172,7 @@ namespace DAO
                             ) VALUES (
                                 { processo.EmpresaID }
                                 , '{ processo.Nome }'
-                                , '{ processo.DataCriacao }'
+                                , '{ processo.DataCriacao ?? DateTime.Now }'
                                 , '{ processo.InicioPeriodo }'
                                 , '{ processo.FimPeriodo }')
                             RETURNING {quote}ID{quote};";
@@ -209,7 +204,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(Processo processo)
+        public Processo Edit(Processo processo)
         {
             try
             {
@@ -235,7 +230,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0;
+                return rows > 0 ? processo : null;
             }
             catch (NpgsqlException ex)
             {

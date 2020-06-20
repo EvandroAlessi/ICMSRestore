@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BsModalService } from 'ngx-bootstrap/modal';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import { InvoiceService } from '../../../services/invoice.service';
+import { DetailsComponent } from '../details/details.component';
 @Component({
   selector: 'app-list',
   styleUrls: ['./list.component.scss'],
@@ -14,14 +15,14 @@ export class ListComponent implements OnInit {
   public showFilter: boolean = false;
   public filters: any = {
     cnpj: '',
-    nome: '',
-    cidade: '',
-    uf: '',
     page: 1,
     take: 5
   };
   public pagination: any = {};
   public invoices: any = [];
+
+  selectedInvoice: any = {};
+  bsModalRef: BsModalRef;
 
   constructor(
     private routerActived: ActivatedRoute,
@@ -47,13 +48,15 @@ export class ListComponent implements OnInit {
     this.invoiceService.getAllSimplify(this.filters).subscribe((response) => {
       this.invoices = response.invoices;
       this.pagination = response.pagination;
-
-      console.log(response);
     });
   }
 
-  details(invoice){
-    // this.modalService.show();
+  details(id){
+    const initialState = {
+      id: id
+    };
+
+    this.bsModalRef = this.modalService.show(DetailsComponent, {initialState});
   }
 
   toggleFilter() {
@@ -61,8 +64,17 @@ export class ListComponent implements OnInit {
   }
 
   changePageSize(size) {
+    let take = (Number)(this.filters.take);
+    let page = (Number)(this.filters.page);
+
+    let lastItem = (Number)(page*take);
+
+    if(lastItem > size) {
+      this.filters.page = Math.floor(lastItem / size);
+    }
+
     this.filters.take = size;
-    this.list();
+    this.paginate(this.filters.page);
   }
 
   filter() {

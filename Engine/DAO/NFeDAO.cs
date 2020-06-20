@@ -280,9 +280,18 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}NFe{ quote}
+                        cmd.CommandText = $@"SELECT {quote}ID{quote}
+                                                , {quote}ProcessoID{quote}
+                                                , {quote}CNPJ{quote}
+                                                , {quote}Entrada{quote}
+                                                , {quote}cNF{quote}
+                                                , {quote}nNF{quote}
+                                                , {quote}dhEmi{quote}
+                                                , {quote}dhSaiEnt{quote}
+                                                , {quote}vNF_TOTAL{quote}
+                                            FROM {quote}NFe{quote}
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY {quote}ID{quote} desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -787,7 +796,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(NFe nfe)
+        public NFe Edit(NFe nfe)
         {
             try
             {
@@ -846,7 +855,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0;
+                return rows > 0 ? nfe : null;
             }
             catch (NpgsqlException ex)
             {

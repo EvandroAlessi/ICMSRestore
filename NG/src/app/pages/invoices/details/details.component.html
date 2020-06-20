@@ -4,8 +4,8 @@
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <i class="fa fa-edit mr-2"></i>
-                        <span>Detalhes Nota Fiscal</span>
+                        <i class="fa fa-info-circle mr-2"></i>
+                        <span>Notal Fiscal Completa</span>
                     </div>
                 </div>
                 <div class="card-body">
@@ -78,13 +78,13 @@
                             <div class="col-md-6">
                                 <label class="col-md-12 col-form-label" for="text-input">dhEmi</label>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" [value]="invoice.dhEmi" name="dhEmi" title="dhEmi" disabled>
+                                    <input type="text" class="form-control" [value]="invoice.dhEmi | date: 'dd/MM/yyyy hh:mm:ss'" name="dhEmi" title="dhEmi" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label class="col-md-12 col-form-label" for="text-input">dhSaiEnt</label>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" [value]="invoice.dhSaiEnt" name="dhSaiEnt" title="dhSaiEnt" disabled>
+                                    <input type="text" class="form-control" [value]="invoice.dhSaiEnt | date: 'dd/MM/yyyy hh:mm:ss'" name="dhSaiEnt" title="dhSaiEnt" disabled>
                                 </div>
                             </div>
                         </div>
@@ -196,7 +196,7 @@
                             <div class="col-md-6">
                                 <label class="col-md-12 col-form-label" for="text-input">CNPJ_DEST</label>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" [value]="invoice.cnpj_DEST" name="cnpj_DEST" title="CNPJ_DEST" disabled>
+                                    <input type="text" class="form-control" [value]="invoice.cnpJ_DEST" name="cnpj_DEST" title="CNPJ_DEST" disabled>
                                 </div>
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                             <div class="col-md-6">
                                 <label class="col-md-12 col-form-label" for="text-input">CPF_DEST</label>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" [value]="invoice.cpf_DEST" name="cpf_DEST" title="CPF_DEST" disabled>
+                                    <input type="text" class="form-control" [value]="invoice.cpF_DEST" name="cpf_DEST" title="CPF_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -252,7 +252,7 @@
                             <div class="col-md-6">
                                 <label class="col-md-12 col-form-label" for="text-input">UF_DEST</label>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" [value]="invoice.uf_DEST" name="uf_DEST" title="UF_DEST" disabled>
+                                    <input type="text" class="form-control" [value]="invoice.uF_DEST" name="uF_DEST" title="UF_DEST" disabled>
                                 </div>
                             </div>
                         </div>
@@ -260,7 +260,7 @@
                             <div class="col-md-6">
                                 <label class="col-md-12 col-form-label" for="text-input">CEP_DEST</label>
                                 <div class="col-md-12">
-                                    <input type="text" class="form-control" [value]="invoice.cep_DEST" name="cep_DEST" title="CEP_DEST" disabled>
+                                    <input type="text" class="form-control" [value]="invoice.ceP_DEST" name="ceP_DEST" title="CEP_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">

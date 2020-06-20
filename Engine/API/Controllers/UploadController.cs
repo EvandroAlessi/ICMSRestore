@@ -88,7 +88,8 @@ namespace API.Controllers
                                     ProcessoID = processoID,
                                     PastaZip = zipDir,
                                     QntArq = entries.Count(),
-                                    Ativo = true
+                                    Ativo = true,
+                                    Entrada = entrada,
                                 };
 
                                 processoUpload = processoUploadService.Insert(processoUpload);

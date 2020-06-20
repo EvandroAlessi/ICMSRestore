@@ -168,15 +168,15 @@ namespace API.Controllers
                     }
                     else
                     {
-                        bool edited = nfeService.Edit(nfe);
+                        var editedNFe = nfeService.Edit(nfe);
 
-                        if (edited)
+                        if (editedNFe is null)
                         {
-                            return NoContent();
+                            return BadRequest("Can't complete the edit process, please verify the data send.");
                         }
                         else
                         {
-                            return BadRequest("Can't complete the edit process, please verify the data send.");
+                            return Ok(editedNFe);
                         }
                     }
                 }

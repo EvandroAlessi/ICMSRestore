@@ -5,6 +5,10 @@
         }
     }
 
+    .animated > .row > .col-md-12 {
+        padding: unset;
+    }
+
     .form-horizontal > .form-group > .col-md-6 > .col-md-12 {
         padding: unset;
     }

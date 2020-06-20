@@ -203,7 +203,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(MVA mva)
+        public MVA Edit(MVA mva)
         {
             try
             {
@@ -230,7 +230,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0;
+                return rows > 0 ? mva : null;
             }
             catch (NpgsqlException ex)
             {

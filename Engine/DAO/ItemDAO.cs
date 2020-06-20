@@ -105,7 +105,7 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"SELECT * FROM {quote}Itens{quote}
-                                    WHERE {quote}NFeID{quote} = { nfeID };";
+                                    WHERE {quote}ProcessID{quote} = { nfeID };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -485,7 +485,7 @@ namespace DAO
             }
         }
 
-        public bool Edit(Item item)
+        public Item Edit(Item item)
         {
             try
             {
@@ -532,7 +532,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0;
+                return rows > 0 ? item : null;
             }
             catch (NpgsqlException ex)
             {
