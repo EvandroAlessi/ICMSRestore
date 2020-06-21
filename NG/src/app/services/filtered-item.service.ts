@@ -16,8 +16,13 @@ export class FilteredItemService {
         return this.http.get<any>(this.api);
     }
 
-    getAllByProcessID(id): Observable<any> {
-        return this.http.get<any>(environment.api.url + '/processes/'+ id +'/filtered-items');
+    getAllByProcessID(id, filters): Observable<any> {
+        let params = new HttpParams();
+
+        params = params.append('page', filters.page);
+        params = params.append('take', filters.take);
+
+        return this.http.get<any>(environment.api.url + '/processes/'+ id +'/filtered-items', { params: params});
     }
 
     get(id){

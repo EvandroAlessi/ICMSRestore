@@ -27,15 +27,15 @@ export class ProcessService {
     }
 
     get(id){
-        return this.http.get<any>(this.api + '/' + id);
+        return this.http.get<Process>(this.api + '/' + id);
     }
 
     post(process: Process) {
         return this.http.post<Process>(this.api, process);
     }
 
-    put(id, process) {
-        return this.http.put(this.api  + '/' + id, process);
+    put(id, process: Process) {
+        return this.http.put<Process>(this.api  + '/' + id, process);
     }
 
     delete(id) {

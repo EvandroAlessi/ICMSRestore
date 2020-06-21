@@ -1,65 +1,50 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { ProcessService } from '../../../services/process.service';
-import { UploadProcessService } from '../../../services/upload-processes.service';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { FilteredItemService } from '../../../services/filtered-item.service';
-import { UploadService } from '../../../services/upload.service';
+import { UploadProcessService } from '../../../../services/upload-processes.service';
+import { UploadService } from '../../../../services/upload.service';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 
 @Component({
-  selector: 'app-edit',
-  styleUrls: ['./edit.component.scss'],
-  templateUrl: './edit.component.html',
+  selector: 'app-upload',
+  styleUrls: ['./upload.component.scss'],
+  templateUrl: './upload.component.html',
 })
-export class EditComponent implements OnInit {
-  public route: string = '/processes';
-  public errors: any = {};
-  public process: any = {};
+export class UploadComponent implements OnInit {
   public uploadProcesses: any = [];
-  public filteredItems: any = [];
-  public id: number;
-  modalRef: BsModalRef;
-  
+  private processID: number;
+  private entrada: boolean = false;
+
+  public modalRef: BsModalRef; 
+
+  public pagination: any = {};
+  public filters: any = {
+    page: 1,
+    take: 5
+  };
+
   constructor(
-    private modalService: BsModalService,
-    private routerActived: ActivatedRoute,
-    private router: Router,
     private toast: ToastrService,
-    private processService: ProcessService,
-    private uploadProcessService: UploadProcessService,
-    private filteredItemService: FilteredItemService,
     private uploadService: UploadService,
+    private uploadProcessService: UploadProcessService,
+    private modalService: BsModalService,
   ) {}
 
   ngOnInit() {
-    this.routerActived.params.subscribe((params) => {
-      this.id = params.id;
-
-      this.processService
-          .get(this.id)
-          .subscribe((response) => {
-              this.process = response;
-            },
-            (err) => {
-              this.router.navigate([this.route]);
-            },
-          );
-    });
-
-    this.getUploadProcesses();
-    this.getFilteredItems();
+    //this.getUploadProcesses();
   }
-  
+
   openModal(template: TemplateRef<any>) {
     this.modalRef = this.modalService.show(template);
   }
 
-  getUploadProcesses() {
+  getUploadProcesses(processID) {
+    this.processID = processID;
+
     this.uploadProcessService
-        .getAllByProcessID(this.id)
+        .getAllByProcessID(this.processID, this.filters)
         .subscribe((response) => {
-          this.uploadProcesses = response;
+          this.uploadProcesses = response.uploadProcesses;
+          this.pagination = response.pagination;
 
             for (let i = 0; i < this.uploadProcesses.length; i++) {
               const element = this.uploadProcesses[i];
@@ -75,40 +60,30 @@ export class EditComponent implements OnInit {
             }
           },
           (err) => {
-            this.router.navigate([this.route]);
+            //this.router.navigate([this.route]);
           }
         );
   }
 
-  getFilteredItems() {
-    this.filteredItemService
-        .getAllByProcessID(this.id)
-        .subscribe((response) => {
-            this.filteredItems = response.filteredItems;
-          },
-          (err) => {
-            this.router.navigate([this.route]);
-          }
-        );
+  changePageSize(size) {
+    let take = (Number)(this.filters.take);
+    let page = (Number)(this.filters.page);
+
+    let lastItem = (Number)(page*take);
+
+    if(lastItem > size) {
+      this.filters.page = Math.floor(lastItem / size);
+    }
+
+    this.filters.take = size;
+    this.paginate(this.filters.page);
   }
 
-  save() {
-    this.processService
-        .put(this.id, this.process)
-        .subscribe((response) => {
-            this.toast.success('Processo editado.', 'Sucesso!');
-            this.router.navigate([this.route]);
-          },
-          (error) => {
-            this.errors = error.error;
-          },
-        );
-  }
+  paginate(page: number) {
+    this.filters.page = page;
 
-  cancel() {
-    this.router.navigate([this.route]);
+    this.getUploadProcesses(this.processID);
   }
-
 
   onConfirm(){
     let files = this.files;
@@ -117,9 +92,9 @@ export class EditComponent implements OnInit {
       this.files = this.files.filter(obj => obj !== file);
 
       this.uploadService
-        .post(this.id, file)
+        .post(file, this.processID, this.entrada)
         .subscribe((response) => {
-            this.getUploadProcesses();
+            this.getUploadProcesses(this.processID);
           },
           (err) => {
             alert('Fodeu');
@@ -127,9 +102,6 @@ export class EditComponent implements OnInit {
         );
     });
   }
-
-
-
 
   files: any[] = [];
 
@@ -187,7 +159,7 @@ export class EditComponent implements OnInit {
         this.files.push(item);
       }
     }
-    this.uploadFilesSimulator(0);
+    //this.uploadFilesSimulator(0);
   }
 
   /**

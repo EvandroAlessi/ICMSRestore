@@ -42,14 +42,18 @@ namespace API.Controllers
 
         [Route("/api/processes/{processID}/upload-processes")]
         [HttpGet]
-        public async Task<dynamic> GetByProcess(int processID)
+        public async Task<dynamic> GetByProcess(int processID, int page = 1, int take = 30)
         {
             try
             {
                 dynamic uploadProcesses = new List<dynamic>();
 
+                Dictionary<string, string> filters = new Dictionary<string, string>();
 
-                foreach (var uploadProcess in await processoUploadService.GetAll(processID))
+                filters.Add("ProcessoID", processID.ToString());
+
+               
+                foreach (var uploadProcess in await processoUploadService.GetAll(processID, page, take))
                 {
                     uploadProcesses.Add(new
                     {
@@ -65,8 +69,11 @@ namespace API.Controllers
                     });
                 }
 
-
-                return uploadProcesses;
+                return new
+                {
+                    UploadProcesses = uploadProcesses,
+                    Pagination = await processoUploadService.GetPagination(page, take, filters)
+                };
             }
             catch (Exception ex)
             {

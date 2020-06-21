@@ -23,6 +23,7 @@ namespace DAO
                 QntArq = Convert.ToInt32(reader["QntArq"]),
                 Ativo = Convert.ToBoolean(reader["Ativo"]),
                 DataInicio = reader.GetFieldValue<DateTime?>("DataInicio"),
+                Entrada = Convert.ToBoolean(reader["Entrada"]),
             };
         }
 
@@ -68,7 +69,7 @@ namespace DAO
             }
         }
 
-        public async Task<List<ProcessoUpload>> GetAll(int processoID)
+        public async Task<List<ProcessoUpload>> GetAll(int processoID, int skip = 0, int take = 30)
         {
             try
             {
@@ -81,8 +82,10 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote}
-                                WHERE {quote}ProcessoID{quote} = { processoID }
-                                ORDER BY {quote}ID{quote} desc;";
+                                            WHERE {quote}ProcessoID{quote} = { processoID }
+                                            ORDER BY {quote}ID{ quote} desc
+                                            LIMIT { take } 
+                                            OFFSET { skip };";
 
                         using (var reader = cmd.ExecuteReader())
                         {

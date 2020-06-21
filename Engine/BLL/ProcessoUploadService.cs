@@ -39,11 +39,13 @@ namespace BLL
             }
         }
 
-        public async Task<List<ProcessoUpload>> GetAll(int processoID)
+        public async Task<List<ProcessoUpload>> GetAll(int processoID, int page = 1, int take = 30)
         {
             try
             {
-                return await processoUploadDAO.GetAll(processoID);
+                int skip = (page - 1) * take;
+
+                return await processoUploadDAO.GetAll(processoID, skip, take);
             }
             catch (Exception ex)
             {

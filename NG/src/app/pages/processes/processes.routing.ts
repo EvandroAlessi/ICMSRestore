@@ -22,7 +22,7 @@ const routes: Routes = [
           title: '',
         },
         loadChildren: () =>
-          import('./edit/edit.module').then((m) => m.EditModule),
+          import('./process-tabs/process-tabs.module').then((m) => m.ProcessTabsModule),
       },
       {
         path: 'create',

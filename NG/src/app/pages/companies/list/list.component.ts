@@ -47,6 +47,8 @@ export class ListComponent implements OnInit {
     this.companyService.getAll(this.filters).subscribe((response) => {
       this.companies = response.companies;
       this.pagination = response.pagination;
+
+      console.log(this.pagination);
     });
   }
 

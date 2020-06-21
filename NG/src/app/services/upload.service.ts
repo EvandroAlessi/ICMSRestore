@@ -18,8 +18,10 @@ export class UploadService {
           })
     }
 
-    post(processID, file) {
-        const formData = new FormData();
+    post(file, processID, entrada) {
+        const formData = new FormData(); 
+        let params = new HttpParams();
+
 
         this.formGroup.patchValue({
             files: file
@@ -28,8 +30,10 @@ export class UploadService {
         this.formGroup.get('files').updateValueAndValidity()
 
         formData.append('files', this.formGroup.get('files').value);
+
+        params = params.append('Entrada', entrada);
         
-        return this.http.post(this.api + "/" + processID, formData);
+        return this.http.post(this.api + "/" + processID, formData, { params: params });
     }
 
     postAll(processID, files) {

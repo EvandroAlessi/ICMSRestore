@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule, ExtraOptions } from '@angular/router';
-import { EditComponent } from './edit.component';
+import { Routes, RouterModule } from '@angular/router';
+import { ProcessTabsComponent } from './process-tabs.component';
 
 const routes: Routes = [
   {
@@ -11,7 +11,7 @@ const routes: Routes = [
     children: [
       {
         path: ':id',
-        component: EditComponent,
+        component: ProcessTabsComponent,
         data: {
           title: 'Editar Processo',
         },
@@ -24,4 +24,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class EditRouting {}
+export class ProcessTabsRouting {}

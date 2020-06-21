@@ -1,0 +1,19 @@
+<tabset >
+    <tab *ngFor="let tabz of tabs"
+         [heading]="tabz.title"
+         [active]="tabz.active"
+         (select)="tabz.active = true"
+         (deselect)="tabz.active = false"
+         [disabled]="tabz.disabled"
+         (onActive)="onActive(tabz)"
+         [removable]="tabz.removable" 
+         (selectTab)="onSelect($event)">
+
+        <div [ngSwitch]="tabz?.title">
+            <app-edit *ngSwitchCase="tabs[0].title"></app-edit>
+            <app-upload *ngSwitchCase="tabs[1].title"></app-upload>
+            <app-filtered-items *ngSwitchCase="tabs[2].title"></app-filtered-items>
+        </div>
+    </tab>
+</tabset>
+

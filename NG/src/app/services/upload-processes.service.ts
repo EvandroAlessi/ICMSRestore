@@ -17,8 +17,13 @@ export class UploadProcessService {
         return this.http.get<any>(this.api);
     }
 
-    getAllByProcessID(id){
-        return this.http.get<any>(environment.api.url + '/processes/'+ id +'/upload-processes');
+    getAllByProcessID(id, filters){
+        let params = new HttpParams();
+
+        params = params.append('page', filters.page);
+        params = params.append('take', filters.take);
+
+        return this.http.get<any>(environment.api.url + '/processes/'+ id +'/upload-processes', { params: params });
     }
 
     get(id){

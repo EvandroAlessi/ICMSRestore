@@ -32,7 +32,7 @@ namespace DAO
                             while (reader.Read())
                             {
                                 pagination.Count = reader.GetInt32(0);
-                                pagination.PageCount = (pagination.Count / take) + 1;
+                                pagination.PageCount = pagination.Count == take ? 1 : ((pagination.Count / take) + 1);
                                 pagination.PageSize = take;
                                 pagination.CurrentPage = page;
 
