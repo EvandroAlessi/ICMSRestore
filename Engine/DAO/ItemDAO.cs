@@ -46,7 +46,13 @@ namespace DAO
                 pCOFINS = reader.GetFieldValue<double?>("pCOFINS"),
                 vCOFINS = reader.GetFieldValue<double?>("vCOFINS"),
                 NFeID = reader.GetFieldValue<int>("NFeID"),
-                ID = reader.GetFieldValue<int>("ID")
+                ID = reader.GetFieldValue<int>("ID"),
+                vProd = reader.GetFieldValue<double?>("vProd"),
+                cEANTrib = reader["cEANTrib"]?.ToString(),
+                uTrib = reader["uTrib"]?.ToString(),
+                qTrib = reader.GetFieldValue<double?>("qTrib"),
+                vUnTrib = reader.GetFieldValue<double?>("vUnTrib"),
+                indTot = reader.GetFieldValue<int?>("indTot"),
             };
         }
 
@@ -250,6 +256,12 @@ namespace DAO
                                 , {quote}pCOFINS{quote}
                                 , {quote}vCOFINS{quote}
                                 , {quote}NFeID{quote}
+                                , {quote}vProd{quote}
+                                , {quote}cEANTrib{quote}
+                                , {quote}uTrib{quote}
+                                , {quote}qTrib{quote}
+                                , {quote}vUnTrib{quote}
+                                , {quote}indTot{quote}
                             ) VALUES (
                                 { item.nItem }
                                 , '{ item.cProd }'
@@ -276,7 +288,14 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.vBC_COFINS) }
                                 , { NullableUtils.TestValue(item.pCOFINS) }
                                 , { NullableUtils.TestValue(item.vCOFINS) }
-                                , { item.NFeID })
+                                , { item.NFeID }
+                                , { NullableUtils.TestValue(item.vProd) }
+                                , '{ item.cEANTrib }'
+                                , '{ item.uTrib }'
+                                , { NullableUtils.TestValue(item.qTrib) }
+                                , { NullableUtils.TestValue(item.vUnTrib) }
+                                , { NullableUtils.TestValue(item.indTot) }
+                            )
                             RETURNING {quote}cProd{quote};";
 
                         id = cmd.ExecuteScalar();
@@ -350,6 +369,12 @@ namespace DAO
                                 , {quote}pCOFINS{quote}
                                 , {quote}vCOFINS{quote}
                                 , {quote}NFeID{quote}
+                                , {quote}vProd{quote}
+                                , {quote}cEANTrib{quote}
+                                , {quote}uTrib{quote}
+                                , {quote}qTrib{quote}
+                                , {quote}vUnTrib{quote}
+                                , {quote}indTot{quote}
                             ) VALUES (
                                 { item.nItem }
                                 , '{ item.cProd }'
@@ -376,7 +401,14 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.vBC_COFINS) }
                                 , { NullableUtils.TestValue(item.pCOFINS) }
                                 , { NullableUtils.TestValue(item.vCOFINS) }
-                                , { item.NFeID });";
+                                , { item.NFeID }
+                                , { NullableUtils.TestValue(item.vProd) }
+                                , '{ item.cEANTrib }'
+                                , '{ item.uTrib }'
+                                , { NullableUtils.TestValue(item.qTrib) }
+                                , { NullableUtils.TestValue(item.vUnTrib) }
+                                , { NullableUtils.TestValue(item.indTot) }
+                            );";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -523,7 +555,13 @@ namespace DAO
 	                            , {quote}vBC_COFINS{quote} = '{ item.vBC_COFINS }'
                                 , {quote}pCOFINS{quote} = '{ item.pCOFINS }'
                                 , {quote}vCOFINS{quote} = '{ item.vCOFINS }'
-                                , {quote}NFeID{quote} = '{ item.NFeID }''
+                                , {quote}NFeID{quote} = '{ item.NFeID }'
+                                , {quote}vProd{quote} = '{ item.vProd }'
+                                , {quote}cEANTrib{quote} = '{ item.cEANTrib }'
+                                , {quote}uTrib{quote} = '{ item.uTrib }'
+                                , {quote}qTrib{quote} = '{ item.qTrib }'
+                                , {quote}vUnTrib{quote} = '{ item.vUnTrib }'
+                                , {quote}indTot{quote} = '{ item.indTot }'
                             WHERE {quote}ID{quote} = { item.ID };";
 
                         rows = cmd.ExecuteNonQuery();

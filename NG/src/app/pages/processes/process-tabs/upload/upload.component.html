@@ -31,7 +31,7 @@
                     <td data-th="Processado" class="sm-column">
                         <a *ngIf="uploadProcess.percent == 100; else elseBlock" class="btn btn-success m-1">Concluído</a>
                         <ng-template #elseBlock>
-                            <a class="btn btn-primary m-1">{{ uploadProcess.percent | number:'2.0-0'}}%</a>
+                            <a class="btn btn-primary m-1">{{ uploadProcess.percent | number:'1.0-0'}}%</a>
                         </ng-template>
                     </td>
                 </tr>
@@ -77,7 +77,7 @@
     </div>
     <div class="modal-body">
         <div class="container" appDnd (fileDropped)="onFileDropped($event)">
-            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" accept=".zip"/>
+            <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" accept=".zip" [disabled]="!canSend"/>
             <svg xmlns="http://www.w3.org/2000/svg" width="63" height="64" viewBox="0 0 63 64">
                 <g fill="#3B454F" fill-rule="nonzero">
                     <path
@@ -147,10 +147,10 @@
                 </div>
             </div>
             <div class="col-md-6 float-right" style="padding: 0;">
-                <button type="button" class="btn btn-success float-right" (click)="onConfirm()">
+                <button type="button" class="btn btn-success float-right" (click)="onConfirm()" [disabled]="!canSend">
                     <i class="fa fa-check mr-1"></i>Enviar
                 </button>
-                <button type="button" class="btn btn-danger float-right" aria-label="Close" (click)="modalRef.hide()" style="margin-right: 5px;">
+                <button type="button" class="btn btn-danger float-right" aria-label="Close" (click)="modalRef.hide()" style="margin-right: 5px;" [disabled]="!canSend">
                     <i class="fa fa-ban mr-1"></i>Cancelar
                 </button>
             </div>

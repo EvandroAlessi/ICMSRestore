@@ -37,6 +37,10 @@ export class CompanyService {
         return this.http.get<any>(this.api, { params: params });
     }
 
+    getAllWithoutFilters() {
+        return this.http.get<any>(this.api);
+    }
+
     get(id){
         return this.http.get<any>(this.api + '/' + id);
     }

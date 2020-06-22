@@ -70,6 +70,12 @@ CREATE TABLE public."Itens"
     "CFOP" integer NOT NULL,
     "CST" integer,
     "CSOSN" integer,
+    "vProd" real,
+    "cEANTrib" integer,
+    "uTrib" character varying COLLATE pg_catalog."default",
+    "qTrib" real,
+    "vUnTrib" real,
+    "indTot" integer,
     CONSTRAINT "ID" PRIMARY KEY ("ID"),
     CONSTRAINT "NFe_FK" FOREIGN KEY ("NFeID")
         REFERENCES public."NFe" ("ID") MATCH SIMPLE
@@ -143,19 +149,19 @@ CREATE TABLE public."ItensFiltrados"
     "qCom" real,
     "vUnCom" real,
     orig integer,
-    "CST" character varying COLLATE pg_catalog."default",
     "vBC" real,
     "pICMS" real,
     "vICMS" real,
     "ID" integer NOT NULL GENERATED ALWAYS AS IDENTITY ( INCREMENT 1 START 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1 ),
-    "dhEmi" date NOT NULL,
-    "dhSaiEnt" character varying COLLATE pg_catalog."default" NOT NULL,
-    "nNF" character varying COLLATE pg_catalog."default" NOT NULL,
     "cNF" integer NOT NULL,
     "ProcessoID" integer NOT NULL,
     "ItemID" integer NOT NULL,
     "CSOSN" integer,
-    "Entrada" boolean,
+    "Entrada" boolean NOT NULL,
+    "nNF" integer NOT NULL,
+    "dhEmi" timestamp with time zone NOT NULL,
+    "dhSaiEnt" timestamp with time zone,
+    "CST" integer,
     CONSTRAINT "ItensFiltrados_pkey" PRIMARY KEY ("ID"),
     CONSTRAINT "Item_FK" FOREIGN KEY ("ItemID")
         REFERENCES public."Itens" ("ID") MATCH SIMPLE
@@ -188,14 +194,6 @@ CREATE INDEX "CFOP_Filtered_Index"
 CREATE INDEX "CSOSN_Filtered_Index"
     ON public."ItensFiltrados" USING btree
     ("CSOSN" ASC NULLS LAST)
-    TABLESPACE pg_default;
--- Index: CST_Filtered_Index
-
--- DROP INDEX public."CST_Filtered_Index";
-
-CREATE INDEX "CST_Filtered_Index"
-    ON public."ItensFiltrados" USING btree
-    ("CST" COLLATE pg_catalog."default" ASC NULLS LAST)
     TABLESPACE pg_default;
 -- Index: Entrada_Filtered_Index
 
@@ -320,8 +318,9 @@ CREATE TABLE public."NFe"
     CONSTRAINT "cNF_nNF_ProcessoID_Unique" UNIQUE ("cNF", "nNF", "ProcessoID"),
     CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
         REFERENCES public."Processos" ("ID") MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+        NOT VALID
 )
 
 TABLESPACE pg_default;
@@ -414,6 +413,8 @@ CREATE TABLE public."ProcessosUpload"
     "QntArq" integer NOT NULL,
     "Ativo" boolean NOT NULL DEFAULT true,
     "PastaZip" character varying COLLATE pg_catalog."default" NOT NULL,
+    "DataInicio" timestamp with time zone NOT NULL,
+    "Entrada" boolean NOT NULL DEFAULT false,
     CONSTRAINT "PK" PRIMARY KEY ("ID"),
     CONSTRAINT "Processo_FK" FOREIGN KEY ("ProcessoID")
         REFERENCES public."Processos" ("ID") MATCH SIMPLE

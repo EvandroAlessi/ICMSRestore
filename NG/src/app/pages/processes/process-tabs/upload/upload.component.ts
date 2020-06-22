@@ -3,6 +3,7 @@ import { ToastrService } from 'ngx-toastr';
 import { UploadProcessService } from '../../../../services/upload-processes.service';
 import { UploadService } from '../../../../services/upload.service';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { HttpEventType, HttpEvent } from '@angular/common/http';
 
 @Component({
   selector: 'app-upload',
@@ -13,6 +14,7 @@ export class UploadComponent implements OnInit {
   public uploadProcesses: any = [];
   private processID: number;
   private entrada: boolean = false;
+  private canSend: boolean = true;
 
   public modalRef: BsModalRef; 
 
@@ -55,7 +57,7 @@ export class UploadComponent implements OnInit {
                     element.percent = response.percent;
                     element.errorFiles = response.errorFiles;
                   });
-                }, 5000);
+                }, 20000);
               }
             }
           },
@@ -86,18 +88,33 @@ export class UploadComponent implements OnInit {
   }
 
   onConfirm(){
-    let files = this.files;
+    this.canSend = false;
+    // let files = this.files;
 
-    files.forEach(file => {
-      this.files = this.files.filter(obj => obj !== file);
-
+    this.files.forEach((file, i)=> {
       this.uploadService
         .post(file, this.processID, this.entrada)
-        .subscribe((response) => {
-            this.getUploadProcesses(this.processID);
+        .subscribe((event) => {
+            // progress
+            if (event.type === HttpEventType.UploadProgress) {
+              const percentage = 100 / event.total * event.loaded;
+              file.progress = percentage;
+            }
+          
+            // finished
+            if (event.type === HttpEventType.Response) {
+              this.getUploadProcesses(this.processID);
+              this.toast.success("Arquivos enviados.", 'Sucesso!');
+              this.files = this.files.filter(obj => obj !== file);
+
+              if(i == this.files.length) {
+                this.canSend = true;
+              }
+            }
           },
           (err) => {
-            alert('Fodeu');
+            this.toast.error("Não foi possível enviar os arquivos.", 'Erro :(');
+            //this.modalService.hide(0);
           }
         );
     });
@@ -109,7 +126,12 @@ export class UploadComponent implements OnInit {
    * on file drop handler
    */
   onFileDropped($event) {
-    this.prepareFilesList($event);
+    if (this.canSend) {
+      this.prepareFilesList($event);
+    }
+    else {
+      this.toast.info("Você tem que esparar os arquivos serem enviados para nosso servidor.", 'Info');
+    }
   }
 
   /**
@@ -124,7 +146,12 @@ export class UploadComponent implements OnInit {
    * @param index (File index)
    */
   deleteFile(index: number) {
-    this.files.splice(index, 1);
+    if (this.canSend) {
+      this.files.splice(index, 1);
+    }
+    else {
+      this.toast.info("Você tem que esparar os arquivos serem enviados para nosso servidor.", 'Info');
+    }
   }
 
   /**

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
@@ -19,7 +20,9 @@ namespace NFeSeeder
     {
         private static System.Timers.Timer timer;
         private static Dictionary<int, Dictionary<string, bool>> processDirs = new Dictionary<int, Dictionary<string, bool>>();
-        private static List<string> dirPaths;
+        private static List<string> dirPaths = new List<string>();
+        private static List<string> zipPaths = new List<string>();
+        private static bool startDescompress = true;
 
         [STAThread]
         static void Main(string[] args)
@@ -36,7 +39,7 @@ namespace NFeSeeder
 
                 CultureConfiguration.ConfigureCulture();
 
-                FindProcessFolders();
+                //FindProcessFolders();
 
                 OnElapsed(null, null);
 
@@ -62,17 +65,96 @@ namespace NFeSeeder
         {
             try
             {
-                //Find new processes folders
-                CheckNewFolders();
+                if (startDescompress)
+                {
+                    // Find new processes folders
+                    CheckNewFolders();
 
-                // start working with all sub folders in parallel
-                StartParallelWork();
+                    // start working with all sub folders in parallel
+                    StartParallelWork();
+
+                    // Check files to descompress and decrompress them
+                    StartParallelDecrompress();
+                }
             }
             catch (Exception ex)
             {
                 Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
             }
         }
+
+        public static void StartParallelDecrompress()
+        {
+            startDescompress = true;
+
+            try
+            {
+                var newFiles = CheckNewZipFiles();
+                zipPaths.AddRange(newFiles);
+
+                foreach (var zipPath in newFiles.ToList())
+                {
+                    Task.Run(() =>
+                    {
+                        Decompress(zipPath);
+                    })
+                    .ContinueWith(t =>
+                    {
+                        zipPaths.Remove(zipPath);
+                        File.Delete(zipPath);
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                startDescompress = true;
+            }
+        }
+
+        public static void Decompress(string zipPath)
+        {
+            using (var stream = File.OpenRead(zipPath))
+            {
+                var dir = Path.ChangeExtension(zipPath, null);
+
+                using (ZipArchive archive = new ZipArchive(stream, ZipArchiveMode.Read))
+                {
+                    PathControl.Create(dir);
+
+                    foreach (ZipArchiveEntry entry in archive.Entries?.Where(x => !string.IsNullOrWhiteSpace(x.Name)))
+                    {
+                        var tries = 0;
+                    again:
+                        try
+                        {
+                            entry.ExtractToFile(Path.Combine(dir, entry.Name), true);
+                        }
+                        catch (Exception ex)
+                        {
+                            PathControl.Create(dir);
+
+                            if (tries < 2)
+                            {
+                                tries++; 
+
+                                Thread.Sleep(150);
+
+                                goto again;
+                            }
+                            else
+                            {
+                                throw ex;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         public static void FindProcessFolders()
         {
@@ -124,6 +206,32 @@ namespace NFeSeeder
             }
         }
 
+        public static List<string> CheckNewZipFiles()
+        {
+            try
+            {
+                var newFiles = new List<string>();
+
+                lock (zipPaths)
+                {
+                    lock (dirPaths)
+                    {
+                        foreach (var dirPath in dirPaths)
+                        {
+                            var currentZipList = Directory.GetFiles(dirPath).ToList();
+
+                            newFiles = currentZipList.Except(zipPaths).ToList();
+                        }
+                    }
+                }
+
+                return newFiles;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public static void CheckNewFolders()
         {
@@ -195,9 +303,9 @@ namespace NFeSeeder
 
                     processoUpload.Ativo = false;
 
-                    var edited = processoUplService.Edit(processoUpload);
+                    processoUpload = processoUplService.Edit(processoUpload);
 
-                    if (!edited)
+                    if (processoUpload is null)
                     {
                         Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }",
                             message: "Erro ao realizar update", 
@@ -291,7 +399,7 @@ namespace NFeSeeder
                                 {
                                     triesCount++;
 
-                                    Thread.Sleep(100);
+                                    Thread.Sleep(150);
 
                                     goto start;
                                 }
@@ -332,7 +440,7 @@ namespace NFeSeeder
                             {
                                 triesCount++;
 
-                                Thread.Sleep(100);
+                                Thread.Sleep(150);
 
                                 goto start;
                             }

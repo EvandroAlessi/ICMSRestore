@@ -19,9 +19,14 @@ export class ResponseInterceptor implements HttpInterceptor {
   ) {}
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request).pipe(tap(event => {
-        if (event instanceof HttpResponse) {
-          event = event.clone({ body: this.modifyBody(event.body) })
+    return next.handle(request).pipe(
+      tap(event => {
+        if (event && event instanceof HttpResponse) {
+          if(event.body){
+            if(event.body.pagination) {
+              event = event.clone({ body: this.modifyBody(event.body) });
+            }
+          }
         }   
 
         return event;
@@ -57,20 +62,18 @@ export class ResponseInterceptor implements HttpInterceptor {
   }
   
   private modifyBody(body: any) {
-    if(body.pagination) {
-      const end = body.pagination.currentPage + 4 > body.pagination.pageCount
-          ? body.pagination.pageCount
-          : body.pagination.currentPage + 4;
+    const end = body.pagination.currentPage + 4 > body.pagination.pageCount
+        ? body.pagination.pageCount
+        : body.pagination.currentPage + 4;
 
-      const start = end - 9 < 1 
-          ? 1 
-          : end - 9;
+    const start = end - 9 < 1 
+        ? 1 
+        : end - 9;
 
-      body.pagination.pages = [];
+    body.pagination.pages = [];
 
-      for (let i = start; i <= end; i++) {
-        body.pagination.pages.push(i);
-      }
+    for (let i = start; i <= end; i++) {
+      body.pagination.pages.push(i);
     }
 
     return body;

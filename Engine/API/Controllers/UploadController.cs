@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -38,7 +39,7 @@ namespace API.Controllers
         [Consumes("multipart/form-data")]
         [RequestFormLimits(ValueCountLimit = int.MaxValue)]
         [RequestSizeLimit(long.MaxValue)]
-        public IActionResult Post([FromForm] List<IFormFile> files, int processoID, bool entrada = false)
+        public async Task<IActionResult> Post([FromForm] List<IFormFile> files, int processoID, bool entrada = false)
         {
             try
             {
@@ -64,29 +65,23 @@ namespace API.Controllers
                             return BadRequest("The send file isn't a .ZIP file, please, try again.");
                         }
 
+                        var zipDir = Path.Combine(path, (entrada ? "$@-" : "") + file.FileName);
+
                         //Save the files in our server
-                        using (var stream = file.OpenReadStream())
+                        using (var stream = new FileStream(zipDir, FileMode.Create))
                         {
-                            using (ZipArchive archive = new ZipArchive(stream))
+                            await file.CopyToAsync(stream);
+
+                            using (var archive = new ZipArchive(stream))
                             {
-                                var zipDir = Path.Combine(path, (entrada ? "$@-" : "") + Path.ChangeExtension(file.FileName, null));
-
-                                PathControl.Create(zipDir);
-
                                 var entries = archive?.Entries?.Where(x => !string.IsNullOrWhiteSpace(x.Name));
-
-                                // One By One Code
-                                foreach (ZipArchiveEntry entry in entries)
-                                {
-                                    entry.ExtractToFile(Path.Combine(zipDir, entry.Name), true);
-                                }
 
                                 var processoUploadService = new ProcessoUploadService();
 
                                 var processoUpload = new ProcessoUpload
                                 {
                                     ProcessoID = processoID,
-                                    PastaZip = zipDir,
+                                    PastaZip = Path.ChangeExtension(zipDir, null),
                                     QntArq = entries.Count(),
                                     Ativo = true,
                                     Entrada = entrada,

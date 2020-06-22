@@ -81,7 +81,15 @@ namespace BLL
         {
             try
             {
-                if (processoUpload.Ativo && Directory.Exists(processoUpload.PastaZip))
+                if (!processoUpload.Ativo)
+                {
+                    return 100.0;
+                }
+                else if (File.Exists(processoUpload.PastaZip + ".zip"))
+                {
+                    return 0.0;
+                }
+                else if(Directory.Exists(processoUpload.PastaZip))
                 {
                     double restFiles = Directory.GetFiles(processoUpload.PastaZip).Count();
 
@@ -108,16 +116,18 @@ namespace BLL
         {
             try
             {
-                var errorPath = Path.Combine(path, "Error");
+                if (Directory.Exists(path))
+                {
+                    var errorPath = Path.Combine(path, "Error");
 
-                if (Directory.Exists(errorPath))
-                {
-                    return Directory.GetFiles(errorPath).Count();
+                    if (Directory.Exists(errorPath))
+                    {
+                        return Directory.GetFiles(errorPath).Count();
+                    }
                 }
-                else
-                {
-                    return 0;
-                }
+                    
+                
+                return 0;
             }
             catch (Exception ex)
             {

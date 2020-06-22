@@ -210,7 +210,13 @@ namespace BLL
                 vBC_COFINS = detalhe.Imposto.COFINS?.COFINSAliq?.vBC,
                 pCOFINS = detalhe.Imposto.COFINS?.COFINSAliq?.pCOFINS,
                 vCOFINS = detalhe.Imposto.COFINS?.COFINSAliq?.vCOFINS,
-                NFeID = nfeID
+                NFeID = nfeID,
+                vProd = detalhe.Produto.vProd,
+                cEANTrib = detalhe.Produto.cEANTrib,
+                uTrib = detalhe.Produto.uTrib,
+                qTrib = detalhe.Produto.qTrib,
+                vUnTrib = detalhe.Produto.vUnTrib,
+                indTot = detalhe.Produto.indTot,
             };
 
             switch (aux)

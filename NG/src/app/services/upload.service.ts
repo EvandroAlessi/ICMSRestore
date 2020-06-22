@@ -33,7 +33,7 @@ export class UploadService {
 
         params = params.append('Entrada', entrada);
         
-        return this.http.post(this.api + "/" + processID, formData, { params: params });
+        return this.http.post(this.api + "/" + processID, formData, { params: params, reportProgress: true, observe: 'events'  });
     }
 
     postAll(processID, files) {
