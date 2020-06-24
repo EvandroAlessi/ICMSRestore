@@ -32,7 +32,7 @@
                         <a *ngIf="uploadProcess.percent == 100; else elseBlock" class="btn btn-success m-1">Concluído</a>
                         <ng-template #elseBlock>
                             <a class="btn btn-primary m-1">{{ uploadProcess.percent | number:'1.0-0'}}%</a>
-                        </ng-template>
+                        </ng-template> 
                     </td>
                 </tr>
                 <tr *ngIf="uploadProcesses.length == 0">
