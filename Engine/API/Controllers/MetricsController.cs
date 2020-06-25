@@ -1,12 +1,14 @@
 ﻿using BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 
 namespace API.Controllers
 {
-    [Route("api/metrics")]
+    [Authorize]
     [ApiController]
+    [Route("api/metrics")]
     public class MetricsController : ControllerBase
     {
         private static readonly MetricsService service = new MetricsService();

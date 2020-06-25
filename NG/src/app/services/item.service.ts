@@ -16,8 +16,8 @@ export class ItemService {
         return this.http.get<any>(this.api);
     }
 
-    getAllByProcessID(id): Observable<any> {
-        return this.http.get<any>(this.api);
+    getAllByInvoice(invoiceID): Observable<any> {
+        return this.http.get<any>(environment.api.url + "/invoices/" + invoiceID + "/items");
     }
 
     get(id){

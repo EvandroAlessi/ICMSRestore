@@ -29,8 +29,7 @@ export class EditComponent implements OnInit {
               this.process = response;
             },
             (err) => {
-              this.toast.error('Tente novamente.', 'Erro ao salvar dados!');
-              this.getProcess(this.id);
+              this.toast.error('Tente novamente.', 'Erro ao buscar dados!');
             },
           );
   }
@@ -40,7 +39,7 @@ export class EditComponent implements OnInit {
         .put(this.id, this.process)
         .subscribe((response) => {
             this.toast.success('Processo editado.', 'Sucesso!');
-            // this.router.navigate([this.route]);
+            this.getProcess(this.id);
           },
           (error) => {
             this.errors = error.error;

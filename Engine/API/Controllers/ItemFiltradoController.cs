@@ -14,7 +14,7 @@ namespace API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/filtered-items")]
-    public class ItensFiltradosController : ControllerBase
+    public class ItemFiltradoController : ControllerBase
     {
         private static readonly ItemFiltradoService service = new ItemFiltradoService();
 

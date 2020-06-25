@@ -1,11 +1,15 @@
 <div class="animated fadeIn">
     <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
+        <div class="col-md-12 p-0">
+            <div class="card m-0">
+                <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <i class="fa fa-info-circle mr-2"></i>
-                        <span>Notal Fiscal Completa</span>
+                        <strong>Notal Fiscal Completa</strong>
+                    </div>
+                    <div>
+                        <button class="btn btn-success" (click)="getItems()">
+                            <i class="fa fa-info-circle mr-2"></i>Ver Itens
+                        </button>
                     </div>
                 </div>
                 <div class="card-body">
@@ -18,394 +22,392 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">ID</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">ID</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.id" name="id" title="ID" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">cUF</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">cUF</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cUF" name="cUF" title="cUF" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">cNF</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">cNF</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cNF" name="cNF" title="cNF" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">natOp</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">natOp</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.natOp" name="natOp" title="natOp" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">indPag</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">indPag</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.indPag" name="indPag" title="indPag" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">mod</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">mod</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.mod" name="mod" title="mod" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">serie</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">serie</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.serie" name="serie" title="serie" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">nNF</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">nNF</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.nNF" name="nNF" title="nNF" disabled>
                                 </div>
                             </div>
                         </div>
-                        
-                        
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">dhEmi</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">dhEmi</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.dhEmi | date: 'dd/MM/yyyy hh:mm:ss'" name="dhEmi" title="dhEmi" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">dhSaiEnt</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">dhSaiEnt</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.dhSaiEnt | date: 'dd/MM/yyyy hh:mm:ss'" name="dhSaiEnt" title="dhSaiEnt" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">CNPJ</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">CNPJ</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cnpj" name="cnpj" title="CNPJ" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xNome</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xNome</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xNome" name="xNome" title="xNome" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xFant</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xFant</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xFant" name="xFant" title="xFant" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xLgr</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xLgr</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xLgr" name="xLgr" title="xLgr" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">nro</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">nro</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.nro" name="nro" title="nro" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xBairro</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xBairro</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xBairro" name="xBairro" title="xBairro" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">cMun</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">cMun</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cMun" name="cMun" title="cMun" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xMun</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xMun</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xMun" name="xMun" title="xMun" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">UF</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">UF</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.uf" name="uf" title="UF" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">CEP</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">CEP</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cep" name="cep" title="CEP" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">cPais</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">cPais</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cPais" name="cPais" title="cPais" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xPais</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xPais</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xPais" name="xPais" title="xPais" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">IE</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">IE</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.ie" name="ie" title="IE" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">IEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">IEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.iest" name="iest" title="IEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">CRT</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">CRT</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.crt" name="crt" title="CRT" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">CNPJ_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">CNPJ_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cnpJ_DEST" name="cnpj_DEST" title="CNPJ_DEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">CPF_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">CPF_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cpF_DEST" name="cpf_DEST" title="CPF_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xNome_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xNome_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xNome_DEST" name="xNome_DEST" title="xNome_DEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xLgr_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xLgr_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xLgr_DEST" name="xLgr_DEST" title="xLgr_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">nro_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">nro_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.nro_DEST" name="nro_DEST" title="nro_DEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xBairro_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xBairro_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xBairro_DEST" name="xBairro_DEST" title="xBairro_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">cMun_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">cMun_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cMun_DEST" name="cMun_DEST" title="cMun_DEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">xMun_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">xMun_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.xMun_DEST" name="xMun_DEST" title="xMun_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">UF_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">UF_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.uF_DEST" name="uF_DEST" title="UF_DEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">CEP_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">CEP_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.ceP_DEST" name="ceP_DEST" title="CEP_DEST" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">cPais_DEST</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">cPais_DEST</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.cPais_DEST" name="cPais_DEST" title="cPais_DEST" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vBC_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vBC_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vBC_TOTAL" name="vBC_TOTAL" title="vBC_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vICMS_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vICMS_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vICMS_TOTAL" name="vICMS_TOTAL" title="vICMS_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vICMSDeson_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vICMSDeson_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vICMSDeson_TOTAL" name="vICMSDeson_TOTAL" title="vICMSDeson_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vFCP_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vFCP_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vFCP_TOTAL" name="vFCP_TOTAL" title="vFCP_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vBCST_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vBCST_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vBCST_TOTAL" name="vBCST_TOTAL" title="vBCST_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vST_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vST_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vST_TOTAL" name="vST_TOTAL" title="vST_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vFCPST_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vFCPST_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vFCPST_TOTAL" name="vFCPST_TOTAL" title="vFCPST_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vFCPSTRet_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vFCPSTRet_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vFCPSTRet_TOTAL" name="vFCPSTRet_TOTAL" title="vFCPSTRet_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vProd_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vProd_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vProd_TOTAL" name="vProd_TOTAL" title="vProd_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vFrete_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vFrete_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vFrete_TOTAL" name="vFrete_TOTAL" title="vFrete_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vSeg_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vSeg_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vSeg_TOTAL" name="vSeg_TOTAL" title="vSeg_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vDesc_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vDesc_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vDesc_TOTAL" name="vDesc_TOTAL" title="vDesc_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vII_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vII_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vII_TOTAL" name="vII_TOTAL" title="vII_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vIPI_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vIPI_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vIPI_TOTAL" name="vIPI_TOTAL" title="vIPI_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vIPIDevol_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vIPIDevol_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vIPIDevol_TOTAL" name="vIPIDevol_TOTAL" title="vIPIDevol_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vPIS_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vPIS_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vPIS_TOTAL" name="vPIS_TOTAL" title="vPIS_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vCOFINS_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vCOFINS_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vCOFINS_TOTAL" name="vCOFINS_TOTAL" title="vCOFINS_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vOutro_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vOutro_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vOutro_TOTAL" name="vOutro_TOTAL" title="vOutro_TOTAL" disabled>
                                 </div>
                             </div>
                         </div>
                         <div class="form-group row">
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">vNF_TOTAL</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">vNF_TOTAL</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.vNF_TOTAL" name="vNF_TOTAL" title="vNF_TOTAL" disabled>
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <label class="col-md-12 col-form-label" for="text-input">Processo ID</label>
-                                <div class="col-md-12">
+                                <label class="col-form-label" for="text-input">Processo ID</label>
+                                <div class="">
                                     <input type="text" class="form-control" [value]="invoice.processoID" name="processoID" title="Processo ID" disabled>
                                 </div>
                             </div>

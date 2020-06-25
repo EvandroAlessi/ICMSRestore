@@ -49,11 +49,11 @@ namespace BLL
             }
         }
 
-        public async Task<List<Item>> GetAll(int nfeID)
+        public async Task<List<Item>> GetAllByInvoice(int invoiceID)
         {
             try
             {
-                return await dao.GetAll(nfeID);
+                return await dao.GetAllByInvoice(invoiceID);
             }
             catch (Exception ex)
             {

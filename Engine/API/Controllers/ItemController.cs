@@ -40,6 +40,28 @@ namespace API.Controllers
             }
         }
 
+        [HttpGet("/api/invoices/{invoiceID}/items")]
+        public async Task<IActionResult> GetAllByInvoice(int invoiceID)
+        {
+            try
+            {
+                var item = await service.GetAllByInvoice(invoiceID);
+
+                if (item is null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(item);
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         // GET api/<ItemController>/5
         /// <summary>
         /// 

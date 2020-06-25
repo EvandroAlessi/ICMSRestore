@@ -1,0 +1,149 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12 p-0">
+            <div class="card m-0">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <strong>Item completo</strong>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-12 col-form-label" for="text-input">xProd</label>
+                            <div class="col-md-12">
+                                <input type="text" class="form-control" [value]="filteredItem.xProd" name="xProd" title="Nome do produto" disabled>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">ItemID</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.itemID" name="itemID" title="ItemID" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">cProd</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.cProd" name="cProd" title="cProd" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">Tipo (Entrada/Saída)</label>
+                            <div>
+                                <input type="text" class="form-control" [value]="filteredItem.entrada == 'true' ? 'ENTRADA' : 'SAÍDA'" name="entrada" title="Tipo da Nota Fiscal" disabled>
+                            </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">nNF</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.nNF" name="nNF" title="nNF" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">NCM</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.ncm" name="ncm" title="NCM" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">CFOP</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.cfop" name="CFOP" title="CFOP" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">dhEmi</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.dhEmi | date: 'dd/MM/yyyy hh:mm:ss'" name="dhEmi" title="dhEmi" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">dhSaiEnt</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.dhSaiEnt | date: 'dd/MM/yyyy hh:mm:ss'" name="dhSaiEnt" title="dhSaiEnt" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">uCom</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.uCom" name="uCom" title="uCom" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">qCom</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.qCom" name="qCom" title="qCom" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">vUnCom</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.vUnCom" name="vUnCom" title="vUnCom" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">orig</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.orig" name="orig" title="orig" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">CST</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.cst" name="CST" title="CST" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">CSOSN</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.csosn" name="CSOSN" title="CSOSN" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">vBC</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.vBC" name="vBC" title="vBC" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">pICMS</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.pICMS" name="pICMS" title="pICMS" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">vICMS</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.vICMS" name="vICMS" title="vICMS" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="col-form-label" for="text-input">cNF</label>
+                                <div>
+                                    <input type="text" class="form-control" [value]="filteredItem.cNF" name="cNF" title="cNF" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </form> 
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,269 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-md-12 p-0">
+            <div class="card m-0">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <strong>Itens</strong>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div *ngFor="let item of items; let i = index;">
+                        <button type="button" class="btn btn-primary col-md-12" (click)="toggle(i)"
+                                [attr.aria-expanded]="!hideRuleContent[i]" aria-controls="collapseBasic">{{ item.xProd }}
+                        </button>
+                        <div id="collapseBasic" [collapse]="!hideRuleContent[i]" [isAnimated]="true">
+                            <form class="form-horizontal well well-lg card card-block card-header">
+                                <div class="form-group row">
+                                    <label class="col-md-12 col-form-label" for="text-input">xProd</label>
+                                    <div class="col-md-12">
+                                        <input type="text" class="form-control" [value]="item.xProd" name="xProd" title="Nome do produto" disabled>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">ID</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.id" name="ID" title="ID" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">cProd</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.cProd" name="cProd" title="cProd" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">nItem</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.nItem" name="nItem" title="nItem" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vICMS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vICMS" name="vICMS" title="vICMS" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">NCM</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.ncm" name="ncm" title="NCM" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">CFOP</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.cfop" name="CFOP" title="CFOP" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">uCom</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.uCom" name="uCom" title="uCom" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">qCom</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.qCom" name="qCom" title="qCom" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vUnCom</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vUnCom" name="vUnCom" title="vUnCom" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">orig</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.orig" name="orig" title="orig" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">CST</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.cst" name="CST" title="CST" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">CSOSN</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.csosn" name="CSOSN" title="CSOSN" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vBC</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vBC" name="vBC" title="vBC" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">pICMS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.pICMS" name="pICMS" title="pICMS" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">cEAN</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.cEAN" name="cEAN" title="cEAN" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vProd</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vProd" name="vProd" title="vProd" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">cEANTrib</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.cEANTrib" name="cEANTrib" title="cEANTrib" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">uTrib</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.uTrib" name="uTrib" title="uTrib" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">qTrib</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.qTrib" name="qTrib" title="qTrib" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vUnTrib</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vUnTrib" name="vUnTrib" title="vUnTrib" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">indTot</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.indTot" name="indTot" title="indTot" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">modBC</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.modBC" name="modBC" title="modBC" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">indTot</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.indTot" name="indTot" title="indTot" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">modBC</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.modBC" name="modBC" title="modBC" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">cEnq</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.cEnq" name="cEnq" title="cEnq" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">CST_IPI</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.csT_IPI" name="CST_IPI" title="CST_IPI" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">CST_PIS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.csT_PIS" name="CST_PIS" title="CST_PIS" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vBC_PIS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vBC_PIS" name="vBC_PIS" title="vBC_PIS" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">pPIS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.pPIS" name="pPIS" title="pPIS" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vPIS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vPIS" name="vPIS" title="vPIS" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">CST_COFINS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.csT_COFINS" name="CST_COFINS" title="CST_COFINS" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vBC_COFINS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vBC_COFINS" name="vBC_COFINS" title="vBC_COFINS" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">pCOFINS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.pCOFINS" name="pCOFINS" title="pCOFINS" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="col-form-label" for="text-input">vCOFINS</label>
+                                        <div>
+                                            <input type="text" class="form-control" [value]="item.vCOFINS" name="vCOFINS" title="vCOFINS" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <hr>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

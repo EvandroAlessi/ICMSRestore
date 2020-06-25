@@ -97,7 +97,7 @@ namespace DAO
             }
         }
 
-        public async Task<List<Item>> GetAll(int nfeID)
+        public async Task<List<Item>> GetAllByInvoice(int invoiceID)
         {
             try
             {
@@ -110,7 +110,7 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"SELECT * FROM { table }
-                                    WHERE ""ProcessID"" = { nfeID };";
+                                    WHERE ""NFeID"" = { invoiceID };";
 
                         using (var reader = cmd.ExecuteReader())
                         {

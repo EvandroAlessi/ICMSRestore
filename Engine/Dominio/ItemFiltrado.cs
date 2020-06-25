@@ -41,6 +41,7 @@ namespace Dominio
         public int cNF { get; set; }
 
         public int? CSOSN { get; set; }
+
         public bool Entrada { get; set; }
 
         public int nNF { get; set; }

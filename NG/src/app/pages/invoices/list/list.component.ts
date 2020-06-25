@@ -7,7 +7,6 @@ import { InvoiceService } from '../../../services/invoice.service';
 import { DetailsComponent } from '../details/details.component';
 @Component({
   selector: 'app-list',
-  styleUrls: ['./list.component.scss'],
   templateUrl: './list.component.html',
 })
 export class ListComponent implements OnInit {
@@ -56,7 +55,7 @@ export class ListComponent implements OnInit {
       id: id
     };
 
-    this.bsModalRef = this.modalService.show(DetailsComponent, {initialState});
+    this.bsModalRef = this.modalService.show(DetailsComponent, { initialState, animated: true });
   }
 
   toggleFilter() {

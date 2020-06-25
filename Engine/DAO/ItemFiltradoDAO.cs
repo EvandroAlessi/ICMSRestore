@@ -16,6 +16,7 @@ namespace DAO
         {
             return new ItemFiltrado
             {
+                ID = Convert.ToInt32(reader["ID"]),
                 ProcessoID = Convert.ToInt32(reader["ProcessoID"]),
                 ItemID = Convert.ToInt32(reader["ItemID"]),
                 cProd = reader["cProd"]?.ToString(),

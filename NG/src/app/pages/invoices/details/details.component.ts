@@ -1,26 +1,28 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { InvoiceService } from '../../../services/invoice.service';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { ItemService } from '../../../services/item.service';
+import { ItemsComponent } from './Items/items.component';
 
 @Component({
   selector: 'app-edit',
-  styleUrls: ['./details.component.scss'],
   templateUrl: './details.component.html',
 })
 export class DetailsComponent implements OnInit {
   public route: string = '/invoices';
-  public errors: any = {};
+  public items: any = {};
   invoice: any = {};
   public id: number;
 
   constructor(
-    private routerActived: ActivatedRoute,
     private router: Router,
     private toast: ToastrService,
     private invoiceService: InvoiceService,
-    public bsModalRef: BsModalRef
+    private itemService: ItemService,
+    public bsModalRef: BsModalRef,
+    private modalService: BsModalService
   ) {}
 
   ngOnInit() {
@@ -30,8 +32,29 @@ export class DetailsComponent implements OnInit {
             this.invoice = response;
           },
           (err) => {
+            this.toast.error("Erro ao buscar nota.", "Erro :(");
             this.router.navigate([this.route]);
           },
         );
+  }
+
+  getItems() {
+    // this.itemService.getAllByInvoice(this.id)
+    //                 .subscribe((response) => { 
+    //                     this.items = response; 
+    //                   },
+    //                   (err) => {
+    //                     this.toast.error("Erro ao buscar itens da nota.", "Erro :(");
+    //                     this.router.navigate([this.route]);
+    //                   },
+    //                 );
+
+    const initialState = {
+      invoiceID: this.id
+    };
+
+    this.bsModalRef.hide();
+
+    this.modalService.show(ItemsComponent, { initialState, animated: true });
   }
 }

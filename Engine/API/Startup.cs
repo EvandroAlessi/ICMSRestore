@@ -36,7 +36,7 @@ namespace ICMSRestore.API
                 {
                     Version = "v1",
                     Title = "ICMS RESTORE API",
-                    Description = "A simple example ASP.NET Core Web API",
+                    Description = "An ASP.NET Core Web API, fast as hell",
                     TermsOfService = new Uri("https://example.com/terms"),
                     Contact = new OpenApiContact
                     {
