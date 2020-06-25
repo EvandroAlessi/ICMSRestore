@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class MVADAO : PaginationBuilder
+    public class MVADAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public MVADAO() => table = "\"MVA\"";
 
         public MVA BuildObject(NpgsqlDataReader reader)
         {
@@ -39,9 +38,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}MVA{ quote}
+                        cmd.CommandText = $@"SELECT * FROM { table }
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -81,8 +80,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}MVA{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -120,8 +119,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}MVA{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -160,13 +159,13 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}MVA{quote} (
-                                {quote}CEST{quote}
-                                , {quote}Descricao{quote}
-                                , {quote}MVA_ST{quote}
-                                , {quote}NCM_SH{quote}
-                                , {quote}DataInicial{quote}
-                                , {quote}DataFinal{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""CEST""
+                                , ""Descricao""
+                                , ""MVA_ST""
+                                , ""NCM_SH""
+                                , ""DataInicial""
+                                , ""DataFinal""
                             ) VALUES (
                                 { mva.CEST }
                                 , '{ mva.Descricao }'
@@ -174,7 +173,7 @@ namespace DAO
                                 , { mva.NCM_SH }
                                 , { mva.DataInicial }
                                 , { mva.DataFinal })
-                            RETURNING {quote}ID{quote};";
+                            RETURNING ""ID"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -215,14 +214,14 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}MVA{quote} SET
-                                {quote}CEST{quote} = { mva.CEST }
-                                , {quote}Descricao{quote} = '{ mva.Descricao }'
-                                , {quote}MVA_ST{quote} = { mva.MVA_ST }
-                                , {quote}NCM_SH{quote} = '{ mva.NCM_SH }'
-                                , {quote}DataInicial{quote} = '{ mva.DataInicial }'
-                                , {quote}DataFinal{quote} = '{ mva.DataFinal }'
-                            WHERE {quote}ID{quote} = { mva.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""CEST"" = { mva.CEST }
+                                , ""Descricao"" = '{ mva.Descricao }'
+                                , ""MVA_ST"" = { mva.MVA_ST }
+                                , ""NCM_SH"" = '{ mva.NCM_SH }'
+                                , ""DataInicial"" = '{ mva.DataInicial }'
+                                , ""DataFinal"" = '{ mva.DataFinal }'
+                            WHERE ""ID"" = { mva.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -254,8 +253,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}MVA{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

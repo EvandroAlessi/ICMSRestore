@@ -19,7 +19,7 @@ namespace API.Controllers
     [Route("api/mva")]
     public class MVAController : ControllerBase
     {
-        private static readonly MVAService mvaService = new MVAService();
+        private static readonly MVAService service = new MVAService();
 
         // GET: api/<MVAController>
         /// <summary>
@@ -33,8 +33,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    MVAs = await mvaService.GetAll(page, take, filters),
-                    Pagination = await mvaService.GetPagination(page, take, filters)
+                    MVAs = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -56,7 +56,7 @@ namespace API.Controllers
         {
             try
             {
-                var mva = await mvaService.Get(id);
+                var mva = await service.Get(id);
 
                 if (mva is null)
                 {
@@ -66,6 +66,19 @@ namespace API.Controllers
                 {
                     return Ok(mva);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+                return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -97,7 +110,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    mva = mvaService.Insert(mva);
+                    mva = service.Insert(mva);
 
                     if (mva is null)
                     {
@@ -225,7 +238,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool exists = mvaService.Exists(id).Result;
+                    bool exists = service.Exists(id).Result;
 
                     if (!exists)
                     {
@@ -233,7 +246,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        var editedMVA = mvaService.Edit(mva);
+                        var editedMVA = service.Edit(mva);
 
                         if (editedMVA is null)
                         {
@@ -263,7 +276,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = mvaService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -271,7 +284,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = mvaService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {

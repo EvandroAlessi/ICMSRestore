@@ -14,7 +14,7 @@ namespace API.Controllers
     [Route("api/companies")]
     public class EmpresaController : ControllerBase
     {
-        private static readonly EmpresaService empresaService = new EmpresaService();
+        private static readonly EmpresaService service = new EmpresaService();
 
         // GET: api/<EmpresaController>
         /// <summary>
@@ -28,8 +28,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    Companies = await empresaService.GetAll(page, take, filters),
-                    Pagination = await empresaService.GetPagination(page, take, filters)
+                    Companies = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -51,7 +51,7 @@ namespace API.Controllers
         {
             try
             {
-                var empresa = await empresaService.Get(id);
+                var empresa = await service.Get(id);
 
                 if (empresa is null)
                 {
@@ -61,6 +61,19 @@ namespace API.Controllers
                 {
                     return Ok(empresa);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+               return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -92,7 +105,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    empresa = empresaService.Insert(empresa);
+                    empresa = service.Insert(empresa);
 
                     if (empresa is null)
                     {
@@ -139,7 +152,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool exists = empresaService.Exists(id).Result;
+                    bool exists = service.Exists(id).Result;
 
                     if (!exists)
                     {
@@ -147,7 +160,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        var editedCompany = empresaService.Edit(empresa);
+                        var editedCompany = service.Edit(empresa);
 
                         if (editedCompany is null)
                         {
@@ -177,7 +190,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = empresaService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -185,7 +198,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = empresaService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {

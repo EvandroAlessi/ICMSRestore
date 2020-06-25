@@ -9,13 +9,25 @@ namespace BLL
 {
     public class MVAService
     {
-        private static readonly MVADAO mvaDAO = new MVADAO();
+        private static readonly MVADAO dao = new MVADAO();
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                return await dao.GetCount();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await mvaDAO.GetPagination("MVA", page, take, filters);
+                return await dao.GetPagination(page, take, filters);
             }
             catch (Exception ex)
             {
@@ -29,7 +41,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await mvaDAO.GetAll(skip, take, filters);
+                return await dao.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -41,7 +53,7 @@ namespace BLL
         {
             try
             {
-                return await mvaDAO.Get(id);
+                return await dao.Get(id);
             }
             catch (Exception ex)
             {
@@ -53,7 +65,7 @@ namespace BLL
         {
             try
             {
-                return await mvaDAO.Exists(id);
+                return await dao.Exists(id);
             }
             catch (Exception ex)
             {
@@ -65,7 +77,7 @@ namespace BLL
         {
             try
             {
-                return mvaDAO.Insert(mva);
+                return dao.Insert(mva);
             }
             catch (Exception ex)
             {
@@ -77,7 +89,7 @@ namespace BLL
         {
             try
             {
-                return mvaDAO.Edit(mva);
+                return dao.Edit(mva);
             }
             catch (Exception ex)
             {
@@ -89,7 +101,7 @@ namespace BLL
         {
             try
             {
-                return mvaDAO.Delete(id);
+                return dao.Delete(id);
             }
             catch (Exception ex)
             {

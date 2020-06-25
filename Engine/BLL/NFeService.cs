@@ -10,13 +10,25 @@ namespace BLL
 {
     public class NFeService
     {
-        private static readonly NFeDAO nfeDAO = new NFeDAO();
+        private static readonly NFeDAO dao = new NFeDAO();
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                return await dao.GetCount();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await nfeDAO.GetPagination("NFe", page, take, filters);
+                return await dao.GetPagination(page, take, filters);
             }
             catch (Exception ex)
             {
@@ -30,7 +42,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await nfeDAO.GetAll(skip, take, filters);
+                return await dao.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -44,7 +56,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await nfeDAO.GetAllSimplify(skip, take, filters);
+                return await dao.GetAllSimplify(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -56,7 +68,7 @@ namespace BLL
         {
             try
             {
-                return await nfeDAO.Get(id);
+                return await dao.Get(id);
             }
             catch (Exception ex)
             {
@@ -68,7 +80,7 @@ namespace BLL
         {
             try
             {
-                return await nfeDAO.Exists(id);
+                return await dao.Exists(id);
             }
             catch (Exception ex)
             {
@@ -80,7 +92,7 @@ namespace BLL
         {
             try
             {
-                return await nfeDAO.Exists(cNF, nNF, processoID);
+                return await dao.Exists(cNF, nNF, processoID);
             }
             catch (Exception ex)
             {
@@ -92,7 +104,7 @@ namespace BLL
         {
             try
             {
-                return nfeDAO.Insert(nfe);
+                return dao.Insert(nfe);
             }
             catch (Exception ex)
             {
@@ -173,7 +185,7 @@ namespace BLL
                     itens.Add(MakeItem(detalhe, nFe.ID));
                 }
 
-                return nfeDAO.InsertNFeItensTransaction(nFe, itens);
+                return dao.InsertNFeItensTransaction(nFe, itens);
             }
             catch (Exception ex)
             {
@@ -292,7 +304,7 @@ namespace BLL
         {
             try
             {
-                return nfeDAO.Edit(nfe);
+                return dao.Edit(nfe);
             }
             catch (Exception ex)
             {
@@ -304,7 +316,7 @@ namespace BLL
         {
             try
             {
-                return nfeDAO.Delete(id);
+                return dao.Delete(id);
             }
             catch (Exception ex)
             {

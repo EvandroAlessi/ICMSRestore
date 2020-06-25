@@ -24,6 +24,9 @@ namespace Dominio
         [Required]
         public int EmpresaID { get; set; }
 
+        [Required]
+        public bool Finalizado { get; set; }
+
         [NotMapped]
         [JsonIgnore]
         public List<NFe> NFes { get; set; }

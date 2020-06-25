@@ -9,13 +9,25 @@ namespace BLL
 {
     public class ItemFiltradoService
     {
-        private static readonly ItemFiltradoDAO itemFiltradoDAO = new ItemFiltradoDAO();
+        private static readonly ItemFiltradoDAO dao = new ItemFiltradoDAO();
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                return await dao.GetCount();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await itemFiltradoDAO.GetPagination("ItensFiltrados", page, take, filters);
+                return await dao.GetPagination(page, take, filters);
             }
             catch (Exception ex)
             {
@@ -29,7 +41,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await itemFiltradoDAO.GetAll(skip, take, filters);
+                return await dao.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -43,7 +55,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await itemFiltradoDAO.GetAll(processID, skip, take);
+                return await dao.GetAll(processID, skip, take);
             }
             catch (Exception ex)
             {
@@ -55,7 +67,7 @@ namespace BLL
         {
             try
             {
-                return await itemFiltradoDAO.Get(id);
+                return await dao.Get(id);
             }
             catch (Exception ex)
             {
@@ -67,7 +79,7 @@ namespace BLL
         {
             try
             {
-                return await itemFiltradoDAO.Exists(id);
+                return await dao.Exists(id);
             }
             catch (Exception ex)
             {
@@ -79,7 +91,7 @@ namespace BLL
         {
             try
             {
-                return itemFiltradoDAO.Insert(itemFiltrado);
+                return dao.Insert(itemFiltrado);
             }
             catch (Exception ex)
             {
@@ -91,7 +103,7 @@ namespace BLL
         {
             try
             {
-                return itemFiltradoDAO.Edit(itemFiltrado);
+                return dao.Edit(itemFiltrado);
             }
             catch (Exception ex)
             {
@@ -103,7 +115,7 @@ namespace BLL
         {
             try
             {
-                return itemFiltradoDAO.Delete(id);
+                return dao.Delete(id);
             }
             catch (Exception ex)
             {

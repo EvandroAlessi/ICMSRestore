@@ -11,10 +11,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class ItemDAO : PaginationBuilder
+    public class ItemDAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public ItemDAO() => table = "\"Itens\"";
 
         public Item BuildObject(NpgsqlDataReader reader)
         {
@@ -68,9 +67,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Itens{quote}
+                        cmd.CommandText = $@"SELECT * FROM { table }
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -110,8 +109,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Itens{quote}
-                                    WHERE {quote}ProcessID{quote} = { nfeID };";
+                        cmd.CommandText = $@"SELECT * FROM { table }
+                                    WHERE ""ProcessID"" = { nfeID };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -149,8 +148,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Itens{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -188,8 +187,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}Itens{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -229,39 +228,39 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
 
-                        cmd.CommandText = $@"INSERT INTO {quote}Itens{ quote} (
-                                {quote}nItem{quote}
-                                , {quote}cProd{quote}
-                                , {quote}cEAN{quote}
-                                , {quote}xProd{quote}
-                                , {quote}NCM{quote}
-                                , {quote}CFOP{quote}
-                                , {quote}uCom{quote}
-                                , {quote}qCom{quote}
-                                , {quote}vUnCom{quote}
-                                , {quote}orig{quote}
-                                , {quote}CST{quote}
-                                , {quote}modBC{quote}
-                                , {quote}vBC{quote}
-                                , {quote}pICMS{quote}
-                                , {quote}vICMS{quote}
-                                , {quote}cEnq{quote}
-                                , {quote}CST_IPI{quote}
-                                , {quote}CST_PIS{quote}
-                                , {quote}vBC_PIS{quote}
-                                , {quote}pPIS{quote}
-                                , {quote}vPIS{quote}
-                                , {quote}CST_COFINS{quote}
-                                , {quote}vBC_COFINS{quote}
-                                , {quote}pCOFINS{quote}
-                                , {quote}vCOFINS{quote}
-                                , {quote}NFeID{quote}
-                                , {quote}vProd{quote}
-                                , {quote}cEANTrib{quote}
-                                , {quote}uTrib{quote}
-                                , {quote}qTrib{quote}
-                                , {quote}vUnTrib{quote}
-                                , {quote}indTot{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""nItem""
+                                , ""cProd""
+                                , ""cEAN""
+                                , ""xProd""
+                                , ""NCM""
+                                , ""CFOP""
+                                , ""uCom""
+                                , ""qCom""
+                                , ""vUnCom""
+                                , ""orig""
+                                , ""CST""
+                                , ""modBC""
+                                , ""vBC""
+                                , ""pICMS""
+                                , ""vICMS""
+                                , ""cEnq""
+                                , ""CST_IPI""
+                                , ""CST_PIS""
+                                , ""vBC_PIS""
+                                , ""pPIS""
+                                , ""vPIS""
+                                , ""CST_COFINS""
+                                , ""vBC_COFINS""
+                                , ""pCOFINS""
+                                , ""vCOFINS""
+                                , ""NFeID""
+                                , ""vProd""
+                                , ""cEANTrib""
+                                , ""uTrib""
+                                , ""qTrib""
+                                , ""vUnTrib""
+                                , ""indTot""
                             ) VALUES (
                                 { item.nItem }
                                 , '{ item.cProd }'
@@ -296,7 +295,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.vUnTrib) }
                                 , { NullableUtils.TestValue(item.indTot) }
                             )
-                            RETURNING {quote}cProd{quote};";
+                            RETURNING ""cProd"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -342,39 +341,39 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
 
-                        cmd.CommandText = $@"INSERT INTO {quote}Itens{ quote} (
-                                {quote}nItem{quote}
-                                , {quote}cProd{quote}
-                                , {quote}cEAN{quote}
-                                , {quote}xProd{quote}
-                                , {quote}NCM{quote}
-                                , {quote}CFOP{quote}
-                                , {quote}uCom{quote}
-                                , {quote}qCom{quote}
-                                , {quote}vUnCom{quote}
-                                , {quote}orig{quote}
-                                , {quote}CST{quote}
-                                , {quote}modBC{quote}
-                                , {quote}vBC{quote}
-                                , {quote}pICMS{quote}
-                                , {quote}vICMS{quote}
-                                , {quote}cEnq{quote}
-                                , {quote}CST_IPI{quote}
-                                , {quote}CST_PIS{quote}
-                                , {quote}vBC_PIS{quote}
-                                , {quote}pPIS{quote}
-                                , {quote}vPIS{quote}
-                                , {quote}CST_COFINS{quote}
-                                , {quote}vBC_COFINS{quote}
-                                , {quote}pCOFINS{quote}
-                                , {quote}vCOFINS{quote}
-                                , {quote}NFeID{quote}
-                                , {quote}vProd{quote}
-                                , {quote}cEANTrib{quote}
-                                , {quote}uTrib{quote}
-                                , {quote}qTrib{quote}
-                                , {quote}vUnTrib{quote}
-                                , {quote}indTot{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""nItem""
+                                , ""cProd""
+                                , ""cEAN""
+                                , ""xProd""
+                                , ""NCM""
+                                , ""CFOP""
+                                , ""uCom""
+                                , ""qCom""
+                                , ""vUnCom""
+                                , ""orig""
+                                , ""CST""
+                                , ""modBC""
+                                , ""vBC""
+                                , ""pICMS""
+                                , ""vICMS""
+                                , ""cEnq""
+                                , ""CST_IPI""
+                                , ""CST_PIS""
+                                , ""vBC_PIS""
+                                , ""pPIS""
+                                , ""vPIS""
+                                , ""CST_COFINS""
+                                , ""vBC_COFINS""
+                                , ""pCOFINS""
+                                , ""vCOFINS""
+                                , ""NFeID""
+                                , ""vProd""
+                                , ""cEANTrib""
+                                , ""uTrib""
+                                , ""qTrib""
+                                , ""vUnTrib""
+                                , ""indTot""
                             ) VALUES (
                                 { item.nItem }
                                 , '{ item.cProd }'
@@ -444,33 +443,33 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}Itens{ quote} (
-                                {quote}nItem{quote}
-                                , {quote}cProd{quote}
-                                , {quote}cEAN{quote}
-                                , {quote}xProd{quote}
-                                , {quote}NCM{quote}
-                                , {quote}CFOP{quote}
-                                , {quote}uCom{quote}
-                                , {quote}qCom{quote}
-                                , {quote}vUnCom{quote}
-                                , {quote}orig{quote}
-                                , {quote}CST{quote}
-                                , {quote}modBC{quote}
-                                , {quote}vBC{quote}
-                                , {quote}pICMS{quote}
-                                , {quote}vICMS{quote}
-                                , {quote}cEnq{quote}
-                                , {quote}CST_IPI{quote}
-                                , {quote}CST_PIS{quote}
-                                , {quote}vBC_PIS{quote}
-                                , {quote}pPIS{quote}
-                                , {quote}vPIS{quote}
-                                , {quote}CST_COFINS{quote}
-                                , {quote}vBC_COFINS{quote}
-                                , {quote}pCOFINS{quote}
-                                , {quote}vCOFINS{quote}
-                                , {quote}cNF{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""nItem""
+                                , ""cProd""
+                                , ""cEAN""
+                                , ""xProd""
+                                , ""NCM""
+                                , ""CFOP""
+                                , ""uCom""
+                                , ""qCom""
+                                , ""vUnCom""
+                                , ""orig""
+                                , ""CST""
+                                , ""modBC""
+                                , ""vBC""
+                                , ""pICMS""
+                                , ""vICMS""
+                                , ""cEnq""
+                                , ""CST_IPI""
+                                , ""CST_PIS""
+                                , ""vBC_PIS""
+                                , ""pPIS""
+                                , ""vPIS""
+                                , ""CST_COFINS""
+                                , ""vBC_COFINS""
+                                , ""pCOFINS""
+                                , ""vCOFINS""
+                                , ""cNF""
                             ) VALUES (
                                 '{ detalhe.nItem }'
                                 , '{ detalhe.Produto.cProd }'
@@ -529,40 +528,40 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}Items{quote} SET
-                                {quote}nItem{quote} = '{ item.nItem }'
-                                , {quote}cProd{quote} = '{ item.cProd }'
-                                , {quote}cEAN{quote} = '{ item.cEAN }'
-                                , {quote}xProd{quote} = '{ item.xProd }'
-                                , {quote}NCM{quote} = '{ item.NCM }'
-                                , {quote}CFOP{quote} = '{ item.CFOP }'
-                                , {quote}uCom{quote} = '{ item.uCom }'
-	                            , {quote}qCom{quote} = '{ item.qCom }'
-                                , {quote}vUnCom{quote} = '{ item.vUnCom }'
-                                , {quote}orig{quote} = '{ item.orig }'
-                                , {quote}CST{quote} = '{ item.CST }'
-                                , {quote}modBC{quote} = '{ item.modBC }'
-                                , {quote}vBC{quote} = '{ item.vBC }'
-                                , {quote}pICMS{quote} = '{ item.pICMS }'
-                                , {quote}vICMS{quote} = '{ item.vICMS }'
-	                            , {quote}cEnq{quote} = '{ item.cEnq }'
-                                , {quote}CST_IPI{quote} = '{ item.CST_IPI }'
-                                , {quote}CST_PIS{quote} = '{ item.CST_PIS }'
-                                , {quote}vBC_PIS{quote} = '{ item.vBC_PIS }'
-                                , {quote}pPIS{quote} = '{ item.pPIS }'
-                                , {quote}vPIS{quote} = '{ item.vPIS }'
-                                , {quote}CST_COFINS{quote} = '{ item.CST_COFINS }'
-	                            , {quote}vBC_COFINS{quote} = '{ item.vBC_COFINS }'
-                                , {quote}pCOFINS{quote} = '{ item.pCOFINS }'
-                                , {quote}vCOFINS{quote} = '{ item.vCOFINS }'
-                                , {quote}NFeID{quote} = '{ item.NFeID }'
-                                , {quote}vProd{quote} = '{ item.vProd }'
-                                , {quote}cEANTrib{quote} = '{ item.cEANTrib }'
-                                , {quote}uTrib{quote} = '{ item.uTrib }'
-                                , {quote}qTrib{quote} = '{ item.qTrib }'
-                                , {quote}vUnTrib{quote} = '{ item.vUnTrib }'
-                                , {quote}indTot{quote} = '{ item.indTot }'
-                            WHERE {quote}ID{quote} = { item.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""nItem"" = '{ item.nItem }'
+                                , ""cProd"" = '{ item.cProd }'
+                                , ""cEAN"" = '{ item.cEAN }'
+                                , ""xProd"" = '{ item.xProd }'
+                                , ""NCM"" = '{ item.NCM }'
+                                , ""CFOP"" = '{ item.CFOP }'
+                                , ""uCom"" = '{ item.uCom }'
+	                            , ""qCom"" = '{ item.qCom }'
+                                , ""vUnCom"" = '{ item.vUnCom }'
+                                , ""orig"" = '{ item.orig }'
+                                , ""CST"" = '{ item.CST }'
+                                , ""modBC"" = '{ item.modBC }'
+                                , ""vBC"" = '{ item.vBC }'
+                                , ""pICMS"" = '{ item.pICMS }'
+                                , ""vICMS"" = '{ item.vICMS }'
+	                            , ""cEnq"" = '{ item.cEnq }'
+                                , ""CST_IPI"" = '{ item.CST_IPI }'
+                                , ""CST_PIS"" = '{ item.CST_PIS }'
+                                , ""vBC_PIS"" = '{ item.vBC_PIS }'
+                                , ""pPIS"" = '{ item.pPIS }'
+                                , ""vPIS"" = '{ item.vPIS }'
+                                , ""CST_COFINS"" = '{ item.CST_COFINS }'
+	                            , ""vBC_COFINS"" = '{ item.vBC_COFINS }'
+                                , ""pCOFINS"" = '{ item.pCOFINS }'
+                                , ""vCOFINS"" = '{ item.vCOFINS }'
+                                , ""NFeID"" = '{ item.NFeID }'
+                                , ""vProd"" = '{ item.vProd }'
+                                , ""cEANTrib"" = '{ item.cEANTrib }'
+                                , ""uTrib"" = '{ item.uTrib }'
+                                , ""qTrib"" = '{ item.qTrib }'
+                                , ""vUnTrib"" = '{ item.vUnTrib }'
+                                , ""indTot"" = '{ item.indTot }'
+                            WHERE ""ID"" = { item.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -594,8 +593,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}Items{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

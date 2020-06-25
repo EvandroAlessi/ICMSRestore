@@ -1,6 +1,6 @@
 <div class="animated fadeIn">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
@@ -16,19 +16,8 @@
                                     <div class="card text-white bg-warning mt-1 mb-1">
                                         <div class="card-body">
                                             <i class="icon-people float-right"></i>
-                                            <div class="text-value">{{ metrics.persons }}</div>
-                                            <div>{{ metrics.persons == 1 ? 'Empresa Cadastrada' : 'Empresas Cadastradas' }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/.col-->
-                                <div class="col-sm-12 col-lg-3">
-                                    <div class="card text-white bg-danger mt-1 mb-1">
-                                        <div class="card-body">
-                                            <i class="icon-bubble float-right"></i>
-                                            <div class="text-value">{{ metrics.occurrences?.received }}</div>
-                                            <div> {{ metrics.occurrences?.received == 1 ? 'Processo Iniciado' : 'Processos Iniciados' }}
-                                            </div>
+                                            <div class="text-value">{{ metrics.companies }}</div>
+                                            <div>{{ metrics.companies == 1 ? 'Empresa Cadastrada' : 'Empresas Cadastradas' }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -37,8 +26,19 @@
                                     <div class="card text-white bg-info mt-1 mb-1">
                                         <div class="card-body">
                                             <i class="icon-people float-right"></i>
-                                            <div class="text-value">{{ metrics.agents }}</div>
-                                            <div>{{ metrics.agents == 1 ? 'Nota Fiscal Importada' : 'Notas Fiscais Importadas' }}</div>
+                                            <div class="text-value">{{ metrics.invoices }}</div>
+                                            <div>{{ metrics.invoices == 1 ? 'Nota Fiscal Importada' : 'Notas Fiscais Importadas' }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                                <div class="col-sm-12 col-lg-3">
+                                    <div class="card text-white bg-danger mt-1 mb-1">
+                                        <div class="card-body">
+                                            <i class="icon-bubble float-right"></i>
+                                            <div class="text-value">{{ metrics.processes }}</div>
+                                            <div> {{ metrics.processes == 1 ? 'Processo Iniciado' : 'Processos Iniciados' }}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -47,8 +47,8 @@
                                     <div class="card text-white bg-success mt-1 mb-1">
                                         <div class="card-body">
                                             <i class="icon-check float-right"></i>
-                                            <div class="text-value">{{ metrics.occurrences?.finished }}</div>
-                                            <div>{{ metrics.occurrences?.finished == 1 ? 'Processo Concluído' : 'Processos Concluídos' }}
+                                            <div class="text-value">{{ metrics.finishedProcesses }}</div>
+                                            <div>{{ metrics.finishedProcesses == 1 ? 'Processo Concluído' : 'Processos Concluídos' }}
                                             </div>
                                         </div>
                                     </div>

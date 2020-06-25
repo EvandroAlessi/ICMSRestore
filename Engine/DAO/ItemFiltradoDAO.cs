@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class ItemFiltradoDAO : PaginationBuilder
+    public class ItemFiltradoDAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public ItemFiltradoDAO() => table = "\"ItensFiltrados\"";
 
         public ItemFiltrado BuildObject(NpgsqlDataReader reader)
         {
@@ -50,9 +49,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ItensFiltrados{quote} 
+                        cmd.CommandText = $@"SELECT * FROM { table } 
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -92,9 +91,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ItensFiltrados{quote} 
-                                            WHERE {quote}ProcessoID{quote} = { processID }
-                                            ORDER BY {quote}ID{ quote} desc
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                            WHERE ""ProcessoID"" = { processID }
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -134,8 +133,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ItensFiltrados{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -173,8 +172,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}ItensFiltrados{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -213,25 +212,25 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}ItensFiltrados{quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}ItemID{quote}
-                                , {quote}cProd{quote}
-                                , {quote}xProd{quote}
-                                , {quote}NCM{quote}
-                                , {quote}CFOP{quote}
-                                , {quote}uCom{quote}
-                                , {quote}qCom{quote}
-                                , {quote}vUnCom{quote}
-                                , {quote}orig{quote}
-                                , {quote}CST{quote}
-                                , {quote}vBC{quote}
-                                , {quote}vICMS{quote}
-                                , {quote}CSOSN{quote}
-                                , {quote}Entrada{quote}
-                                , {quote}nNF{quote}
-                                , {quote}dhEmi{quote}
-                                , {quote}dhSaiEnt{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""ProcessoID""
+                                , ""ItemID""
+                                , ""cProd""
+                                , ""xProd""
+                                , ""NCM""
+                                , ""CFOP""
+                                , ""uCom""
+                                , ""qCom""
+                                , ""vUnCom""
+                                , ""orig""
+                                , ""CST""
+                                , ""vBC""
+                                , ""vICMS""
+                                , ""CSOSN""
+                                , ""Entrada""
+                                , ""nNF""
+                                , ""dhEmi""
+                                , ""dhSaiEnt""
                             ) VALUES (
                                 { itemFiltrado.ProcessoID }
                                 , { itemFiltrado.ItemID }
@@ -252,7 +251,7 @@ namespace DAO
                                 , '{ itemFiltrado.dhEmi }'
                                 , '{ itemFiltrado.dhSaiEnt }'
                             )
-                            RETURNING {quote}ID{quote};";
+                            RETURNING ""ID"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -293,26 +292,26 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}ItensFiltrados{quote} SET
-                                {quote}ProcessoID{quote} = { itemFiltrado.ProcessoID }
-                                , {quote}ItemID{quote} = { itemFiltrado.ItemID }
-                                , {quote}cProd{quote} = '{ itemFiltrado.cProd }'
-                                , {quote}xProd{quote} = '{ itemFiltrado.xProd }'
-                                , {quote}NCM{quote} = { itemFiltrado.NCM }
-                                , {quote}CFOP{quote} = { NullableUtils.TestValue(itemFiltrado.CFOP) }
-                                , {quote}uCom{quote} = { NullableUtils.TestValue(itemFiltrado.uCom) }
-                                , {quote}qCom{quote} = { NullableUtils.TestValue(itemFiltrado.qCom) }
-                                , {quote}vUnCom{quote} = { NullableUtils.TestValue(itemFiltrado.vUnCom) }
-                                , {quote}orig{quote} = { NullableUtils.TestValue(itemFiltrado.orig) }
-                                , {quote}CST{quote} = { NullableUtils.TestValue(itemFiltrado.CST) }
-                                , {quote}vBC{quote} = { NullableUtils.TestValue(itemFiltrado.vBC) }
-                                , {quote}vICMS{quote} = { NullableUtils.TestValue(itemFiltrado.vICMS) }
-                                , {quote}CSOSN{quote} = { NullableUtils.TestValue(itemFiltrado.CSOSN) }
-                                , {quote}Entrada{quote} = '{ itemFiltrado.Entrada }'
-                                , {quote}nNF{quote} = { itemFiltrado.nNF }
-                                , {quote}dhEmi{quote} = '{ itemFiltrado.dhEmi }'
-                                , {quote}dhSaiEnt{quote} = '{ itemFiltrado.dhSaiEnt }'
-                            WHERE {quote}ID{quote} = { itemFiltrado.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""ProcessoID"" = { itemFiltrado.ProcessoID }
+                                , ""ItemID"" = { itemFiltrado.ItemID }
+                                , ""cProd"" = '{ itemFiltrado.cProd }'
+                                , ""xProd"" = '{ itemFiltrado.xProd }'
+                                , ""NCM"" = { itemFiltrado.NCM }
+                                , ""CFOP"" = { NullableUtils.TestValue(itemFiltrado.CFOP) }
+                                , ""uCom"" = { NullableUtils.TestValue(itemFiltrado.uCom) }
+                                , ""qCom"" = { NullableUtils.TestValue(itemFiltrado.qCom) }
+                                , ""vUnCom"" = { NullableUtils.TestValue(itemFiltrado.vUnCom) }
+                                , ""orig"" = { NullableUtils.TestValue(itemFiltrado.orig) }
+                                , ""CST"" = { NullableUtils.TestValue(itemFiltrado.CST) }
+                                , ""vBC"" = { NullableUtils.TestValue(itemFiltrado.vBC) }
+                                , ""vICMS"" = { NullableUtils.TestValue(itemFiltrado.vICMS) }
+                                , ""CSOSN"" = { NullableUtils.TestValue(itemFiltrado.CSOSN) }
+                                , ""Entrada"" = '{ itemFiltrado.Entrada }'
+                                , ""nNF"" = { itemFiltrado.nNF }
+                                , ""dhEmi"" = '{ itemFiltrado.dhEmi }'
+                                , ""dhSaiEnt"" = '{ itemFiltrado.dhSaiEnt }'
+                            WHERE ""ID"" = { itemFiltrado.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -344,8 +343,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}ItensFiltrados{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

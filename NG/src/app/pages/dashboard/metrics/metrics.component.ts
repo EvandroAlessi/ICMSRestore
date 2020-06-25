@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { MetricsService } from '../../../services/metrics.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,16 +8,17 @@ import { Router } from '@angular/router';
   styles: [],
 })
 export class MetricsComponent implements OnInit {
-  public route: string = '/occurrences';
+  public route: string = '/metrics';
   public occurrences: any = [];
   public metrics: any = {};
 
-  constructor() {}
+  constructor(
+    private metricsService: MetricsService
+  ) {}
 
   ngOnInit() {
-    // this.dashboardService.getAll([]).then((response) => {
-    //   this.occurrences = response.occurrences;
-    //   this.metrics = response.total;
-    // });
+    this.metricsService.getCounts().subscribe((response) => {
+        this.metrics = response;
+    });
   }
 }

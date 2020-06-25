@@ -9,13 +9,25 @@ namespace BLL
 {
     public class ProcessoService
     {
-        private static readonly ProcessoDAO processoDAO = new ProcessoDAO();
+        private static readonly ProcessoDAO dao = new ProcessoDAO();
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                return await dao.GetCount();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await processoDAO.GetPagination("Processos", page, take, filters);
+                return await dao.GetPagination(page, take, filters);
             }
             catch (Exception ex)
             {
@@ -29,7 +41,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await processoDAO.GetAll(skip, take, filters);
+                return await dao.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -41,7 +53,7 @@ namespace BLL
         {
             try
             {
-                return await processoDAO.Get(id);
+                return await dao.Get(id);
             }
             catch (Exception ex)
             {
@@ -53,7 +65,7 @@ namespace BLL
         {
             try
             {
-                return await processoDAO.Exists(id);
+                return await dao.Exists(id);
             }
             catch (Exception ex)
             {
@@ -65,7 +77,7 @@ namespace BLL
         {
             try
             {
-                return processoDAO.Insert(processo);
+                return dao.Insert(processo);
             }
             catch (Exception ex)
             {
@@ -77,7 +89,7 @@ namespace BLL
         {
             try
             {
-                return processoDAO.Edit(processo);
+                return dao.Edit(processo);
             }
             catch (Exception ex)
             {
@@ -89,7 +101,7 @@ namespace BLL
         {
             try
             {
-                return processoDAO.Delete(id);
+                return dao.Delete(id);
             }
             catch (Exception ex)
             {

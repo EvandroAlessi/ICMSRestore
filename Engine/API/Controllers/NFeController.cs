@@ -16,7 +16,7 @@ namespace API.Controllers
     [Route("api/invoices")]
     public class NFeController : ControllerBase
     {
-        private static readonly NFeService nfeService = new NFeService();
+        private static readonly NFeService service = new NFeService();
 
         // GET: api/<NFeController>
         /// <summary>
@@ -30,8 +30,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    Invoices = await nfeService.GetAll(page, take, filters),
-                    Pagination = await nfeService.GetPagination(page, take, filters)
+                    Invoices = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -49,8 +49,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    Invoices = await nfeService.GetAllSimplify(page, take, filters),
-                    Pagination = await nfeService.GetPagination(page, take, filters)
+                    Invoices = await service.GetAllSimplify(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -72,7 +72,7 @@ namespace API.Controllers
         {
             try
             {
-                var nfe = await nfeService.Get(id);
+                var nfe = await service.Get(id);
 
                 if (nfe is null)
                 {
@@ -82,6 +82,19 @@ namespace API.Controllers
                 {
                     return Ok(nfe);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+                return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -113,7 +126,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    nfe = nfeService.Insert(nfe);
+                    nfe = service.Insert(nfe);
 
                     if (nfe is null)
                     {
@@ -160,7 +173,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool exists = nfeService.Exists(id).Result;
+                    bool exists = service.Exists(id).Result;
 
                     if (!exists)
                     {
@@ -168,7 +181,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        var editedNFe = nfeService.Edit(nfe);
+                        var editedNFe = service.Edit(nfe);
 
                         if (editedNFe is null)
                         {
@@ -198,7 +211,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = nfeService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -206,7 +219,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = nfeService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {

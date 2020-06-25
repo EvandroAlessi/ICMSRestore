@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class EmpresaDAO : PaginationBuilder
+    public class EmpresaDAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public EmpresaDAO() => table = "\"Empresas\"";
 
         public Empresa BuildObject(NpgsqlDataReader reader)
         {
@@ -37,9 +36,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Empresas{quote} 
+                        cmd.CommandText = $@"SELECT * FROM { table } 
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -79,8 +78,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Empresas{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -118,8 +117,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}Empresas{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -158,17 +157,17 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}Empresas{quote} (
-                                {quote}CNPJ{quote}
-                                , {quote}Nome{quote}
-                                , {quote}Cidade{quote}
-                                , {quote}UF{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""CNPJ""
+                                , ""Nome""
+                                , ""Cidade""
+                                , ""UF""
                             ) VALUES (
                                 '{ empresa.CNPJ }'
                                 , '{ empresa.Nome }'
                                 , '{ empresa.Cidade }'
                                 , '{ empresa.UF }')
-                            RETURNING {quote}ID{quote};";
+                            RETURNING ""ID"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -209,12 +208,12 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}Empresas{quote} SET
-                                {quote}CNPJ{quote} = '{ empresa.CNPJ }'
-                                , {quote}Nome{quote} = '{ empresa.Nome }'
-                                , {quote}Cidade{quote} = '{ empresa.Cidade }'
-                                , {quote}UF{quote} = '{ empresa.UF }'
-                            WHERE {quote}ID{quote} = { empresa.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""CNPJ"" = '{ empresa.CNPJ }'
+                                , ""Nome"" = '{ empresa.Nome }'
+                                , ""Cidade"" = '{ empresa.Cidade }'
+                                , ""UF"" = '{ empresa.UF }'
+                            WHERE ""ID"" = { empresa.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -246,8 +245,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}Empresas{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

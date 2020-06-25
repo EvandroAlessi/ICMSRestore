@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class NFeDAO : PaginationBuilder
+    public class NFeDAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public NFeDAO() => table = "\"NFe\"";
 
         public string BuildItensInsertQuery(List<Item> itens, int nfeID)
         {
@@ -22,34 +21,34 @@ namespace DAO
             {
                 if (i == 0)
                 {
-                    query = $@"INSERT INTO {quote}Itens{ quote} (
-                                {quote}nItem{quote}
-                                , {quote}cProd{quote}
-                                , {quote}cEAN{quote}
-                                , {quote}xProd{quote}
-                                , {quote}NCM{quote}
-                                , {quote}CFOP{quote}
-                                , {quote}uCom{quote}
-                                , {quote}qCom{quote}
-                                , {quote}vUnCom{quote}
-                                , {quote}orig{quote}
-                                , {quote}CST{quote}
-                                , {quote}modBC{quote}
-                                , {quote}vBC{quote}
-                                , {quote}pICMS{quote}
-                                , {quote}vICMS{quote}
-                                , {quote}cEnq{quote}
-                                , {quote}CST_IPI{quote}
-                                , {quote}CST_PIS{quote}
-                                , {quote}vBC_PIS{quote}
-                                , {quote}pPIS{quote}
-                                , {quote}vPIS{quote}
-                                , {quote}CST_COFINS{quote}
-                                , {quote}vBC_COFINS{quote}
-                                , {quote}pCOFINS{quote}
-                                , {quote}vCOFINS{quote}
-                                , {quote}NFeID{quote}
-                                , {quote}CSOSN{quote}
+                    query = $@"INSERT INTO ""Itens"" (
+                                ""nItem""
+                                , ""cProd""
+                                , ""cEAN""
+                                , ""xProd""
+                                , ""NCM""
+                                , ""CFOP""
+                                , ""uCom""
+                                , ""qCom""
+                                , ""vUnCom""
+                                , ""orig""
+                                , ""CST""
+                                , ""modBC""
+                                , ""vBC""
+                                , ""pICMS""
+                                , ""vICMS""
+                                , ""cEnq""
+                                , ""CST_IPI""
+                                , ""CST_PIS""
+                                , ""vBC_PIS""
+                                , ""pPIS""
+                                , ""vPIS""
+                                , ""CST_COFINS""
+                                , ""vBC_COFINS""
+                                , ""pCOFINS""
+                                , ""vCOFINS""
+                                , ""NFeID""
+                                , ""CSOSN""
                             ) VALUES (
                                 { itens[i].nItem }
                                 , '{ itens[i].cProd }'
@@ -122,65 +121,65 @@ namespace DAO
 
         public string BuildInsertQuery(NFe nfe, bool hasReturn = false)
         {
-            var query = $@"INSERT INTO {quote}NFe{ quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}CEP{quote}
-                                , {quote}CEP_DEST{quote}
-                                , {quote}CNPJ{quote}
-                                , {quote}CNPJ_DEST{quote}
-                                , {quote}CPF_DEST{quote}
-                                , {quote}CRT{quote}
-                                , {quote}IE{quote}
-                                , {quote}IEST{quote}
-                                , {quote}UF{quote}
-                                , {quote}UF_DEST{quote}
-                                , {quote}cMun{quote}
-                                , {quote}cMun_DEST{quote}
-                                , {quote}cNF{quote}
-                                , {quote}cPais{quote}
-                                , {quote}cPais_DEST{quote}
-                                , {quote}cUF{quote}
-                                , {quote}dhEmi{quote}
-                                , {quote}dhSaiEnt{quote}
-                                , {quote}email_DEST{quote}
-                                , {quote}indPag{quote}
-                                , {quote}mod{quote}
-                                , {quote}nNF{quote}
-                                , {quote}natOp{quote}
-                                , {quote}nro{quote}
-                                , {quote}nro_DEST{quote}
-                                , {quote}serie{quote}
-                                , {quote}xBairro{quote}
-                                , {quote}xBairro_DEST{quote}
-                                , {quote}xFant{quote}
-                                , {quote}xLgr{quote}
-                                , {quote}xLgr_DEST{quote}
-                                , {quote}xMun{quote}
-                                , {quote}xMun_DEST{quote}
-                                , {quote}xNome{quote}
-                                , {quote}xNome_DEST{quote}
-                                , {quote}xPais{quote}
-                                , {quote}xPais_DEST{quote}
-                                , {quote}vBC_TOTAL{quote}
-                                , {quote}vICMS_TOTAL{quote}
-                                , {quote}vICMSDeson_TOTAL{quote}
-                                , {quote}vFCP_TOTAL{quote}
-                                , {quote}vBCST_TOTAL{quote}
-                                , {quote}vST_TOTAL{quote}
-                                , {quote}vFCPST_TOTAL{quote}
-                                , {quote}vFCPSTRet_TOTAL{quote}
-                                , {quote}vProd_TOTAL{quote}
-                                , {quote}vFrete_TOTAL{quote}
-                                , {quote}vSeg_TOTAL{quote}
-                                , {quote}vDesc_TOTAL{quote}
-                                , {quote}vII_TOTAL{quote}
-                                , {quote}vIPI_TOTAL{quote}
-                                , {quote}vIPIDevol_TOTAL{quote}
-                                , {quote}vPIS_TOTAL{quote}
-                                , {quote}vCOFINS_TOTAL{quote}
-                                , {quote}vOutro_TOTAL{quote}
-                                , {quote}vNF_TOTAL{quote}
-                                , {quote}Entrada{quote}
+            var query = $@"INSERT INTO { table } (
+                                ""ProcessoID""
+                                , ""CEP""
+                                , ""CEP_DEST""
+                                , ""CNPJ""
+                                , ""CNPJ_DEST""
+                                , ""CPF_DEST""
+                                , ""CRT""
+                                , ""IE""
+                                , ""IEST""
+                                , ""UF""
+                                , ""UF_DEST""
+                                , ""cMun""
+                                , ""cMun_DEST""
+                                , ""cNF""
+                                , ""cPais""
+                                , ""cPais_DEST""
+                                , ""cUF""
+                                , ""dhEmi""
+                                , ""dhSaiEnt""
+                                , ""email_DEST""
+                                , ""indPag""
+                                , ""mod""
+                                , ""nNF""
+                                , ""natOp""
+                                , ""nro""
+                                , ""nro_DEST""
+                                , ""serie""
+                                , ""xBairro""
+                                , ""xBairro_DEST""
+                                , ""xFant""
+                                , ""xLgr""
+                                , ""xLgr_DEST""
+                                , ""xMun""
+                                , ""xMun_DEST""
+                                , ""xNome""
+                                , ""xNome_DEST""
+                                , ""xPais""
+                                , ""xPais_DEST""
+                                , ""vBC_TOTAL""
+                                , ""vICMS_TOTAL""
+                                , ""vICMSDeson_TOTAL""
+                                , ""vFCP_TOTAL""
+                                , ""vBCST_TOTAL""
+                                , ""vST_TOTAL""
+                                , ""vFCPST_TOTAL""
+                                , ""vFCPSTRet_TOTAL""
+                                , ""vProd_TOTAL""
+                                , ""vFrete_TOTAL""
+                                , ""vSeg_TOTAL""
+                                , ""vDesc_TOTAL""
+                                , ""vII_TOTAL""
+                                , ""vIPI_TOTAL""
+                                , ""vIPIDevol_TOTAL""
+                                , ""vPIS_TOTAL""
+                                , ""vCOFINS_TOTAL""
+                                , ""vOutro_TOTAL""
+                                , ""vNF_TOTAL""
+                                , ""Entrada""
                             ) VALUES (
                                 { nfe.ProcessoID }
                                 , '{ nfe.CEP }'
@@ -244,7 +243,7 @@ namespace DAO
 
             if (hasReturn)
             {
-                query += $"RETURNING {quote}ID{ quote}";
+                query += $@"RETURNING ""ID""";
             }
 
             query += ";";
@@ -344,9 +343,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}NFe{ quote}
+                        cmd.CommandText = $@"SELECT * FROM { table }
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -386,18 +385,18 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote}
-                                                , {quote}ProcessoID{quote}
-                                                , {quote}CNPJ{quote}
-                                                , {quote}Entrada{quote}
-                                                , {quote}cNF{quote}
-                                                , {quote}nNF{quote}
-                                                , {quote}dhEmi{quote}
-                                                , {quote}dhSaiEnt{quote}
-                                                , {quote}vNF_TOTAL{quote}
-                                            FROM {quote}NFe{quote}
+                        cmd.CommandText = $@"SELECT ""ID""
+                                                , ""ProcessoID""
+                                                , ""CNPJ""
+                                                , ""Entrada""
+                                                , ""cNF""
+                                                , ""nNF""
+                                                , ""dhEmi""
+                                                , ""dhSaiEnt""
+                                                , ""vNF_TOTAL""
+                                            FROM { table }
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -437,8 +436,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}NFe{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -476,8 +475,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}NFe{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -516,10 +515,10 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}NFe{quote} 
-                                WHERE {quote}cNF{quote} = { cNF } 
-                                    AND {quote}nNF{quote} = { nNF }
-                                    AND {quote}ProcessoID{quote} = { processoID } ;";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""cNF"" = { cNF } 
+                                    AND ""nNF"" = { nNF }
+                                    AND ""ProcessoID"" = { processoID } ;";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -606,6 +605,7 @@ namespace DAO
                                 cmd.Transaction = transaction;
                                 cmd.CommandType = CommandType.Text;
                                 cmd.CommandText = BuildInsertQuery(nfe, true);
+                                cmd.Prepare();
 
                                 var nfeID = (int)cmd.ExecuteScalar();
 
@@ -623,6 +623,7 @@ namespace DAO
                                     cmd2.Transaction = transaction;
                                     cmd2.CommandType = CommandType.Text;
                                     cmd2.CommandText = BuildItensInsertQuery(itens, nfeID);
+                                    cmd2.Prepare();
 
                                     rows = cmd2.ExecuteNonQuery();
                                 }
@@ -706,45 +707,45 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}NFe{ quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}CEP{quote}
-                                , {quote}CEP_DEST{quote}
-                                , {quote}CNPJ{quote}
-                                , {quote}CNPJ_DEST{quote}
-                                , {quote}CPF_DEST{quote}
-                                , {quote}CRT{quote}
-                                , {quote}IE{quote}
-                                , {quote}IEST{quote}
-                                , {quote}UF{quote}
-                                , {quote}UF_DEST{quote}
-                                , {quote}cMun{quote}
-                                , {quote}cMun_DEST{quote}
-                                , {quote}cNF{quote}
-                                , {quote}cPais{quote}
-                                , {quote}cPais_DEST{quote}
-                                , {quote}cUF{quote}
-                                , {quote}dhEmi{quote}
-                                , {quote}dhSaiEnt{quote}
-                                , {quote}email_DEST{quote}
-                                , {quote}indPag{quote}
-                                , {quote}mod{quote}
-                                , {quote}nNF{quote}
-                                , {quote}natOp{quote}
-                                , {quote}nro{quote}
-                                , {quote}nro_DEST{quote}
-                                , {quote}serie{quote}
-                                , {quote}xBairro{quote}
-                                , {quote}xBairro_DEST{quote}
-                                , {quote}xFant{quote}
-                                , {quote}xLgr{quote}
-                                , {quote}xLgr_DEST{quote}
-                                , {quote}xMun{quote}
-                                , {quote}xMun_DEST{quote}
-                                , {quote}xNome{quote}
-                                , {quote}xNome_DEST{quote}
-                                , {quote}xPais{quote}
-                                , {quote}xPais_DEST{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""ProcessoID""
+                                , ""CEP""
+                                , ""CEP_DEST""
+                                , ""CNPJ""
+                                , ""CNPJ_DEST""
+                                , ""CPF_DEST""
+                                , ""CRT""
+                                , ""IE""
+                                , ""IEST""
+                                , ""UF""
+                                , ""UF_DEST""
+                                , ""cMun""
+                                , ""cMun_DEST""
+                                , ""cNF""
+                                , ""cPais""
+                                , ""cPais_DEST""
+                                , ""cUF""
+                                , ""dhEmi""
+                                , ""dhSaiEnt""
+                                , ""email_DEST""
+                                , ""indPag""
+                                , ""mod""
+                                , ""nNF""
+                                , ""natOp""
+                                , ""nro""
+                                , ""nro_DEST""
+                                , ""serie""
+                                , ""xBairro""
+                                , ""xBairro_DEST""
+                                , ""xFant""
+                                , ""xLgr""
+                                , ""xLgr_DEST""
+                                , ""xMun""
+                                , ""xMun_DEST""
+                                , ""xNome""
+                                , ""xNome_DEST""
+                                , ""xPais""
+                                , ""xPais_DEST""
                             ) VALUES (
                                 { processoID }
                                 , '{ nfe.NotaFiscalEletronica.InformacoesNFe.Emitente?.Endereco.CEP }'
@@ -815,46 +816,46 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}NFe{quote} SET
-                                {quote}ProcessoID{quote} = { nfe.ProcessoID }
-                                , {quote}CEP{quote} = '{ nfe.CEP }'
-                                , {quote}CEP_DEST{quote} = '{ nfe.CEP_DEST }'
-                                , {quote}CNPJ{quote} = '{ nfe.CNPJ }'
-                                , {quote}CNPJ_DEST{quote} = '{ nfe.CNPJ_DEST }'
-                                , {quote}CPF_DEST{quote} = '{ nfe.CPF_DEST }'
-                                , {quote}CRT{quote} = { nfe.CRT }
-                                , {quote}IE{quote} = '{ nfe.IE }'
-                                , {quote}IEST{quote} = '{ nfe.IEST }'
-                                , {quote}UF{quote} = '{ nfe.UF }'
-                                , {quote}UF_DEST{quote} = '{ nfe.UF_DEST }'
-                                , {quote}cMun{quote} = '{ nfe.cMun }'
-                                , {quote}cMun_DEST{quote} = '{ nfe.cMun_DEST }'
-                                , {quote}cNF{quote} = '{ nfe.cNF }'
-                                , {quote}cPais{quote} = '{ nfe.cPais }'
-                                , {quote}cPais_DEST{quote} = '{ nfe.cPais_DEST }'
-                                , {quote}cUF{quote} = '{ nfe.cUF }'
-                                , {quote}dhEmi{quote} = '{ nfe.dhEmi }'
-                                , {quote}dhSaiEnt{quote} = '{ nfe.dhSaiEnt }'
-                                , {quote}email_DEST{quote} = '{ nfe.email_DEST }'
-                                , {quote}indPag{quote} = '{ nfe.indPag }'
-                                , {quote}mod{quote} = '{ nfe.mod }'
-                                , {quote}nNF{quote} = '{ nfe.nNF }'
-                                , {quote}natOp{quote} = '{ nfe.natOp }'
-                                , {quote}nro{quote} = '{ nfe.nro }'
-                                , {quote}nro_DEST{quote} = '{ nfe.nro_DEST }'
-                                , {quote}serie{quote} = '{ nfe.serie }'
-                                , {quote}xBairro{quote} = '{ nfe.xBairro }'
-                                , {quote}xBairro_DEST{quote} = '{ nfe.xBairro_DEST }'
-                                , {quote}xFant{quote} = '{ nfe.xFant }'
-                                , {quote}xLgr{quote} = '{ nfe.xLgr }'
-                                , {quote}xLgr_DEST{quote} = '{ nfe.xLgr_DEST }'
-                                , {quote}xMun{quote} = '{ nfe.xMun }'
-                                , {quote}xMun_DEST{quote} = '{ nfe.xMun_DEST }'
-                                , {quote}xNome{quote} = '{ nfe.xNome }'
-                                , {quote}xNome_DEST{quote} = '{ nfe.xNome_DEST }'
-                                , {quote}xPais{quote} = '{ nfe.xPais }'
-                                , {quote}xPais_DEST{quote} = '{ nfe.xPais_DEST }'
-                            WHERE {quote}ID{quote} = { nfe.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""ProcessoID"" = { nfe.ProcessoID }
+                                , ""CEP"" = '{ nfe.CEP }'
+                                , ""CEP_DEST"" = '{ nfe.CEP_DEST }'
+                                , ""CNPJ"" = '{ nfe.CNPJ }'
+                                , ""CNPJ_DEST"" = '{ nfe.CNPJ_DEST }'
+                                , ""CPF_DEST"" = '{ nfe.CPF_DEST }'
+                                , ""CRT"" = { nfe.CRT }
+                                , ""IE"" = '{ nfe.IE }'
+                                , ""IEST"" = '{ nfe.IEST }'
+                                , ""UF"" = '{ nfe.UF }'
+                                , ""UF_DEST"" = '{ nfe.UF_DEST }'
+                                , ""cMun"" = '{ nfe.cMun }'
+                                , ""cMun_DEST"" = '{ nfe.cMun_DEST }'
+                                , ""cNF"" = '{ nfe.cNF }'
+                                , ""cPais"" = '{ nfe.cPais }'
+                                , ""cPais_DEST"" = '{ nfe.cPais_DEST }'
+                                , ""cUF"" = '{ nfe.cUF }'
+                                , ""dhEmi"" = '{ nfe.dhEmi }'
+                                , ""dhSaiEnt"" = '{ nfe.dhSaiEnt }'
+                                , ""email_DEST"" = '{ nfe.email_DEST }'
+                                , ""indPag"" = '{ nfe.indPag }'
+                                , ""mod"" = '{ nfe.mod }'
+                                , ""nNF"" = '{ nfe.nNF }'
+                                , ""natOp"" = '{ nfe.natOp }'
+                                , ""nro"" = '{ nfe.nro }'
+                                , ""nro_DEST"" = '{ nfe.nro_DEST }'
+                                , ""serie"" = '{ nfe.serie }'
+                                , ""xBairro"" = '{ nfe.xBairro }'
+                                , ""xBairro_DEST"" = '{ nfe.xBairro_DEST }'
+                                , ""xFant"" = '{ nfe.xFant }'
+                                , ""xLgr"" = '{ nfe.xLgr }'
+                                , ""xLgr_DEST"" = '{ nfe.xLgr_DEST }'
+                                , ""xMun"" = '{ nfe.xMun }'
+                                , ""xMun_DEST"" = '{ nfe.xMun_DEST }'
+                                , ""xNome"" = '{ nfe.xNome }'
+                                , ""xNome_DEST"" = '{ nfe.xNome_DEST }'
+                                , ""xPais"" = '{ nfe.xPais }'
+                                , ""xPais_DEST"" = '{ nfe.xPais_DEST }'
+                            WHERE ""ID"" = { nfe.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -886,8 +887,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}NFe{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

@@ -16,7 +16,7 @@ namespace API.Controllers
     [Route("api/filtered-items")]
     public class ItensFiltradosController : ControllerBase
     {
-        private static readonly ItemFiltradoService itemFiltradoService = new ItemFiltradoService();
+        private static readonly ItemFiltradoService service = new ItemFiltradoService();
 
         // GET: api/<ItemFiltradoController>
         /// <summary>
@@ -30,8 +30,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    FilteredItems = await itemFiltradoService.GetAll(page, take, filters),
-                    Pagination = await itemFiltradoService.GetPagination(page, take, filters)
+                    FilteredItems = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -54,8 +54,8 @@ namespace API.Controllers
 
                 var response = new
                 {
-                    FilteredItems = await itemFiltradoService.GetAll(processID, page, take),
-                    Pagination = await itemFiltradoService.GetPagination(page, take, filters)
+                    FilteredItems = await service.GetAll(processID, page, take),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -77,7 +77,7 @@ namespace API.Controllers
         {
             try
             {
-                var itemFiltrado = await itemFiltradoService.Get(id);
+                var itemFiltrado = await service.Get(id);
 
                 if (itemFiltrado is null)
                 {
@@ -87,6 +87,19 @@ namespace API.Controllers
                 {
                     return Ok(itemFiltrado);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+                return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -118,7 +131,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    itemFiltrado = itemFiltradoService.Insert(itemFiltrado);
+                    itemFiltrado = service.Insert(itemFiltrado);
 
                     if (itemFiltrado is null)
                     {
@@ -165,7 +178,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool exists = itemFiltradoService.Exists(itemFiltrado.ID).Result;
+                    bool exists = service.Exists(itemFiltrado.ID).Result;
 
                     if (!exists)
                     {
@@ -173,7 +186,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        var editedItemFiltrado = itemFiltradoService.Edit(itemFiltrado);
+                        var editedItemFiltrado = service.Edit(itemFiltrado);
 
                         if (editedItemFiltrado is null)
                         {
@@ -203,7 +216,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = itemFiltradoService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -211,7 +224,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = itemFiltradoService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {

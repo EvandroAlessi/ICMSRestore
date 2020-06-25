@@ -5,19 +5,33 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using static CrossCutting.LOG;
 
 namespace BLL
 {
     public class ProcessoUploadService
     {
-        private static readonly ProcessoUploadDAO processoUploadDAO = new ProcessoUploadDAO();
+        private static readonly ProcessoUploadDAO dao = new ProcessoUploadDAO();
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                return await dao.GetCount();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await processoUploadDAO.GetPagination("ProcessosUpload", page, take, filters);
+                return await dao.GetPagination(page, take, filters);
             }
             catch (Exception ex)
             {
@@ -31,7 +45,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await processoUploadDAO.GetAll(skip, take, filters);
+                return await dao.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -45,7 +59,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await processoUploadDAO.GetAll(processoID, skip, take);
+                return await dao.GetAll(processoID, skip, take);
             }
             catch (Exception ex)
             {
@@ -57,7 +71,7 @@ namespace BLL
         {
             try
             {
-                return await processoUploadDAO.Get(id);
+                return await dao.Get(id);
             }
             catch (Exception ex)
             {
@@ -69,7 +83,7 @@ namespace BLL
         {
             try
             {
-                return await processoUploadDAO.Get(processoID, zipPath);
+                return await dao.Get(processoID, zipPath);
             }
             catch (Exception ex)
             {
@@ -89,7 +103,7 @@ namespace BLL
                 {
                     return 0.0;
                 }
-                else if(Directory.Exists(processoUpload.PastaZip))
+                else if(Directory.Exists(processoUpload.PastaZip) && Directory.GetFiles(processoUpload.PastaZip).Count() > 0)
                 {
                     double restFiles = Directory.GetFiles(processoUpload.PastaZip).Count();
 
@@ -103,6 +117,22 @@ namespace BLL
                 }
                 else
                 {
+                    processoUpload.Ativo = false;
+
+                    processoUpload = Edit(processoUpload);
+
+                    if (processoUpload is null)
+                    {
+                        Log(func: $"ProcessoUploadService.{ MethodBase.GetCurrentMethod().Name }",
+                            message: "Erro ao realizar update",
+                            parameters: new
+                            {
+                                ID = processoUpload.ID,
+                                ProcessoID = processoUpload.ProcessoID,
+                                PastaZip = processoUpload.PastaZip,
+                            });
+                    }
+
                     return 100.0;
                 }
             }
@@ -139,7 +169,7 @@ namespace BLL
         {
             try
             {
-                return await processoUploadDAO.Exists(id);
+                return await dao.Exists(id);
             }
             catch (Exception ex)
             {
@@ -151,7 +181,7 @@ namespace BLL
         {
             try
             {
-                return processoUploadDAO.Insert(processoUpload);
+                return dao.Insert(processoUpload);
             }
             catch (Exception ex)
             {
@@ -163,7 +193,7 @@ namespace BLL
         {
             try
             {
-                return processoUploadDAO.Edit(processoUpload);
+                return dao.Edit(processoUpload);
             }
             catch (Exception ex)
             {
@@ -175,7 +205,7 @@ namespace BLL
         {
             try
             {
-                return processoUploadDAO.Delete(id);
+                return dao.Delete(id);
             }
             catch (Exception ex)
             {

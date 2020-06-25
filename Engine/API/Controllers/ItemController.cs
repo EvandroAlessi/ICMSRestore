@@ -14,7 +14,7 @@ namespace API.Controllers
     [Route("api/items")]
     public class ItemController : ControllerBase
     {
-        private static readonly ItemService itemService = new ItemService();
+        private static readonly ItemService service = new ItemService();
 
         // GET: api/<ItemController>
         /// <summary>
@@ -28,8 +28,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    Items = await itemService.GetAll(page, take, filters),
-                    Pagination = await itemService.GetPagination(page, take, filters)
+                    Items = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -51,7 +51,7 @@ namespace API.Controllers
         {
             try
             {
-                var item = await itemService.Get(id);
+                var item = await service.Get(id);
 
                 if (item is null)
                 {
@@ -61,6 +61,19 @@ namespace API.Controllers
                 {
                     return Ok(item);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+                return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -92,7 +105,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    item = itemService.Insert(item);
+                    item = service.Insert(item);
 
                     if (item is null)
                     {
@@ -139,7 +152,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool exists = itemService.Exists(item.ID).Result;
+                    bool exists = service.Exists(item.ID).Result;
 
                     if (!exists)
                     {
@@ -147,7 +160,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        var editedItem = itemService.Edit(item);
+                        var editedItem = service.Edit(item);
 
                         if (editedItem is null)
                         {
@@ -177,7 +190,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = itemService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -185,7 +198,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = itemService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {

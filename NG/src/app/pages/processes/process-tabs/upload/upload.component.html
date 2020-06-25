@@ -17,21 +17,23 @@
                     <th>Nome do ZIP</th>
                     <th>Total de Arquivos</th>
                     <th>Arquivos com Erro</th>
-                    <th class="md-column">Processado</th>
+                    <th class="md-column">Processamento</th>
                 </tr>
             </thead>
             <tbody>
                 <tr *ngFor="let uploadProcess of uploadProcesses">
                     <td data-th="Tipo">{{ uploadProcess.entrada ? 'ENTRADA' : 'SAÍDA' }}</td>
                     <td data-th="Data Inicio">{{ uploadProcess.dataInicio | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
-                    <td data-th="Ativo">{{ uploadProcess.ativo}}</td>
+                    <td data-th="Ativo">
+                        <input class="check-input" type="checkbox" [checked]="uploadProcess.ativo" id="Ativo" disabled>
+                    </td>
                     <td data-th="Nome do ZIP">{{ uploadProcess.pastaZip.substring(uploadProcess.pastaZip.lastIndexOf('\\') + 1) }}</td>
                     <td data-th="Total de Arquivos">{{ uploadProcess.qntArq }}</td>
                     <td data-th="Arquivos com Erro">{{ uploadProcess.errorFiles }}</td>
                     <td data-th="Processado" class="sm-column">
-                        <a *ngIf="uploadProcess.percent == 100; else elseBlock" class="btn btn-success m-1">Concluído</a>
+                        <a *ngIf="uploadProcess.percent == 100; else elseBlock" class="btn btn-success m-1 disabled">Concluído</a>
                         <ng-template #elseBlock>
-                            <a class="btn btn-primary m-1">{{ uploadProcess.percent | number:'1.0-0'}}%</a>
+                            <a class="btn btn-primary m-1 disabled">{{ uploadProcess.percent | number:'1.0-0'}}%</a>
                         </ng-template> 
                     </td>
                 </tr>

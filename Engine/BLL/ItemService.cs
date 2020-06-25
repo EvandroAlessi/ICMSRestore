@@ -9,13 +9,25 @@ namespace BLL
 {
     public class ItemService
     {
-        private readonly ItemDAO itemDAO = new ItemDAO();
+        private readonly ItemDAO dao = new ItemDAO();
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                return await dao.GetCount();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
-                return await itemDAO.GetPagination("Itens", page, take, filters);
+                return await dao.GetPagination(page, take, filters);
             }
             catch (Exception ex)
             {
@@ -29,7 +41,7 @@ namespace BLL
             {
                 int skip = (page - 1) * take;
 
-                return await itemDAO.GetAll(skip, take, filters);
+                return await dao.GetAll(skip, take, filters);
             }
             catch (Exception ex)
             {
@@ -41,7 +53,7 @@ namespace BLL
         {
             try
             {
-                return await itemDAO.GetAll(nfeID);
+                return await dao.GetAll(nfeID);
             }
             catch (Exception ex)
             {
@@ -53,7 +65,7 @@ namespace BLL
         {
             try
             {
-                return await itemDAO.Get(id);
+                return await dao.Get(id);
             }
             catch (Exception ex)
             {
@@ -65,7 +77,7 @@ namespace BLL
         {
             try
             {
-                return await itemDAO.Exists(id);
+                return await dao.Exists(id);
             }
             catch (Exception ex)
             {
@@ -77,7 +89,7 @@ namespace BLL
         {
             try
             {
-                return itemDAO.Insert(item);
+                return dao.Insert(item);
             }
             catch (Exception ex)
             {
@@ -119,7 +131,7 @@ namespace BLL
                     NFeID = nfeID
                 };
 
-                return itemDAO.InserWithoutObjReturn(item);
+                return dao.InserWithoutObjReturn(item);
             }
             catch (Exception ex)
             {
@@ -131,7 +143,7 @@ namespace BLL
         {
             try
             {
-                return itemDAO.Edit(item);
+                return dao.Edit(item);
             }
             catch (Exception ex)
             {
@@ -143,7 +155,7 @@ namespace BLL
         {
             try
             {
-                return itemDAO.Delete(id);
+                return dao.Delete(id);
             }
             catch (Exception ex)
             {

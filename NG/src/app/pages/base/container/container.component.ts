@@ -7,7 +7,7 @@ import { AuthenticationService } from '../../../services/authentication.service'
   templateUrl: './container.component.html',
 })
 export class ContainerComponent implements AfterViewInit {
-  public sidebarMinimized = false;
+  public sidebarMinimized = true;
   public navItems = navItems;
 
   constructor(

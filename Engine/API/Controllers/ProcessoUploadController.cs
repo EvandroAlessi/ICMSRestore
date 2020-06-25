@@ -14,7 +14,7 @@ namespace API.Controllers
     [Route("api/upload-processes")]
     public class ProcessoUploadController : ControllerBase
     {
-        private static readonly ProcessoUploadService processoUploadService = new ProcessoUploadService();
+        private static readonly ProcessoUploadService service = new ProcessoUploadService();
 
         // GET: api/<ProcessoUploadController>
         /// <summary>
@@ -28,8 +28,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    UploadProcesses = await processoUploadService.GetAll(page, take, filters),
-                    Pagination = await processoUploadService.GetPagination(page, take, filters)
+                    UploadProcesses = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -53,7 +53,7 @@ namespace API.Controllers
                 filters.Add("ProcessoID", processID.ToString());
 
                
-                foreach (var uploadProcess in await processoUploadService.GetAll(processID, page, take))
+                foreach (var uploadProcess in await service.GetAll(processID, page, take))
                 {
                     uploadProcesses.Add(new
                     {
@@ -64,15 +64,15 @@ namespace API.Controllers
                         uploadProcess.PastaZip,
                         uploadProcess.ProcessoID,
                         uploadProcess.QntArq,
-                        percent = processoUploadService.GetState(uploadProcess),
-                        errorFiles = processoUploadService.GetErrorFiles(uploadProcess.PastaZip),
+                        percent = service.GetState(uploadProcess),
+                        errorFiles = service.GetErrorFiles(uploadProcess.PastaZip),
                     });
                 }
 
                 return new
                 {
                     UploadProcesses = uploadProcesses,
-                    Pagination = await processoUploadService.GetPagination(page, take, filters)
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
             }
             catch (Exception ex)
@@ -92,7 +92,7 @@ namespace API.Controllers
         {
             try
             {
-                var processoUpload = await processoUploadService.Get(id);
+                var processoUpload = await service.Get(id);
 
                 if (processoUpload is null)
                 {
@@ -114,7 +114,7 @@ namespace API.Controllers
         {
             try
             {
-                var uploadProcess = await processoUploadService.Get(id);
+                var uploadProcess = await service.Get(id);
 
                 if (uploadProcess is null)
                 {
@@ -124,10 +124,23 @@ namespace API.Controllers
                 {
                     return Ok(new
                         {
-                            percent = processoUploadService.GetState(uploadProcess),
-                            errorFiles = processoUploadService.GetErrorFiles(uploadProcess.PastaZip),
+                            percent = service.GetState(uploadProcess),
+                            errorFiles = service.GetErrorFiles(uploadProcess.PastaZip),
                         });
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+                return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -159,7 +172,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    processoUpload = processoUploadService.Insert(processoUpload);
+                    processoUpload = service.Insert(processoUpload);
 
                     if (processoUpload is null)
                     {
@@ -206,7 +219,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool exists = processoUploadService.Exists(id).Result;
+                    bool exists = service.Exists(id).Result;
 
                     if (!exists)
                     {
@@ -214,7 +227,7 @@ namespace API.Controllers
                     }
                     else
                     {
-                        var editedProcessoUpload = processoUploadService.Edit(processoUpload);
+                        var editedProcessoUpload = service.Edit(processoUpload);
 
                         if (editedProcessoUpload is null)
                         {
@@ -244,7 +257,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = processoUploadService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -252,7 +265,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = processoUploadService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {

@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class ProcessoDAO : PaginationBuilder
+    public class ProcessoDAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public ProcessoDAO() => table = "\"Processos\"";
 
         public Processo BuildObject(NpgsqlDataReader reader)
         {
@@ -22,7 +21,8 @@ namespace DAO
                 DataCriacao = Convert.ToDateTime(reader["DataCriacao"]),
                 InicioPeriodo = Convert.ToDateTime(reader["InicioPeriodo"]),
                 FimPeriodo = Convert.ToDateTime(reader["FimPeriodo"]),
-                EmpresaID = Convert.ToInt32(reader["EmpresaID"])
+                EmpresaID = Convert.ToInt32(reader["EmpresaID"]),
+                Finalizado = Convert.ToBoolean(reader["Finalizado"])
             };
         }
 
@@ -38,9 +38,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Processos{ quote}
+                        cmd.CommandText = $@"SELECT * FROM { table }
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{ quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -82,8 +82,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}Processos{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table }
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -111,6 +111,47 @@ namespace DAO
             }
         }
 
+        public async Task<long> GetFinishedCount()
+        {
+            try
+            {
+                long count = 0;
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT Count(*) FROM { table }
+                                            WHERE ""Finalizado"";";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                count = reader.GetInt32(0);
+
+                                break;
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return count;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<bool> Exists(int id)
         {
             try
@@ -123,8 +164,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}Processos{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table }
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -163,19 +204,22 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}Processos{quote} (
-                                {quote}EmpresaID{quote}
-                                , {quote}Nome{quote}
-                                , {quote}DataCriacao{quote}
-                                , {quote}InicioPeriodo{quote}
-                                , {quote}FimPeriodo{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""EmpresaID""
+                                , ""Nome""
+                                , ""DataCriacao""
+                                , ""InicioPeriodo""
+                                , ""FimPeriodo""
+                                , ""Finalizado""
                             ) VALUES (
                                 { processo.EmpresaID }
                                 , '{ processo.Nome }'
                                 , '{ processo.DataCriacao ?? DateTime.Now }'
                                 , '{ processo.InicioPeriodo }'
-                                , '{ processo.FimPeriodo }')
-                            RETURNING {quote}ID{quote};";
+                                , '{ processo.FimPeriodo }'
+                                , '{ processo.Finalizado }'
+                            )
+                            RETURNING ""ID"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -216,13 +260,14 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}Processos{quote} SET
-                                {quote}EmpresaID{quote} = '{ processo.EmpresaID }'
-                                , {quote}Nome{quote} = '{ processo.Nome }'
-                                , {quote}DataCriacao{quote} = '{ processo.DataCriacao }'
-                                , {quote}InicioPeriodo{quote} = '{ processo.InicioPeriodo }'
-                                , {quote}FimPeriodo{quote} = '{ processo.FimPeriodo }'
-                            WHERE {quote}ID{quote} = { processo.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""EmpresaID"" = '{ processo.EmpresaID }'
+                                , ""Nome"" = '{ processo.Nome }'
+                                , ""DataCriacao"" = '{ processo.DataCriacao }'
+                                , ""InicioPeriodo"" = '{ processo.InicioPeriodo }'
+                                , ""FimPeriodo"" = '{ processo.FimPeriodo }'
+                                , ""Finalizado"" = '{ processo.Finalizado }'
+                            WHERE ""ID"" = { processo.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -254,8 +299,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}Processos{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

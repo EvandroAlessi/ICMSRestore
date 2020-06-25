@@ -287,7 +287,8 @@ namespace NFeSeeder
 
                 if (Directory.GetFiles(subDir).Count() == 0)
                 {
-                    Directory.Delete(subDir);
+                    if (Directory.GetDirectories(subDir).Count() == 0)
+                        Directory.Delete(subDir);
 
                     if (processDirs[processoID].Values.Count == 0)
                     {
@@ -297,23 +298,26 @@ namespace NFeSeeder
                         dirPaths.Remove(processPath);
                     }
 
-                    var processoUplService = new ProcessoUploadService();
-
-                    var processoUpload = processoUplService.Get(processoID, subDir).Result;
-
-                    processoUpload.Ativo = false;
-
-                    processoUpload = processoUplService.Edit(processoUpload);
-
-                    if (processoUpload is null)
+                    if (!zipPaths.Any(x => Path.ChangeExtension(x, null) == subDir))
                     {
-                        Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }",
-                            message: "Erro ao realizar update", 
-                            parameters: new
-                            {
-                                ProcessoID = processoID,
-                                PastaZip = subDir,
-                            });
+                        var processoUplService = new ProcessoUploadService();
+
+                        var processoUpload = processoUplService.Get(processoID, subDir).Result;
+
+                        processoUpload.Ativo = false;
+
+                        processoUpload = processoUplService.Edit(processoUpload);
+
+                        if (processoUpload is null)
+                        {
+                            Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }",
+                                message: "Erro ao realizar update",
+                                parameters: new
+                                {
+                                    ProcessoID = processoID,
+                                    PastaZip = subDir,
+                                });
+                        }
                     }
                 }
             }

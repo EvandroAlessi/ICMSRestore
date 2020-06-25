@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class ProcessoUploadDAO : PaginationBuilder
+    public class ProcessoUploadDAO : CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        public ProcessoUploadDAO() => table = "\"ProcessosUpload\"";
 
         public ProcessoUpload BuildObject(NpgsqlDataReader reader)
         {
@@ -39,9 +38,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote}
+                        cmd.CommandText = $@"SELECT * FROM { table }
                                             { DynamicWhere.BuildFilters(filters) }
-                                            ORDER BY {quote}ID{quote} desc
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -81,9 +80,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote}
-                                            WHERE {quote}ProcessoID{quote} = { processoID }
-                                            ORDER BY {quote}ID{ quote} desc
+                        cmd.CommandText = $@"SELECT * FROM { table }
+                                            WHERE ""ProcessoID"" = { processoID }
+                                            ORDER BY ""ID"" desc
                                             LIMIT { take } 
                                             OFFSET { skip };";
 
@@ -123,8 +122,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -162,9 +161,9 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT * FROM {quote}ProcessosUpload{quote} 
-                                WHERE {quote}ProcessoID{quote} = { processoID }
-                                    AND {quote}PastaZip{quote} = '{ zipPath }';";
+                        cmd.CommandText = $@"SELECT * FROM { table } 
+                                WHERE ""ProcessoID"" = { processoID }
+                                    AND ""PastaZip"" = '{ zipPath }';";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -202,8 +201,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT {quote}ID{quote} FROM {quote}ProcessosUpload{quote} 
-                                WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
+                                WHERE ""ID"" = { id };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -242,13 +241,13 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"INSERT INTO {quote}ProcessosUpload{quote} (
-                                {quote}ProcessoID{quote}
-                                , {quote}PastaZip{quote}
-                                , {quote}QntArq{quote}
-                                , {quote}Ativo{quote}
-                                , {quote}DataInicio{quote}
-                                , {quote}Entrada{quote}
+                        cmd.CommandText = $@"INSERT INTO { table } (
+                                ""ProcessoID""
+                                , ""PastaZip""
+                                , ""QntArq""
+                                , ""Ativo""
+                                , ""DataInicio""
+                                , ""Entrada""
                             ) VALUES (
                                 { processoUpload.ProcessoID }
                                 , '{ processoUpload.PastaZip }'
@@ -256,7 +255,7 @@ namespace DAO
                                 , '{ processoUpload.Ativo }'
                                 , '{ processoUpload.DataInicio ?? DateTime.Now }'
                                 , '{ processoUpload.Entrada }')
-                            RETURNING {quote}ID{quote};";
+                            RETURNING ""ID"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -297,13 +296,13 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"UPDATE {quote}ProcessosUpload{quote} SET
-                                {quote}ProcessoID{quote} = { processoUpload.ProcessoID }
-                                , {quote}PastaZip{quote} = '{ processoUpload.PastaZip }'
-                                , {quote}QntArq{quote} = { processoUpload.QntArq }
-                                , {quote}Ativo{quote} = '{ processoUpload.Ativo }'
-                                , {quote}DataInicio{quote} = '{ processoUpload.DataInicio }'
-                            WHERE {quote}ID{quote} = { processoUpload.ID };";
+                        cmd.CommandText = $@"UPDATE { table } SET
+                                ""ProcessoID"" = { processoUpload.ProcessoID }
+                                , ""PastaZip"" = '{ processoUpload.PastaZip }'
+                                , ""QntArq"" = { processoUpload.QntArq }
+                                , ""Ativo"" = '{ processoUpload.Ativo }'
+                                , ""DataInicio"" = '{ processoUpload.DataInicio }'
+                            WHERE ""ID"" = { processoUpload.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -335,8 +334,8 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"DELETE FROM {quote}ProcessosUpload{quote}
-                            WHERE {quote}ID{quote} = { id };";
+                        cmd.CommandText = $@"DELETE FROM { table }
+                            WHERE ""ID"" = { id };";
 
                         rows = cmd.ExecuteNonQuery();
                     }

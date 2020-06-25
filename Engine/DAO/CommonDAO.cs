@@ -7,12 +7,13 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class PaginationBuilder
+    public class CommonDAO
     {
-        static string connString = AppSettings.ConnectionString;
-        const string quote = "\"";
+        protected static readonly string connString = AppSettings.ConnectionString;
+        protected string table = string.Empty;
+        //protected const string quote = "\"";
 
-        public async Task<Pagination> GetPagination(string table, int page, int take, Dictionary<string, string> filters)
+        public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {
             try
             {
@@ -24,7 +25,7 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT Count(*) FROM { quote + table + quote } 
+                        cmd.CommandText = $@"SELECT Count(*) FROM { table } 
                                             { DynamicWhere.BuildFilters(filters) };";
 
                         using (var reader = cmd.ExecuteReader())
@@ -58,6 +59,46 @@ namespace DAO
                 }
 
                 return pagination;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<long> GetCount()
+        {
+            try
+            {
+                long count = 0;
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT Count(*) FROM { table };";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                count = reader.GetInt32(0);
+
+                                break;
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return count;
             }
             catch (NpgsqlException ex)
             {

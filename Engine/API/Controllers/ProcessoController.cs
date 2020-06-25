@@ -16,7 +16,7 @@ namespace API.Controllers
     [Route("api/processes")]
     public class ProcessoController : ControllerBase
     {
-        private static readonly ProcessoService processoService = new ProcessoService();
+        private static readonly ProcessoService service = new ProcessoService();
 
         // GET: api/<ProcessoController>
         [HttpGet]
@@ -26,8 +26,8 @@ namespace API.Controllers
             {
                 var response = new
                 {
-                    Processes = await processoService.GetAll(page, take, filters),
-                    Pagination = await processoService.GetPagination(page, take, filters)
+                    Processes = await service.GetAll(page, take, filters),
+                    Pagination = await service.GetPagination(page, take, filters)
                 };
 
                 return response;
@@ -44,7 +44,7 @@ namespace API.Controllers
         {
             try
             {
-                var processo = await processoService.Get(id);
+                var processo = await service.Get(id);
 
                 if (processo is null)
                 {
@@ -54,6 +54,19 @@ namespace API.Controllers
                 {
                     return Ok(processo);
                 }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
+        {
+            try
+            {
+                return Ok(await service.GetCount());
             }
             catch (Exception ex)
             {
@@ -86,7 +99,7 @@ namespace API.Controllers
 
                     if (exists)
                     {
-                        processo = processoService.Insert(processo);
+                        processo = service.Insert(processo);
 
                         if (processo is null)
                         {
@@ -142,7 +155,7 @@ namespace API.Controllers
 
                     if (empExists)
                     {
-                        bool exists = processoService.Exists(id).Result;
+                        bool exists = service.Exists(id).Result;
 
                         if (!exists)
                         {
@@ -150,7 +163,7 @@ namespace API.Controllers
                         }
                         else
                         {
-                            var editedProcess = processoService.Edit(processo);
+                            var editedProcess = service.Edit(processo);
 
                             if (editedProcess is null)
                             {
@@ -180,7 +193,7 @@ namespace API.Controllers
         {
             try
             {
-                bool exists = processoService.Exists(id).Result;
+                bool exists = service.Exists(id).Result;
 
                 if (!exists)
                 {
@@ -188,7 +201,7 @@ namespace API.Controllers
                 }
                 else
                 {
-                    bool deleted = processoService.Delete(id);
+                    bool deleted = service.Delete(id);
 
                     if (deleted)
                     {
