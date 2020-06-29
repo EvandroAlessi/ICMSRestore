@@ -8,7 +8,7 @@ namespace CrossCutting.ResultModels
     /// Este registro deve conter as notas fiscais de devoluções de vendas ocorridas no mesmo mês em que foi computada a saída da mesma mercadoria.
     /// Devoluções de vendas são entradas que têm por objeto anular os efeitos da operação original da qual resultou a saída da mercadoria.
     /// </summary>
-    public partial class NFeDevolOutroEstado : NFeDevolBase
+    public partial class NFeOutroEstadoDevol : NFeDevolBase
     {
         /// <summary>
         /// Texto fixo contendo 1320

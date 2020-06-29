@@ -7,7 +7,7 @@ namespace CrossCutting.ResultModels
     /// <summary>
     /// Este registro deve conter as notas fiscais de devolução de venda ocorridas no mesmo mês em que foi computada a saída da mesma mercadoria.
     /// </summary>
-    public partial class NFeDevolSaida : NFeDevolBase
+    public partial class NFeSaidaDevol : NFeDevolBase
     {
         /// <summary>
         /// Texto fixo contendo 1220

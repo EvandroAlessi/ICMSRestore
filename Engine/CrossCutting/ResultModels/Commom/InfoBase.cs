@@ -87,7 +87,7 @@ namespace CrossCutting.ResultModels.Commom
         /// <summary>
         /// Unidade de medida do item 
         /// Deve ser informada a mesma unidade de medida utilizada
-        /// para quantificação do estoque declarada no campo B09 do registro 1000
+        /// para quantificação do estoque declarada no campo Produto.UNID_ITEM do registro 1000
         /// </summary>
         [Required]
         [MaxLength(10)]
@@ -98,7 +98,7 @@ namespace CrossCutting.ResultModels.Commom
     {
         /// <summary>
         /// Quantidade do item devolvida 
-        /// Informar a quantidade do item devolvido convertido na mesma unidade de medida declarada no campo B09[UNID_ITEM] do Registro 1000
+        /// Informar a quantidade do item devolvido convertido na mesma unidade de medida declarada no campo Produto.UNID_ITEM do Registro 1000
         /// </summary>
         [Required]
         [RegularExpression(@"^(0|-?\d{0,9}(\.\d{0,3})?)$")]

@@ -60,30 +60,35 @@ namespace CrossCutting.ResultModels
         public string NOME { get; set; }
 
         /// <summary>
-        /// 0 – Arquivo original
-        /// 1 – Arquivo substituto
+        /// 0 – Arquivo original,
+        /// 1 – Arquivo substituto.
+        /// Informar 0 (zero) para identificar o Arquivo original quando for o primeiro envio do arquivo. 
+        /// Informar 1 (um) para identificar o Arquivo substituto, quando o contribuinte desejar substituir um arquivo original
         /// </summary>
         [Required]
         [DefaultValue(0)]
         public int CD_FIN { get; set; }
 
         /// <summary>
-        /// Número do regime especial
+        /// Número do regime especial.
+        /// Se possuir regime especial, informar o número.
         /// </summary>
         [MaxLength(10)]
         public string N_REG_ESPECIAL { get; set; }
 
         /// <summary>
+        /// CNPJ do Centro de Distribuição.
         /// Informar o CNPJ do estabelecimento que centraliza as aquisições dos
-        /// produtos sujeitos à substituição tributária
+        /// produtos sujeitos à substituição tributária.
+        /// Se houver operação de transferência interna entre filiais e não existir Centro de Distribuição, deve informar neste campo o próprio CNPJ.
         /// </summary>
         [MaxLength(14)]
         [MinLength(14)]
         public string CNPJ_CD { get; set; }
 
         /// <summary>
-        /// Informar a Inscrição Estadual do estabelecimento que centraliza as
-        /// aquisições dos produtos sujeitos à substituição tributária
+        /// Informar a Inscrição Estadual do estabelecimento que centraliza as aquisições dos produtos sujeitos à substituição tributária ou a própria
+        /// inscrição estadual se não houver estabelecimento que centraliza as aquisições dos produtos.
         /// </summary>
         [MaxLength(10)]
         [MinLength(10)]

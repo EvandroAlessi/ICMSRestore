@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace CrossCutting.ResultModels
 {
@@ -31,8 +28,10 @@ namespace CrossCutting.ResultModels
         public int IND_FECOP { get; set; }
 
         /// <summary>
-        /// Informar o código de identificação da mercadoria utilizado
-        /// na aquisição e na comercialização do produto.
+        /// Sequência de números e/ou letras atribuída pelo contribuinte para a identificação da mercadoria que integra o ciclo de aquisição,
+        /// produção e venda do estabelecimento.Deve corresponder ao código do item declarado no campo 2 do registro 0200 da EFD.É vedada a reutilização do código
+        /// de item.O código de item não pode ser alterado, caso ocorra, o contribuinte deverá informar o registro 0205 da EFD. No caso de contribuinte que não declara
+        /// a EFD, informar o código do item utilizado para identificar o produto nas suas operações.
         /// </summary>
         [Required]
         [MaxLength(60)]
@@ -102,7 +101,7 @@ namespace CrossCutting.ResultModels
 
         /// <summary>
         /// Quantidade total do item adquirido no período
-        /// Informar o mesmo valor do campo D02 do registro 1100
+        /// Informar o mesmo valor do campo TotalEntrada.QTD_TOT_ENTRADA do registro 1100
         /// </summary>
         [Required]
         [RegularExpression(@"^(0|-?\d{0,9}(\.\d{0,3})?)$")]
@@ -110,8 +109,7 @@ namespace CrossCutting.ResultModels
 
         /// <summary>
         /// Quantidade total de saídas do item no período 
-        /// Somatória da quantidade das operações de saídas do item
-        /// declaradas nos campos F02, H02, J02, L02
+        /// Equação: QTD_TOT_SAIDA = TotalSaida.QTD_TOT_SAIDA + TotalSaidaOutroEstado.QTD_TOT_SAIDA + TotalSaidaArt119.QTD_TOT_SAIDA + TotalSaidaSimples.QTD_TOT_SAIDA
         /// </summary>
         [Required]
         [RegularExpression(@"^(0|-?\d{0,9}(\.\d{0,3})?)$")]

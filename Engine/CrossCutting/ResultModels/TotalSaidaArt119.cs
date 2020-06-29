@@ -19,7 +19,7 @@ namespace CrossCutting.ResultModels
         public string REG { get; set; }
 
         /// <summary>
-        /// Valor de confronto do ICMS das entradas 
+        /// Valor de confronto do ICMS das entradas.
         /// Obtido pela multiplicação do campo J02 [QTD_TOT_SAÍDA] pelo campo D06[VL_UNIT_MED_ICMS_SUPORT_ENTR] do registro 1100
         /// </summary>
         [Required]

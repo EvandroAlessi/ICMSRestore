@@ -6,7 +6,7 @@ namespace CrossCutting.ResultModels.Commom
     {
         /// <summary>
         /// Quantidade do produto na saida
-        /// Informar a quantidade do item convertida na mesma unidade de medida declarada no campo B09[UNID_ITEM] do Registro 1000
+        /// Informar a quantidade do item convertida na mesma unidade de medida declarada no campo Produto.UNID_ITEM do Registro 1000
         /// </summary>
         [Required]
         [RegularExpression(@"^(0|-?\d{0,9}(\.\d{0,3})?)$")]

@@ -21,7 +21,7 @@ namespace CrossCutting.ResultModels
 
         /// <summary>
         /// Código do item 
-        /// Deve ser informado o mesmo código do item declarado no campo B03
+        /// Deve ser informado o mesmo código do item declarado no campo Produto.COD_ITEM
         /// </summary>
         [Required]
         [MaxLength(60)]
@@ -29,7 +29,7 @@ namespace CrossCutting.ResultModels
 
         /// <summary>
         /// Informar a unidade de medida utilizada na quantificação do estoque
-        /// Deve ser a mesma unidade de medida utilizada no campo B09 do registro 1000
+        /// Deve ser a mesma unidade de medida utilizada no campo Produto.UNID_ITEM do registro 1000
         /// </summary>
         [Required]
         [MaxLength(10)]
