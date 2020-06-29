@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 import { FormGroup, FormBuilder } from '@angular/forms';
@@ -21,7 +21,7 @@ export class UploadService {
     post(file, processID, entrada) {
         const formData = new FormData(); 
         let params = new HttpParams();
-
+        let headers = new HttpHeaders();
 
         this.formGroup.patchValue({
             files: file
@@ -32,8 +32,11 @@ export class UploadService {
         formData.append('files', this.formGroup.get('files').value);
 
         params = params.append('Entrada', entrada);
+
+        headers.append('Content-Type', 'multipart/form-data');
+        headers.append('Accept', 'application/json');
         
-        return this.http.post(this.api + "/" + processID, formData, { params: params, reportProgress: true, observe: 'events'  });
+        return this.http.post(this.api + "/" + processID, formData, { params: params, headers: headers, reportProgress: true, observe: 'events'  });
     }
 
     postAll(processID, files) {

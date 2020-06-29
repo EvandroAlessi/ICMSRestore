@@ -1,4 +1,6 @@
-﻿using System;
+﻿using BLL;
+using CrossCutting;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Uploader.Models;
@@ -8,6 +10,34 @@ namespace Uploader
     class Program
     {
         static void Main(string[] args)
+        {
+            SendFiles();
+
+            Console.ReadLine();
+        }
+
+
+        public static void DeleteAllNFe()
+        {
+            AppSettings.ConnectionString = "Server = 127.0.0.1; Port = 5432; Database = icms_restore; User Id = postgres; Password = admin";
+
+            try
+            {
+                var nfeService = new NFeService();
+
+                foreach (var nfe in nfeService.GetAllSimplify().Result)
+                {
+                    nfeService.Delete(nfe.ID);
+                    Console.WriteLine(nfe.ID);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+        }
+
+        public static void SendFiles()
         {
             try
             {
@@ -39,8 +69,6 @@ namespace Uploader
             {
                 Console.WriteLine(ex);
             }
-
-            Console.ReadLine();
         }
     }
 }

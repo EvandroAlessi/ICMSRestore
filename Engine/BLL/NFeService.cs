@@ -182,7 +182,7 @@ namespace BLL
 
                 foreach (var detalhe in nFeProc.InformacoesNFe.Detalhe)
                 {
-                    itens.Add(MakeItem(detalhe, nFe.ID));
+                    itens.Add(BuildItem(detalhe, nFe.ID));
                 }
 
                 return dao.InsertNFeItensTransaction(nFe, itens);
@@ -193,9 +193,9 @@ namespace BLL
             }
         }
 
-        public Item MakeItem(CrossCutting.SerializationModels.Detalhe detalhe, int nfeID)
+        public Item BuildItem(CrossCutting.SerializationModels.Detalhe detalhe, int nfeID)
         {
-            var aux = detalhe?.Imposto?.ICMS?
+            var icms = detalhe?.Imposto?.ICMS?
                 .GetType()
                 .GetProperties()
                 .FirstOrDefault(x => !(x.GetValue(detalhe?.Imposto?.ICMS) is null))
@@ -231,9 +231,9 @@ namespace BLL
                 indTot = detalhe.Produto.indTot,
             };
 
-            switch (aux)
+            switch (icms)
             {
-                case CrossCutting.SerializationModels.ICMS00 icms:
+                case CrossCutting.SerializationModels.ICMS00 _:
                     item.orig = detalhe.Imposto.ICMS?.ICMS00?.orig;
                     item.CST = detalhe.Imposto.ICMS?.ICMS00?.CST;
                     item.modBC = detalhe.Imposto.ICMS?.ICMS00?.modBC;
@@ -242,52 +242,52 @@ namespace BLL
                     item.vICMS = detalhe.Imposto.ICMS?.ICMS00?.vICMS;
 
                     break;
-                case CrossCutting.SerializationModels.ICMSSN101 icms:
+                case CrossCutting.SerializationModels.ICMSSN101 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN101?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN101?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN102 icms:
+                case CrossCutting.SerializationModels.ICMSSN102 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN102?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN102?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN103 icms:
+                case CrossCutting.SerializationModels.ICMSSN103 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN103?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN103?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN201 icms:
+                case CrossCutting.SerializationModels.ICMSSN201 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN201?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN201?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN202 icms:
+                case CrossCutting.SerializationModels.ICMSSN202 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN202?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN202?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN203 icms:
+                case CrossCutting.SerializationModels.ICMSSN203 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN203?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN203?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN300 icms:
+                case CrossCutting.SerializationModels.ICMSSN300 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN300?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN300?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN400 icms:
+                case CrossCutting.SerializationModels.ICMSSN400 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN400?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN400?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN500 icms:
+                case CrossCutting.SerializationModels.ICMSSN500 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN500?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN500?.CSOSN;
                     break;
-                case CrossCutting.SerializationModels.ICMSSN900 icms:
+                case CrossCutting.SerializationModels.ICMSSN900 _:
 
                     item.orig = detalhe.Imposto.ICMS?.ICMSSN900?.orig;
                     item.CSOSN = detalhe.Imposto.ICMS?.ICMSSN900?.CSOSN;

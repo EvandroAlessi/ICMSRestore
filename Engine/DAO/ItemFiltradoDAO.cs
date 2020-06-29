@@ -1,4 +1,5 @@
 ﻿using CrossCutting;
+using CrossCutting.Models;
 using Dominio;
 using Npgsql;
 using System;
@@ -35,7 +36,61 @@ namespace DAO
                 nNF = Convert.ToInt32(reader["nNF"]),
                 dhEmi = Convert.ToDateTime(reader["dhEmi"]),
                 dhSaiEnt = reader.GetFieldValue<DateTime?>("dhSaiEnt"),
+                cNF = Convert.ToInt32(reader["cNF"]),
+                pICMS = reader.GetFieldValue<double?>("pICMS"),
+                vProd = reader.GetFieldValue<double>("vProd"),
             };
+        }
+
+        public async Task<bool> CalcItems(DateTime start, DateTime end, bool entrada = false)
+        {
+            try
+            {
+                var list = new List<SimpleResponse>();
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT date_part('MONTH', ""dhEmi""), ""NCM"", ""vProd""
+                                FROM { table }
+                                WHERE ""Entrada"" = { entrada }
+                                    AND ""dhEmi"" BETWEEN '{ start }' AND '{ end }'
+                                ORDER BY 1 DESC;";
+
+                        //GROUP BY ""NCM"", ""dhEmi""
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var simple = new SimpleResponse
+                                {
+                                    Month = reader.GetFieldValue<int>(0),
+                                    NCM = reader["NCM"]?.ToString(),
+                                    vProd = reader.GetFieldValue<double>("vProd"),
+                                };
+
+                                list.Add(simple);
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return list.Count > 0;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<List<ItemFiltrado>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
@@ -232,6 +287,7 @@ namespace DAO
                                 , ""nNF""
                                 , ""dhEmi""
                                 , ""dhSaiEnt""
+                                , ""vProd""
                             ) VALUES (
                                 { itemFiltrado.ProcessoID }
                                 , { itemFiltrado.ItemID }
@@ -251,6 +307,7 @@ namespace DAO
                                 , { itemFiltrado.nNF }
                                 , '{ itemFiltrado.dhEmi }'
                                 , '{ itemFiltrado.dhSaiEnt }'
+                                , { NullableUtils.TestValue(itemFiltrado.vProd) }
                             )
                             RETURNING ""ID"";";
 
@@ -312,6 +369,7 @@ namespace DAO
                                 , ""nNF"" = { itemFiltrado.nNF }
                                 , ""dhEmi"" = '{ itemFiltrado.dhEmi }'
                                 , ""dhSaiEnt"" = '{ itemFiltrado.dhSaiEnt }'
+                                , ""vProd"" = { NullableUtils.TestValue(itemFiltrado.vProd) }
                             WHERE ""ID"" = { itemFiltrado.ID };";
 
                         rows = cmd.ExecuteNonQuery();

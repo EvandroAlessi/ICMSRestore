@@ -49,6 +49,12 @@ namespace DAO
                                 , ""vCOFINS""
                                 , ""NFeID""
                                 , ""CSOSN""
+                                , ""vProd""
+                                , ""cEANTrib""
+                                , ""uTrib""
+                                , ""qTrib""
+                                , ""vUnTrib""
+                                , ""indTot""
                             ) VALUES (
                                 { itens[i].nItem }
                                 , '{ itens[i].cProd }'
@@ -77,11 +83,18 @@ namespace DAO
                                 , { NullableUtils.TestValue(itens[i].vCOFINS) }
                                 , { nfeID }
                                 , { NullableUtils.TestValue(itens[i].CSOSN) }
+                                , { NullableUtils.TestValue(itens[i].vProd) }
+                                , '{ itens[i].cEANTrib }'
+                                , '{ itens[i].uTrib }'
+                                , { NullableUtils.TestValue(itens[i].qTrib) }
+                                , { NullableUtils.TestValue(itens[i].vUnTrib) }
+                                , { NullableUtils.TestValue(itens[i].indTot) }
                             )";
                 }
                 else
                 {
-                    query += $@", ({ itens[i].nItem }
+                    query += $@", (
+                                { itens[i].nItem }
                                 , '{ itens[i].cProd }'
                                 , '{ itens[i].cEAN }'
                                 , '{ itens[i].xProd }'
@@ -107,7 +120,14 @@ namespace DAO
                                 , { NullableUtils.TestValue(itens[i].pCOFINS) }
                                 , { NullableUtils.TestValue(itens[i].vCOFINS) }
                                 , { nfeID }
-                                , { NullableUtils.TestValue(itens[i].CSOSN) })";
+                                , { NullableUtils.TestValue(itens[i].CSOSN) }
+                                , { NullableUtils.TestValue(itens[i].vProd) }
+                                , '{ itens[i].cEANTrib }'
+                                , '{ itens[i].uTrib }'
+                                , { NullableUtils.TestValue(itens[i].qTrib) }
+                                , { NullableUtils.TestValue(itens[i].vUnTrib) }
+                                , { NullableUtils.TestValue(itens[i].indTot) }
+                            )";
                 }
 
                 if (i == itens.Count - 1)
@@ -618,8 +638,6 @@ namespace DAO
 
                                 using (var cmd2 = conn.CreateCommand())
                                 {
-                                    
-
                                     cmd2.Transaction = transaction;
                                     cmd2.CommandType = CommandType.Text;
                                     cmd2.CommandText = BuildItensInsertQuery(itens, nfeID);

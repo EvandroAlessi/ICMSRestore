@@ -8,11 +8,16 @@ namespace Dominio
         [Key]
         public int ID { get; set; }
 
+        [Required]
         public int ProcessoID { get; set; }
 
+        [Required]
         public int ItemID { get; set; }
 
         public string cProd { get; set; }
+
+        [Required]
+        public double vProd { get; set; }
 
         public string xProd { get; set; }
 
@@ -46,6 +51,7 @@ namespace Dominio
 
         public int nNF { get; set; }
 
+        [Required]
         public DateTime dhEmi { get; set; }
 
         public DateTime? dhSaiEnt { get; set; }

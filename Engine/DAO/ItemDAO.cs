@@ -52,6 +52,7 @@ namespace DAO
                 qTrib = reader.GetFieldValue<double?>("qTrib"),
                 vUnTrib = reader.GetFieldValue<double?>("vUnTrib"),
                 indTot = reader.GetFieldValue<int?>("indTot"),
+                CSOSN = reader.GetFieldValue<int?>("CSOSN")
             };
         }
 
@@ -255,6 +256,7 @@ namespace DAO
                                 , ""pCOFINS""
                                 , ""vCOFINS""
                                 , ""NFeID""
+                                , ""CSOSN""
                                 , ""vProd""
                                 , ""cEANTrib""
                                 , ""uTrib""
@@ -288,6 +290,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.pCOFINS) }
                                 , { NullableUtils.TestValue(item.vCOFINS) }
                                 , { item.NFeID }
+                                , { NullableUtils.TestValue(item.CSOSN) }
                                 , { NullableUtils.TestValue(item.vProd) }
                                 , '{ item.cEANTrib }'
                                 , '{ item.uTrib }'
@@ -295,7 +298,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.vUnTrib) }
                                 , { NullableUtils.TestValue(item.indTot) }
                             )
-                            RETURNING ""cProd"";";
+                        RETURNING ""cProd"";";
 
                         id = cmd.ExecuteScalar();
                     }
@@ -368,6 +371,7 @@ namespace DAO
                                 , ""pCOFINS""
                                 , ""vCOFINS""
                                 , ""NFeID""
+                                , ""CSOSN""
                                 , ""vProd""
                                 , ""cEANTrib""
                                 , ""uTrib""
@@ -379,13 +383,13 @@ namespace DAO
                                 , '{ item.cProd }'
                                 , '{ item.cEAN }'
                                 , '{ item.xProd }'
-                                , '{ item.NCM }'
-                                , '{ item.CFOP }'
+                                , { NullableUtils.TestValue(item.NCM) }
+                                , { NullableUtils.TestValue(item.CFOP) }
                                 , '{ item.uCom }'
                                 , { NullableUtils.TestValue(item.qCom) }
                                 , { NullableUtils.TestValue(item.vUnCom) }
                                 , { NullableUtils.TestValue(item.orig) }
-                                , '{ item.CST }'
+                                , { NullableUtils.TestValue(item.CST) }
                                 , { NullableUtils.TestValue(item.modBC) }
                                 , { NullableUtils.TestValue(item.vBC) }
                                 , { NullableUtils.TestValue(item.pICMS) }
@@ -401,6 +405,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(item.pCOFINS) }
                                 , { NullableUtils.TestValue(item.vCOFINS) }
                                 , { item.NFeID }
+                                , { NullableUtils.TestValue(item.CSOSN) }
                                 , { NullableUtils.TestValue(item.vProd) }
                                 , '{ item.cEANTrib }'
                                 , '{ item.uTrib }'
