@@ -12,6 +12,8 @@ namespace Dominio
         [Key]
         public int ID { get; set; }
 
+        public string Chave { get; set; }
+
         #region Identificacao
 
         public int cUF { get; set; }

@@ -174,8 +174,9 @@ namespace BLL
                     vCOFINS_TOTAL = nFeProc.InformacoesNFe.Total?.ICMSTot?.vCOFINS,
                     vOutro_TOTAL = nFeProc.InformacoesNFe.Total?.ICMSTot?.vOutro,
                     vNF_TOTAL = nFeProc.InformacoesNFe.Total?.ICMSTot?.vNF,
+                    Chave = nFeProc.InformacoesNFe.Chave,
                     ProcessoID = processoID,
-                    Entrada = entrada
+                    Entrada = entrada,
                 };
 
                 List<Item> itens = new List<Item>();

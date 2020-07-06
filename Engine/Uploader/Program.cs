@@ -1,5 +1,6 @@
 ﻿using BLL;
 using CrossCutting;
+using DAO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,16 +12,31 @@ namespace Uploader
     {
         static void Main(string[] args)
         {
-            SendFiles();
+            AppSettings.ConnectionString = "Server = 127.0.0.1; Port = 5432; Database = icms_restore; User Id = postgres; Password = admin";
 
-            Console.ReadLine();
+            try
+            {
+                //SendFiles();
+                //DeleteAllNFe();
+
+                foreach (var processo in new ProcessoService().GetAll().Result)
+                {
+                    var aux = new ItemFiltradoDAO().CalcItems(processo.InicioPeriodo, processo.FimPeriodo).Result;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Console.ReadLine();
+            }
         }
 
 
         public static void DeleteAllNFe()
         {
-            AppSettings.ConnectionString = "Server = 127.0.0.1; Port = 5432; Database = icms_restore; User Id = postgres; Password = admin";
-
             try
             {
                 var nfeService = new NFeService();

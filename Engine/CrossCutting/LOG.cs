@@ -68,7 +68,7 @@ namespace CrossCutting
         /// </summary>
         /// <param name="func"></param>
         /// <param name="ex"></param>
-        /// <param name="parametros"></param>
+        /// <param name="parameters"></param>
         public static void Log(string func, Exception ex, dynamic parameters = null, bool repeated = false)
         {
             try

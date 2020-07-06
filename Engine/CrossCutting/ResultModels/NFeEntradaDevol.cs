@@ -16,7 +16,7 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1120")]
-        public string REG { get; set; }
+        public string REG { get { return "1120"; } set { } }
 
         /// <summary>
         /// Base de cálculo do ICMS ST

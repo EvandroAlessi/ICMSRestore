@@ -55,5 +55,18 @@ namespace Dominio
         public DateTime dhEmi { get; set; }
 
         public DateTime? dhSaiEnt { get; set; }
+
+
+
+        public string CNPJ { get; set; }
+        public string UF { get; set; }
+        public string CNPJ_DEST { get; set; }
+        public string UF_DEST { get; set; }
+        public string IE { get; set; }
+        public string xNome { get; set; }
+        public string Chave { get; set; }
+
+
+        public int nItem { get; set; }
     }
 }

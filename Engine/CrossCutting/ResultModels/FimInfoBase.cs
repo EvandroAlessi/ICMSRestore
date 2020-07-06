@@ -14,13 +14,13 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1999")]
-        public string REG { get; set; }
+        public string REG { get { return "1999"; } set { } }
 
         /// <summary>
         /// A quantidade de linhas a ser informada deve considerar
         /// também o próprio registro 1999
         /// </summary>
         [MaxLength(9)]
-        public string QTD_LIN { get; set; }
+        public int QTD_LIN { get; set; }
     }
 }

@@ -17,15 +17,17 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("0000")]
-        public string REG { get; set; }
+        public string REG { get { return "0000"; } set { } }
 
         /// <summary>
-        /// Código da versão do leiaute do arquivo
+        /// Código da versão do leiaute do arquivo.
+        /// Versão atual desse Manual é 100
         /// </summary>
         [Required]
         [MaxLength(3)]
         [MinLength(3)]
-        public string COD_VERSAO { get; set; }
+        [DefaultValue("100")]
+        public string COD_VERSAO { get { return "100"; } set { } }
 
         /// <summary>
         /// Informar o mês de referência e o ano de apuração do arquivo.

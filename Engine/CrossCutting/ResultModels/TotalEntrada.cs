@@ -15,7 +15,7 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1100")]
-        public string REG { get; set; }
+        public string REG { get { return "1100"; } set { } }
 
         /// <summary>
         /// Quantidade total do item adquirido no período.

@@ -16,6 +16,6 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1410")]
-        public string REG { get; set; }
+        public string REG { get { return "1410"; } set { } }
     }
 }

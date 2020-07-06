@@ -1,10 +1,14 @@
 ﻿using CrossCutting;
 using CrossCutting.Models;
+using CrossCutting.ResultModels;
 using Dominio;
 using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace DAO
@@ -42,11 +46,11 @@ namespace DAO
             };
         }
 
-        public async Task<bool> CalcItems(DateTime start, DateTime end, bool entrada = false)
+        public async Task<bool> CalcItems(DateTime start, DateTime end)
         {
             try
             {
-                var list = new List<SimpleResponse>();
+                var list = new List<ItemFiltrado>();
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
@@ -54,32 +58,27 @@ namespace DAO
 
                     using (var cmd = conn.CreateCommand())
                     {
-                        cmd.CommandText = $@"SELECT date_part('MONTH', ""dhEmi""), ""NCM"", ""vProd""
+                        cmd.CommandText = $@"SELECT *
                                 FROM { table }
-                                WHERE ""Entrada"" = { entrada }
-                                    AND ""dhEmi"" BETWEEN '{ start }' AND '{ end }'
+                                WHERE 
+                                    ""dhEmi"" BETWEEN '{ start }' AND '{ end }'
                                 ORDER BY 1 DESC;";
+                        
+                                   // ""Entrada"" = { entrada } AND 
 
-                        //GROUP BY ""NCM"", ""dhEmi""
-
-                        using (var reader = cmd.ExecuteReader())
+                        using var reader = cmd.ExecuteReader();
                         {
                             while (reader.Read())
                             {
-                                var simple = new SimpleResponse
-                                {
-                                    Month = reader.GetFieldValue<int>(0),
-                                    NCM = reader["NCM"]?.ToString(),
-                                    vProd = reader.GetFieldValue<double>("vProd"),
-                                };
-
-                                list.Add(simple);
+                                list.Add(BuildObject(reader));
                             }
                         }
                     }
 
                     await conn.CloseAsync();
                 }
+
+                await calc(list);
 
                 return list.Count > 0;
             }
@@ -92,6 +91,317 @@ namespace DAO
                 throw ex;
             }
         }
+
+        public async Task calc(List<ItemFiltrado> items)
+        {
+            try
+            {
+                var files = new List<ArquivoFinal>();
+
+                //var error = items.Any(x => items.Any(y => y.CNPJ != x.CNPJ));
+
+                //if (error)
+                //{
+                //    throw new Exception("Entre as notas foi encontrado ao menos 2 CNPJs distintos!");
+                //}
+
+                foreach (var byYear in items.GroupBy(x => x.dhEmi.Year))
+                {
+                    foreach (var byMonth in byYear.GroupBy(x => x.dhEmi.Month))
+                    {
+                        foreach (var byNCM in byMonth.GroupBy(x => x.NCM))
+                        {
+                            var nfesEntrada = new List<NFeEntrada>();
+                            var nfesSaida = new List<NFeSaida>();
+
+                            foreach (var item in byNCM)
+                            {
+                                var CST_CSOSN = (item.CST != null ? item.CST : item.CSOSN)?.ToString("D" + 2);
+
+                                if (item.Entrada)
+                                {
+                                    nfesEntrada.Add(new NFeEntrada
+                                    {
+                                        DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
+                                        COD_RESP_RET = 0,
+                                        CST_CSOSN = CST_CSOSN,
+                                        CHAVE = item.Chave,
+                                        N_NF = item.nNF.ToString(),
+                                        CNPJ_EMIT = item.CNPJ,
+                                        UF_EMIT = item.UF,
+                                        CNPJ_DEST = item.CNPJ_DEST,
+                                        UF_DEST = item.UF_DEST,
+                                        CFOP = item.CFOP.ToString("D" + 4),
+                                        N_ITEM = item.nItem.ToString(),
+                                        UNID_ITEM = item.uCom,
+                                        QTD_ENTRADA = item.qCom.Value,
+                                        VL_UNIT_ITEM = item.vUnCom.Value,
+                                        VL_BC_ICMS_ST = 0.0,
+                                        VL_ICMS_SUPORT_ENTR = 0.0,
+                                    });
+                                }
+                                else
+                                {
+                                    nfesSaida.Add(new NFeSaida
+                                    {
+                                        DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
+                                        CST_CSOSN = CST_CSOSN,
+                                        CHAVE = item.Chave,
+                                        N_NF = item.nNF.ToString(),
+                                        CNPJ_EMIT = item.CNPJ,
+                                        UF_EMIT = item.UF,
+                                        CNPJ_DEST = item.CNPJ_DEST,
+                                        UF_DEST = item.UF_DEST,
+                                        CFOP = item.CFOP.ToString("D" + 4),
+                                        N_ITEM = item.nItem.ToString(),
+                                        UNID_ITEM = item.uCom,
+                                        QTD_SAIDA = item.qCom.Value,
+                                        VL_UNIT_ITEM = item.vUnCom.Value,
+                                        VL_ICMS_EFET = (item.vUnCom * 18 / 100).Value,
+                                    });
+                                }
+                            }
+
+                            double menorValUnEntrada = nfesEntrada.Count > 0
+                                    ? nfesEntrada.Min(x => x.QTD_ENTRADA)
+                                    : 0.0; 
+
+                            double countSaidas = nfesSaida.Count > 0 
+                                    ? nfesSaida.Sum(x => x.QTD_SAIDA)
+                                    : 0.0;
+
+                            double countEntradas = nfesEntrada.Count > 0
+                                    ? nfesEntrada.Sum(x => x.QTD_ENTRADA)
+                                    : 0.0;
+
+                            var totalEntradas = new TotalEntrada
+                            {
+                                QTD_TOT_ENTRADA = countEntradas,
+                                MENOR_VL_UNIT_ITEM = menorValUnEntrada,
+                                //VL_BC_ICMSST_UNIT_MED = 0.0,
+                                //VL_TOT_ICMS_SUPORT_ENTR = 0.0,
+                                //VL_UNIT_MED_ICMS_SUPORT_ENTR = 0.0,
+                            };
+
+                            //Menos as devoluções
+                            totalEntradas.VL_BC_ICMSST_UNIT_MED = nfesEntrada.Sum(x => x.VL_BC_ICMS_ST) /* - Sum(DEVOLUCOES) */ / totalEntradas.QTD_TOT_ENTRADA;
+
+                            //Menos as devoluções
+                            totalEntradas.VL_TOT_ICMS_SUPORT_ENTR = nfesEntrada.Sum(x => x.VL_ICMS_SUPORT_ENTR) /* - Sum(DEVOLUCOES) */;
+
+                            totalEntradas.VL_UNIT_MED_ICMS_SUPORT_ENTR = totalEntradas.VL_TOT_ICMS_SUPORT_ENTR / totalEntradas.QTD_TOT_ENTRADA;
+
+
+                            var totalSaidas = new TotalSaida
+                            {
+                                QTD_TOT_SAIDA = countSaidas,
+                                //VL_TOT_ICMS_EFETIVO = 0.0,
+                                APUR_ICMSST_RECUPERAR_RESSARCIR = 0.0,
+                                VL_CONFRONTO_ICMS_ENTRADA = 0.0,
+                                RESULT_RECUPERAR_RESSARCIR = 0.0,
+                                RESULT_COMPLEMENTAR = 0.0,
+                                APUR_ICMSST_COMPLEMENTAR = 0.0,
+                                APUR_FECOP_RESSARCIR = 0.0,
+                                APUR_FECOP_COMPLEMENTAR = 0.0,
+                            };
+
+                            //Menos as devoluções
+                            totalSaidas.VL_TOT_ICMS_EFETIVO = nfesSaida.Sum(x => x.VL_ICMS_EFET) /* - Sum(DEVOLUCOES) */;
+
+                            files.Add(new ArquivoFinal
+                            {
+                                Contribuinte = new Contribuinte
+                                {
+                                    CNPJ = byNCM.First().CNPJ,
+                                    CNPJ_CD = "",
+                                    CD_FIN = 0,
+                                    IE = byNCM.First().IE,
+                                    IE_CD = "",
+                                    MES_ANO = byNCM.First().dhEmi.ToString("MMyyyy"),
+                                    NOME = byNCM.First().xNome,
+                                    N_REG_ESPECIAL = "",
+                                },
+                                Produto = new Produto
+                                {
+                                    IND_FECOP = 0,
+                                    COD_ITEM = byNCM.First().cProd,
+                                    COD_BARRAS = "",
+                                    COD_ANP = "",
+                                    NCM = byNCM.First().NCM.ToString("D" + 8),
+                                    CEST = "",
+                                    DESCR_ITEM = byNCM.First().xProd,
+                                    UNID_ITEM = byNCM.First().uCom,
+                                    ALIQ_ICMS_ITEM = 18.00,
+                                    ALIQ_FECOP = 0.0,
+                                    QTD_TOT_ENTRADA = countEntradas,
+                                    QTD_TOT_SAIDA = countSaidas,
+                                },
+                                TotalEntrada = totalEntradas,
+                                NFeEntrada = nfesEntrada,
+                                TotalSaida = totalSaidas,
+                                NFeSaida = nfesSaida,
+                                FimInfoBase = new FimInfoBase
+                                {
+                                    QTD_LIN = (3 + nfesEntrada.Count() + 1 + nfesSaida.Count() + 1)
+                                },
+                                Total = new Total
+                                {
+                                    REG1200_ICMSST_RECUPERAR_RESSARCIR = 0.0,
+                                    REG1200_ICMSST_COMPLEMENTAR = 0.0,
+                                    REG1300_ICMSST_RECUPERAR_RESSARCIR = 0.0,
+                                    REG1400_ICMSST_RECUPERAR_RESSARCIR = 0.0,
+                                    REG1500_ICMSST_RECUPERAR_RESSARCIR = 0.0,
+                                    REG9000_FECOP_RESSARCIR = 0.0,
+                                    REG9000_FECOP_COMPLEMENTAR = 0.0,
+                                },
+                                FimArquivo = new FimArquivo
+                                {
+                                    QTD_LIN = (3 + nfesEntrada.Count() + 1 + nfesSaida.Count() + 3)
+                                }
+                            });
+                        }
+                    }
+                }
+
+
+                foreach (var arquivo in files)
+                {
+                    lock (locker)
+                    {
+                        var path = $"{ Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) }\\FILES";
+
+                        PathControl.Create(path);
+
+                        path = Path.Combine(path, arquivo.Produto.DESCR_ITEM.Replace("/", "") + ".txt");
+
+                        using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                        {
+                            using (StreamWriter stream = new StreamWriter(file))
+                            {
+                                lock (stream)
+                                {
+                                    //Contribuinte
+                                    stream.WriteLine(arquivo.Contribuinte.REG + '|' +
+                                                     arquivo.Contribuinte.COD_VERSAO + '|' +
+                                                     arquivo.Contribuinte.MES_ANO + '|' +
+                                                     arquivo.Contribuinte.CNPJ + '|' +
+                                                     arquivo.Contribuinte.IE + '|' +
+                                                     arquivo.Contribuinte.NOME + '|' +
+                                                     arquivo.Contribuinte.CD_FIN + '|' +
+                                                     arquivo.Contribuinte.N_REG_ESPECIAL + '|' +
+                                                     arquivo.Contribuinte.CNPJ_CD + '|' +
+                                                     arquivo.Contribuinte.IE_CD);
+
+                                    //Produto
+                                    stream.WriteLine(arquivo.Produto.REG + '|' +
+                                                     arquivo.Produto.IND_FECOP + '|' +
+                                                     arquivo.Produto.COD_ITEM + '|' +
+                                                     arquivo.Produto.COD_BARRAS + '|' +
+                                                     arquivo.Produto.COD_ANP + '|' +
+                                                     arquivo.Produto.NCM + '|' +
+                                                     arquivo.Produto.CEST + '|' +
+                                                     arquivo.Produto.DESCR_ITEM + '|' +
+                                                     arquivo.Produto.UNID_ITEM + '|' +
+                                                     arquivo.Produto.ALIQ_ICMS_ITEM + '|' +
+                                                     arquivo.Produto.ALIQ_FECOP + '|' +
+                                                     arquivo.Produto.QTD_TOT_ENTRADA + '|' +
+                                                     arquivo.Produto.QTD_TOT_SAIDA);
+
+                                    //TotalEntrada
+                                    stream.WriteLine(arquivo.TotalEntrada.REG + '|' +
+                                                     arquivo.TotalEntrada.QTD_TOT_ENTRADA + '|' +
+                                                     arquivo.TotalEntrada.MENOR_VL_UNIT_ITEM + '|' +
+                                                     arquivo.TotalEntrada.VL_BC_ICMSST_UNIT_MED + '|' +
+                                                     arquivo.TotalEntrada.VL_TOT_ICMS_SUPORT_ENTR + '|' +
+                                                     arquivo.TotalEntrada.VL_UNIT_MED_ICMS_SUPORT_ENTR);
+
+                                    //NFeEntrada
+                                    foreach (var nfe in arquivo.NFeEntrada)
+                                    {
+                                        stream.WriteLine(nfe.REG + '|' +
+                                                         nfe.DT_DOC + '|' +
+                                                         nfe.COD_RESP_RET + '|' +
+                                                         nfe.CST_CSOSN + '|' +
+                                                         nfe.CHAVE + '|' +
+                                                         nfe.N_NF + '|' +
+                                                         nfe.CNPJ_EMIT + '|' +
+                                                         nfe.UF_EMIT + '|' +
+                                                         nfe.CNPJ_DEST + '|' +
+                                                         nfe.UF_DEST + '|' +
+                                                         nfe.CFOP + '|' +
+                                                         nfe.N_ITEM + '|' +
+                                                         nfe.UNID_ITEM + '|' +
+                                                         nfe.QTD_ENTRADA + '|' +
+                                                         nfe.VL_UNIT_ITEM + '|' +
+                                                         nfe.VL_BC_ICMS_ST + '|' +
+                                                         nfe.VL_ICMS_SUPORT_ENTR);
+                                    }
+
+                                    //TotalSaida
+                                    stream.WriteLine(arquivo.TotalSaida.REG + '|' +
+                                                     arquivo.TotalSaida.QTD_TOT_SAIDA + '|' +
+                                                     arquivo.TotalSaida.VL_TOT_ICMS_EFETIVO + '|' +
+                                                     arquivo.TotalSaida.VL_CONFRONTO_ICMS_ENTRADA + '|' +
+                                                     arquivo.TotalSaida.RESULT_RECUPERAR_RESSARCIR + '|' +
+                                                     arquivo.TotalSaida.RESULT_COMPLEMENTAR + '|' +
+                                                     arquivo.TotalSaida.APUR_ICMSST_RECUPERAR_RESSARCIR + '|' +
+                                                     arquivo.TotalSaida.APUR_ICMSST_COMPLEMENTAR + '|' +
+                                                     arquivo.TotalSaida.APUR_FECOP_RESSARCIR + '|' +
+                                                     arquivo.TotalSaida.APUR_FECOP_COMPLEMENTAR);
+
+                                    //NFeSaida
+                                    foreach (var nfe in arquivo.NFeSaida)
+                                    {
+                                        stream.WriteLine(nfe.REG + '|' +
+                                                         nfe.DT_DOC + '|' +
+                                                         nfe.CST_CSOSN + '|' +
+                                                         nfe.CHAVE + '|' +
+                                                         nfe.N_NF + '|' +
+                                                         nfe.CNPJ_EMIT + '|' +
+                                                         nfe.UF_EMIT + '|' +
+                                                         nfe.CNPJ_DEST + '|' +
+                                                         nfe.UF_DEST + '|' +
+                                                         nfe.CFOP + '|' +
+                                                         nfe.N_ITEM + '|' +
+                                                         nfe.UNID_ITEM + '|' +
+                                                         nfe.QTD_SAIDA + '|' +
+                                                         nfe.VL_UNIT_ITEM + '|' +
+                                                         nfe.VL_ICMS_EFET);
+                                    }
+
+                                    //FimInfoBase
+                                    stream.WriteLine(arquivo.FimInfoBase.REG + '|' +
+                                                     arquivo.FimInfoBase.QTD_LIN);
+
+                                    //Total
+                                    stream.WriteLine(arquivo.Total.REG + '|' +
+                                                     arquivo.Total.REG1200_ICMSST_RECUPERAR_RESSARCIR + '|' +
+                                                     arquivo.Total.REG1200_ICMSST_COMPLEMENTAR + '|' +
+                                                     arquivo.Total.REG1300_ICMSST_RECUPERAR_RESSARCIR + '|' +
+                                                     arquivo.Total.REG1400_ICMSST_RECUPERAR_RESSARCIR + '|' +
+                                                     arquivo.Total.REG1500_ICMSST_RECUPERAR_RESSARCIR + '|' +
+                                                     arquivo.Total.REG9000_FECOP_RESSARCIR + '|' +
+                                                     arquivo.Total.REG9000_FECOP_COMPLEMENTAR);
+
+                                    //FimArquivo
+                                    stream.WriteLine(arquivo.FimArquivo.REG + '|' +
+                                                     arquivo.FimArquivo.QTD_LIN);
+
+                                    stream.Close();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        private static object locker = new object();
 
         public async Task<List<ItemFiltrado>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
         {

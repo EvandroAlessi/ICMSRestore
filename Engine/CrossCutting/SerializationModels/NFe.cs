@@ -6,11 +6,15 @@ namespace CrossCutting.SerializationModels
     [XmlRoot("NFe", Namespace = "http://www.portalfiscal.inf.br/nfe")]
     public class NFe
     {
+
         [XmlElement(ElementName = "infNFe")]
         public InfNFe InformacoesNFe { get; set; }
 
         public class InfNFe
         {
+            [XmlAttribute("Id")]
+            public string Chave { get; set; }
+
             [XmlElement("ide")]
             public Identificacao Identificacao { get; set; }
 

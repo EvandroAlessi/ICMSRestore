@@ -16,7 +16,7 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1300")]
-        public string REG { get; set; }
+        public string REG { get { return "1300"; } set { } }
 
         /// <summary>
         /// Valor de confronto do ICMS das entradas

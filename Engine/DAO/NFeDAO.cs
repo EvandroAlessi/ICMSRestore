@@ -13,7 +13,7 @@ namespace DAO
     {
         public NFeDAO() => table = "\"NFe\"";
 
-        public string BuildItensInsertQuery(List<Item> itens, int nfeID)
+        public string BuildItemsInsertQuery(List<Item> itens, int nfeID)
         {
             var query = "";
 
@@ -200,6 +200,7 @@ namespace DAO
                                 , ""vOutro_TOTAL""
                                 , ""vNF_TOTAL""
                                 , ""Entrada""
+                                , ""Chave""
                             ) VALUES (
                                 { nfe.ProcessoID }
                                 , '{ nfe.CEP }'
@@ -259,6 +260,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(nfe.vOutro_TOTAL) }
                                 , { NullableUtils.TestValue(nfe.vNF_TOTAL) }
                                 , { nfe.Entrada }
+                                , { nfe.Chave }
                             )";
 
             if (hasReturn)
@@ -332,7 +334,9 @@ namespace DAO
                 vCOFINS_TOTAL = reader.GetFieldValue<double?>("vCOFINS_TOTAL"),
                 vOutro_TOTAL = reader.GetFieldValue<double?>("vOutro_TOTAL"),
                 vNF_TOTAL = reader.GetFieldValue<double?>("vNF_TOTAL"),
-                ProcessoID = Convert.ToInt32(reader["ProcessoID"])
+                ProcessoID = Convert.ToInt32(reader["ProcessoID"]),
+                Entrada = reader.GetFieldValue<bool>("Entrada"),
+                Chave = reader["Chave"]?.ToString(),
             };
         }
 
@@ -347,7 +351,8 @@ namespace DAO
                 dhSaiEnt = reader.GetFieldValue<DateTime?>("dhSaiEnt"),
                 nNF = Convert.ToInt32(reader["nNF"]),
                 vNF_TOTAL = reader.GetFieldValue<double?>("vNF_TOTAL"),
-                CNPJ = reader["CNPJ"]?.ToString()
+                CNPJ = reader["CNPJ"]?.ToString(),
+                Entrada = reader.GetFieldValue<bool>("Entrada"),
             };
         }
 
@@ -640,7 +645,7 @@ namespace DAO
                                 {
                                     cmd2.Transaction = transaction;
                                     cmd2.CommandType = CommandType.Text;
-                                    cmd2.CommandText = BuildItensInsertQuery(itens, nfeID);
+                                    cmd2.CommandText = BuildItemsInsertQuery(itens, nfeID);
                                     cmd2.Prepare();
 
                                     rows = cmd2.ExecuteNonQuery();

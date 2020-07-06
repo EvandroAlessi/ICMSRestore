@@ -17,7 +17,15 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1110")]
-        public string REG { get; set; }
+        public string REG { get { return "1110"; } set { } }
+
+        /// <summary>
+        /// Código que indica o responsável pela retenção do ICMS-ST.
+        /// 1 – Remetente direto
+        /// 2 – Remetente indireto
+        /// 3 – Próprio declarante
+        /// </summary>
+        public int COD_RESP_RET { get; set; }
 
         /// <summary>
         /// Quantidade do item adquirido.

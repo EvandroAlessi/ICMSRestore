@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CrossCutting.ResultModels
 {
     /// <summary>
+    /// Registro 1000 – Identificação analítica do produto.
     /// Este registro deve conter os códigos das mercadorias e as respectivas descrições atribuídas pelo contribuinte para a identificação da mercadoria que
     /// integra o ciclo de aquisição e comercialização do estabelecimento.
     /// </summary>
@@ -16,7 +17,7 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("1000")]
-        public string REG { get; set; }
+        public string REG { get { return "1000"; } set { } }
 
         /// <summary>
         /// Indicador de produto sujeito ao Fundo de Combate à Pobreza
@@ -86,7 +87,7 @@ namespace CrossCutting.ResultModels
         /// Corresponde à alíquota da mercadoria prevista para as
         /// operações internas, incluído o FECOP.Caso a mercadoria
         /// seja beneficiada com redução da base de cálculo, adotar a
-        //// carga tributária efetiva
+        /// carga tributária efetiva
         /// </summary>
         [Required]
         [RegularExpression(@"^(0|-?\d{0,2}(\.\d{0,2})?)$")]

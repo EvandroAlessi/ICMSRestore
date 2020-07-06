@@ -15,7 +15,7 @@ namespace CrossCutting.ResultModels
         [MaxLength(4)]
         [MinLength(4)]
         [DefaultValue("9000")]
-        public string REG { get; set; }
+        public string REG { get { return "9000"; } set { } }
 
         /// <summary>
         /// Valor a recuperar ou a ressarcir nas saídas para consumidor final

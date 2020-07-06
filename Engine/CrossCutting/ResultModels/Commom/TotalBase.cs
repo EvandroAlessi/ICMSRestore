@@ -2,7 +2,7 @@
 
 namespace CrossCutting.ResultModels.Commom
 {
-    public partial class TotalBase : InfoBase
+    public partial class TotalBase
     {
         /// <summary>
         /// Quantidade total de saídas destinadas a contribuintes do Simples Nacional
