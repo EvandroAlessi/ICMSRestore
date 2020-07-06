@@ -21,7 +21,7 @@ namespace Uploader
 
                 foreach (var processo in new ProcessoService().GetAll().Result)
                 {
-                    var aux = new ItemFiltradoDAO().CalcItems(processo.InicioPeriodo, processo.FimPeriodo).Result;
+                    var aux = new ItemFiltradoDAO().GetSumarry(processo).Result;
                 }
             }
             catch (Exception ex)
@@ -41,7 +41,7 @@ namespace Uploader
             {
                 var nfeService = new NFeService();
 
-                foreach (var nfe in nfeService.GetAllSimplify().Result)
+                foreach (var nfe in nfeService.GetAllSimplify(1, 100000).Result)
                 {
                     nfeService.Delete(nfe.ID);
                     Console.WriteLine(nfe.ID);

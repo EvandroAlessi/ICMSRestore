@@ -4,77 +4,52 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                        <strong>Itens Filtrados</strong>
+                        <strong>Resumo</strong>
                     </div>
-                    <button type="button" class="btn btn-info">Gerar Resultado</button>
+                    <button type="button" (click)="buildFiles()" class="btn btn-info">Gerar todos os documentos</button>
                 </div>
                 <div class="card-body">
                     <table class="table table-hover table-bordered table-striped text-center mobile-table">
                         <thead>
                             <tr>
-                                <!-- <th>Processo</th> -->
-                                <th>Item</th>
-                                <th>Tipo</th>
-                                <th>Emissão</th>
-                                <th>xProd</th>
+                                <th>Mês/Ano</th>
+                                <!-- <th>Tipo</th> -->
+                                <th>Nome</th>
                                 <th>NCM</th>
-                                <!-- <th>orig</th> -->
-                                <th>CFOP</th>
-                                <th>CST</th>
-                                <th>CSOSN</th>
-                                <th>vICMS</th>
+                                <th>Notas</th>
+                                <th>Média Entrada</th>
+                                <th>Média Saída</th>
+                                <!-- <th>Menor Valor</th>
+                                <th>Maior Valor</th> -->
+                                <th>Valor Total</th>
+                                <th>MVA</th>
                                 <th class="md-column">Ações</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let item of filteredItems">
-                                <!-- <td data-th="ProcessoID">{{ item.processoID }}</td> -->
-                                <td data-th="ItemID">{{ item.itemID }}</td>
-                                <td data-th="Entrada">{{ item.entrada == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td>
-                                <td data-th="Data Emissão">{{ item.dhEmi | date: 'dd/MM/yyyy hh:mm:ss' }}</td>
-                                <td data-th="xProd">{{ item.xProd }}</td>
+                            <tr *ngFor="let item of products">
+                                <td data-th="Mês/Ano">{{ item.monthYear }}</td>
+                                <!-- <td data-th="Tipo">{{ item.entry == 'true' ? 'ENTRADA' : 'SAÍDA' }}</td> -->
+                                <td data-th="Nome">{{ item.name }}</td>
                                 <td data-th="NCM">{{ item.ncm }}</td>
-                                <!-- <td data-th="orig">{{ item.orig }}</td> -->
-                                <td data-th="CFOP">{{ item.cfop }}</td>
-                                <td data-th="CST">{{ item.cst }}</td>
-                                <td data-th="CSOSN">{{ item.csosn }}</td>
-                                <td data-th="vICMS">{{ item.vICMS }}</td>
+                                <td data-th="Notas">{{ item.totalResults }}</td>
+                                <td data-th="Média Entrada">{{ item.mediaEntry | number:'1.0-2' }}</td>
+                                <td data-th="Média Saída">{{ item.media | number:'1.0-2' }}</td>
+                                <!-- <td data-th="Menor Valor">{{ item.lowerValue | number:'1.0-2' }}</td>
+                                <td data-th="Maior Valor">{{ item.highestValue | number:'1.0-2' }}</td> -->
+                                <td data-th="Valor Total">{{ item.totalValue | number:'1.0-2' }}</td>
+                                <td data-th="MVA"></td>
                                 <td data-th="Ações" class="sm-column">
-                                    <button class="btn btn-success m-1" (click)="details(item.id)">
-                                        <i class="fa fa-info-circle mr-1"></i>Detalhes
+                                    <button class="btn btn-success m-1" (click)="buildFiles(item.ncm)">
+                                        Gerar Documento
                                     </button>
                                 </td>
                             </tr>
-                            <tr *ngIf="filteredItems.length == 0">
+                            <tr *ngIf="products.length == 0">
                                 <td colspan="10">Nenhum Registro Encontrado</td>
                             </tr>
                         </tbody>
                     </table>
-                    <nav *ngIf="pagination && pagination.pageCount > 1" class="row">
-                        <div class="col-md-2">
-                            <div class="btn-group" dropdown [dropup]="true">
-                                <button id="button-dropup" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-dropup" title="Quanita de itens por página">
-                                  {{ filters.take }} <span class="caret"></span>
-                                </button>
-                                <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-dropup" title="Itens por página">
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(5)">5</a></li>
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(10)">10</a></li>
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(30)">30</a></li>
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(50)">50</a></li>
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(100)">100</a></li>
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(500)">500</a></li>
-                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(1000)">1000</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <ul class="pagination justify-content-end mb-0 col-md-10">
-                            <li class="page-item" [class.disabled]="pagination.currentPage == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
-
-                            <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == pagination.currentPage"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
-
-                            <li class="page-item" [class.disabled]="pagination.pageCount == pagination.currentPage"><a (click)="paginate(pagination.pageCount)" class="page-link">Última</a></li>
-                        </ul>
-                    </nav>
                 </div>
             </div>
         </div>

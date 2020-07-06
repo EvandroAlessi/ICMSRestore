@@ -4,6 +4,7 @@ import { TabDirective } from 'ngx-bootstrap/tabs';
 import { UploadComponent } from './upload/upload.component';
 import { FilteredItemsComponent } from './filtered-items/filtered-items.component';
 import { EditComponent } from './edit/edit.component';
+import { ProcessingComponent } from './processing/processing.component';
 
 @Component({
   selector: 'app-process-tabs',
@@ -17,13 +18,14 @@ export class ProcessTabsComponent implements OnInit, AfterViewInit {
     { title: 'Dados', active: true },
     { title: 'Uploads' },
     { title: 'Itens Filtrados' },
-    { title: 'Processamento' },
+    { title: 'Resumo' },
     { title: 'Resultados' },
   ];
 
   @ViewChild(EditComponent, { static: false}) edit: EditComponent;
   @ViewChild(UploadComponent, { static: false}) upload: UploadComponent;
   @ViewChild(FilteredItemsComponent, { static: false}) filteredItems: FilteredItemsComponent;
+  @ViewChild(ProcessingComponent, { static: false}) processing: ProcessingComponent;
   
   constructor(
     private routerActived: ActivatedRoute,
@@ -43,13 +45,16 @@ export class ProcessTabsComponent implements OnInit, AfterViewInit {
     switch (data.heading) {
       case this.tabs[0].title:
         this.edit.getProcess(this.id);
-      break;
+        break;
       case this.tabs[1].title:
         this.upload.getUploadProcesses(this.id);
-      break;
+        break;
       case this.tabs[2].title:
         this.filteredItems.getFilteredItems(this.id);
-      break;
+        break;
+      case this.tabs[3].title:
+        this.processing.getSumarry(this.id);
+        break;
     }
   }
 }

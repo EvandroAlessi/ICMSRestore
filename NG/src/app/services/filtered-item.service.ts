@@ -29,6 +29,24 @@ export class FilteredItemService {
         return this.http.get<any>(this.api + '/' + id);
     }
 
+    getSumarry(processID){
+        let params = new HttpParams();
+
+        params = params.append('processID', processID);
+
+        return this.http.get<any>(this.api + '/summary-result', { params: params});
+    }
+
+    download(processID, ncm) {
+        let params = new HttpParams();
+
+        params = params.append('processID', processID);
+        if(ncm)
+            params = params.append('ncm', ncm);
+
+        return this.http.get(this.api + '/download-results', { params: params, responseType: "arraybuffer"});
+    }
+
     post(item: any) {
         return this.http.post(this.api, item);
     }

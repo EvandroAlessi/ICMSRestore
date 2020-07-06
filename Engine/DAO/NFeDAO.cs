@@ -260,7 +260,7 @@ namespace DAO
                                 , { NullableUtils.TestValue(nfe.vOutro_TOTAL) }
                                 , { NullableUtils.TestValue(nfe.vNF_TOTAL) }
                                 , { nfe.Entrada }
-                                , { nfe.Chave }
+                                , { nfe.Chave?.Replace("NFe", "") }
                             )";
 
             if (hasReturn)

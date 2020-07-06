@@ -15,5 +15,6 @@ import { SharedModule } from '../../../shared/shared.module';
     BsDropdownModule,
     SharedModule,
   ],
+  exports: [ProcessingComponent]
 })
 export class ProcessingModule {}

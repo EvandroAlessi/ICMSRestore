@@ -1,8 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 using BLL;
+using CrossCutting;
 using Dominio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -100,6 +108,106 @@ namespace API.Controllers
             try
             {
                 return Ok(await service.GetCount());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet("summary-result")]
+        public async Task<IActionResult> GetSumarry(int processID)
+        {
+            try
+            {
+                return Ok(await service.GetSumarry(processID));
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        public static void CreateZipFile(string fileName, IEnumerable<string> files)
+        {
+            // Create and open a new ZIP file
+            var zip = ZipFile.Open(fileName, ZipArchiveMode.Create);
+
+            foreach (var file in files)
+            {
+                // Add the entry for each file
+                zip.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+            }
+
+            // Dispose of the object when we are  done
+            zip.Dispose();
+        }
+
+        [HttpGet("download-results")]
+        public async Task<IActionResult> Download(int processID, int? ncm = null)
+        {
+            try
+            {
+                var path = $"{ Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) }\\FILES";
+
+                PathControl.Create(path);
+
+                path += $"\\{ processID }";
+
+                PathControl.Create(path);
+                
+                var tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".zip"); // might want to clean this up if there are a lot of downloads
+
+                await service.Calc(path, processID, ncm);
+
+                using (var stream = new FileStream(tempFile, FileMode.Create))
+                using (var archive = new ZipArchive(stream, ZipArchiveMode.Update, true))
+                {
+                    if (ncm is null)
+                    {
+                        foreach (var item in Directory.GetDirectories(path))
+                        {
+                            //Create a zip entry for each attachment
+                            foreach (var file in Directory.GetFiles(item))
+                            {
+                                // Add the entry for each file
+                                archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        path = Path.Combine(path, ncm.ToString());
+
+                        foreach (var file in Directory.GetFiles(path))
+                        {
+                            // Add the entry for each file
+                            archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                        }
+                    }
+                }
+
+                //using (var fileStream = new FileStream(tempFile, FileMode.Create))
+                //{
+                //    compressedFileStream.Seek(0, SeekOrigin.Begin);
+                //    compressedFileStream.CopyTo(fileStream);
+                //}
+
+                //System.Net.Http.HttpResponseMessage response = new System.Net.Http.HttpResponseMessage(HttpStatusCode.OK);
+                //response.Content = new StreamContent(compressedFileStream);
+                //response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
+                //response.Content.Headers.ContentDisposition.FileName = ncm.ToString();
+                //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
+
+                const string contentType = "application/zip";
+                HttpContext.Response.ContentType = contentType;
+                var result = new FileContentResult(System.IO.File.ReadAllBytes(tempFile), contentType)
+                {
+                    FileDownloadName = $"{tempFile}.zip"
+                };
+
+                return result;
             }
             catch (Exception ex)
             {

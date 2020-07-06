@@ -8,6 +8,7 @@ import { UploadModule } from './upload/upload.module';
 import { FilteredItemsModule } from './filtered-items/filtered-items.module';
 import { EditModule } from './edit/edit.module';
 import { ProcessTabsRouting } from './process-tabs.routing';
+import { ProcessingModule } from './processing/processing.module';
 
 @NgModule({
   declarations: [ProcessTabsComponent],
@@ -21,7 +22,8 @@ import { ProcessTabsRouting } from './process-tabs.routing';
     ProcessTabsRouting,
     UploadModule,
     FilteredItemsModule,
-    EditModule
+    EditModule,
+    ProcessingModule,
   ]
 })
 export class ProcessTabsModule {}

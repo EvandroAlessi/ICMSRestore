@@ -8,12 +8,8 @@ import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
   templateUrl: './processing.component.html',
 })
 export class ProcessingComponent implements OnInit {
-  public filteredItems: any = [];
+  public products: any = [];
   public pagination: any = {};
-  public filters: any = {
-    page: 1,
-    take: 5
-  };
 
   private id;
   bsModalRef: BsModalRef;
@@ -28,14 +24,13 @@ export class ProcessingComponent implements OnInit {
     //this.getUploadProcesses();
   }
 
-  getFilteredItems(processID) {
+  getSumarry(processID) {
     this.id = processID;
 
     this.filteredItemService
-        .getAllByProcessID(this.id, this.filters)
+        .getSumarry(this.id)
         .subscribe((response) => {
-            this.filteredItems = response.filteredItems;
-            this.pagination = response.pagination;
+            this.products = response;
           },
           (err) => {
             //this.router.navigate([this.route]);
@@ -43,16 +38,36 @@ export class ProcessingComponent implements OnInit {
         );
   }
 
-  changePageSize(size) {
-    this.filters.take = size;
-    this.filters.page = 1;
-    
-    this.paginate(this.filters.page);
+  downloadFile(data: any) {
+    const blob = new Blob([data], { type: 'blob' });
+    const url= window.URL.createObjectURL(blob);
+    window.open(url);
   }
 
-  paginate(page: number) {
-    this.filters.page = page;
+  downLoadFile(data: any, type: string) {
+    let blob = new Blob([data], { type: type});
+    let url = window.URL.createObjectURL(blob);
+    let pwa = window.open(url);
+    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+        alert( 'Please disable your Pop-up blocker and try again.');
+    }
+  }
 
-    this.getFilteredItems(this.id);
+  buildFiles(ncm) {
+    this.filteredItemService
+        .download(this.id, ncm)
+        .subscribe((response) => {
+            this.toast.success('Arquivos baixados', 'Sucesso!');
+            
+            const blob = new Blob([response], {
+              type: 'application/zip'
+            });
+            const url = window.URL.createObjectURL(blob);
+            window.open(url);
+          },
+          (err) => {
+            this.toast.error('Algo deu errado!', 'erro :(');
+          }
+        );
   }
 }

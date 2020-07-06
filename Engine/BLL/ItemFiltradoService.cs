@@ -75,6 +75,34 @@ namespace BLL
             }
         }
 
+        public async Task<List<ProductMedia>> GetSumarry(int processID)
+        {
+            try
+            {
+                var processService = new ProcessoService();
+
+                var process = await processService.Get(processID);
+
+                return await dao.GetSumarry(process);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<bool> Calc(string path, int processID, int? ncm = null)
+        {
+            try
+            {
+                return await dao.CalcItems(path, processID, ncm);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<bool> Exists(int id)
         {
             try

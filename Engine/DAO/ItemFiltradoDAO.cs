@@ -43,10 +43,18 @@ namespace DAO
                 cNF = Convert.ToInt32(reader["cNF"]),
                 pICMS = reader.GetFieldValue<double?>("pICMS"),
                 vProd = reader.GetFieldValue<double>("vProd"),
+                Chave = reader["Chave"]?.ToString(),
+                CNPJ = reader["CNPJ"]?.ToString(),
+                CNPJ_DEST = reader["CNPJ_DEST"]?.ToString(),
+                IE = reader["IE"]?.ToString(),
+                nItem = reader.GetFieldValue<int>("nItem"),
+                UF = reader["UF"]?.ToString(),
+                UF_DEST = reader["UF_DEST"]?.ToString(),
+                xNome = reader["xNome"]?.ToString(),
             };
         }
 
-        public async Task<bool> CalcItems(DateTime start, DateTime end)
+        public async Task<bool> CalcItems(string path, int processID, int? ncm = null)
         {
             try
             {
@@ -60,8 +68,8 @@ namespace DAO
                     {
                         cmd.CommandText = $@"SELECT *
                                 FROM { table }
-                                WHERE 
-                                    ""dhEmi"" BETWEEN '{ start }' AND '{ end }'
+                                WHERE ""ProcessoID"" = { processID } 
+                                    { (ncm.HasValue ? $@"AND ""NCM"" = '{ ncm }'" : "") }
                                 ORDER BY 1 DESC;";
                         
                                    // ""Entrada"" = { entrada } AND 
@@ -78,9 +86,7 @@ namespace DAO
                     await conn.CloseAsync();
                 }
 
-                await calc(list);
-
-                return list.Count > 0;
+                return await calc(path, list);
             }
             catch (NpgsqlException ex)
             {
@@ -92,7 +98,7 @@ namespace DAO
             }
         }
 
-        public async Task calc(List<ItemFiltrado> items)
+        public async Task<bool> calc(string path, List<ItemFiltrado> items)
         {
             try
             {
@@ -268,13 +274,15 @@ namespace DAO
                 {
                     lock (locker)
                     {
-                        var path = $"{ Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) }\\FILES";
-
                         PathControl.Create(path);
 
-                        path = Path.Combine(path, arquivo.Produto.DESCR_ITEM.Replace("/", "") + ".txt");
+                        var path2 = Path.Combine(path, arquivo.Produto.NCM);
 
-                        using (FileStream file = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None))
+                        PathControl.Create(path2);
+
+                        path2 = Path.Combine(path2, arquivo.Produto.DESCR_ITEM.Replace("/", "") + ".txt");
+
+                        using (FileStream file = new FileStream(path2, FileMode.Create, FileAccess.Write, FileShare.None))
                         {
                             using (StreamWriter stream = new StreamWriter(file))
                             {
@@ -399,6 +407,8 @@ namespace DAO
 
                 throw ex;
             }
+
+            return true;
         }
 
         private static object locker = new object();
@@ -515,6 +525,98 @@ namespace DAO
                 }
 
                 return itemFiltrado;
+            }
+            catch (NpgsqlException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+
+        public async Task<List<ProductMedia>> calcSumarry(List<ItemFiltrado> items)
+        {
+            try
+            {
+                var products = new List<ProductMedia>();
+
+                foreach (var byYear in items.GroupBy(x => x.dhEmi.Year))
+                {
+                    foreach (var byMonth in byYear.GroupBy(x => x.dhEmi.Month))
+                    {
+                        foreach (var byNCM in byMonth.GroupBy(x => x.NCM))
+                        {
+                            var product = new ProductMedia();
+
+                            product.Name = byNCM.FirstOrDefault()?.xProd;
+                            product.NCM = byNCM.FirstOrDefault()?.NCM;
+                            product.MonthYear = byNCM.FirstOrDefault()?.dhEmi.ToString("MM/yyyy");
+                            product.LowerValue = byNCM.Any(x => !x.Entrada) 
+                                ? byNCM.Where(x => !x.Entrada)?.Min(x => x.vUnCom.Value)
+                                : null;
+                            product.HighestValue = byNCM.Any(x => !x.Entrada) 
+                                ? byNCM.Where(x => !x.Entrada)?.Max(x => x.vUnCom.Value)
+                                : null;
+                            product.Media = byNCM.Any(x => !x.Entrada) 
+                                ? byNCM.Where(x => !x.Entrada)?.Average(x => x.vUnCom.Value)
+                                : null;
+                            product.TotalResults = byNCM.Select(x => x).Count();
+                            product.TotalValue = byNCM.Any(x => !x.Entrada) 
+                                ? byNCM.Where(x => !x.Entrada)?.Sum(x => x.vUnCom.Value) 
+                                : null;
+                            product.MediaEntry = (byNCM.Any(x => x.Entrada) 
+                                ? byNCM.Where(x => x.Entrada)?.Average(x => x.vUnCom.Value) 
+                                : null);
+
+                            products.Add(product);
+                        }
+                    }
+                }
+
+                return products.OrderByDescending(x => x.MediaEntry).ToList();
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+        }
+
+        public async Task<List<ProductMedia>> GetSumarry(Processo process)
+        {
+            try
+            {
+                var list = new List<ItemFiltrado>();
+
+                using (var conn = new NpgsqlConnection(connString))
+                {
+                    await conn.OpenAsync();
+
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = $@"SELECT *
+                                FROM { table }
+                                WHERE 
+                                    ""dhEmi"" BETWEEN '{ process.InicioPeriodo }' AND '{ process.FimPeriodo }'
+                                ORDER BY 1 DESC;";
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                list.Add(BuildObject(reader));
+                            }
+                        }
+                    }
+
+                    await conn.CloseAsync();
+                }
+
+                return await calcSumarry(list);
             }
             catch (NpgsqlException ex)
             {
