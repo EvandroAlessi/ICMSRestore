@@ -12,11 +12,15 @@ namespace CrossCutting.ResultModels
 
         public TotalEntrada TotalEntrada { get; set; }
 
-        public List<NFeEntrada> NFeEntrada { get; set; }
+        public List<NFeEntrada> NFesEntrada { get; set; }
+
+        public List<NFeEntradaDevol> NFesEntradaDevol { get; set; }
 
         public TotalSaida TotalSaida { get; set; }
 
-        public List<NFeSaida> NFeSaida { get; set; }
+        public List<NFeSaida> NFesSaida { get; set; }
+
+        public List<NFeSaidaDevol> NFesSaidaDevol { get; set; }
 
         public FimInfoBase FimInfoBase { get; set; }
 

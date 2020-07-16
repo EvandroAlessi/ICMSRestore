@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Principal;
 
 namespace Dominio
 {
@@ -68,5 +69,10 @@ namespace Dominio
 
 
         public int nItem { get; set; }
+
+
+
+        //MAPEAR
+        public string cEAN { get; set; }
     }
 }

@@ -24,7 +24,7 @@ namespace NFeSeeder
         private static List<string> zipPaths = new List<string>();
         private static bool startDescompress = true;
 
-        [STAThread]
+        [MTAThread]
         static void Main(string[] args)
         {
             try
@@ -85,7 +85,7 @@ namespace NFeSeeder
 
         public static void StartParallelDecrompress()
         {
-            startDescompress = true;
+            startDescompress = false;
 
             try
             {
@@ -94,10 +94,10 @@ namespace NFeSeeder
 
                 foreach (var zipPath in newFiles.ToList())
                 {
-                    Task.Run(() =>
+                    Task.Factory.StartNew(() =>
                     {
                         Decompress(zipPath);
-                    })
+                    }, TaskCreationOptions.LongRunning)
                     .ContinueWith(t =>
                     {
                         zipPaths.Remove(zipPath);
@@ -115,7 +115,7 @@ namespace NFeSeeder
             }
         }
 
-        public static void Decompress(string zipPath)
+        public static async Task Decompress(string zipPath)
         {
             using (var stream = File.OpenRead(zipPath))
             {
@@ -154,7 +154,6 @@ namespace NFeSeeder
                 }
             }
         }
-
 
         public static void FindProcessFolders()
         {
@@ -343,10 +342,10 @@ namespace NFeSeeder
                                 {
                                     processDirs[process.Key][subDir.Key] = true;
 
-                                    Task.Run(() =>
+                                    Task.Factory.StartNew(() =>
                                     {
                                         DoWork(process.Key, subDir.Key);
-                                    })
+                                    }, TaskCreationOptions.LongRunning)
                                     .ContinueWith(t =>
                                     {
                                         RemoveCompletedFolder(process.Key, subDir.Key);
@@ -364,7 +363,7 @@ namespace NFeSeeder
             }
         }
 
-        public static void DoWork(int processoID, string subDir)
+        public static async Task DoWork(int processoID, string subDir)
         {
             try
             {

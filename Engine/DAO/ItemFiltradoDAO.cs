@@ -15,6 +15,9 @@ namespace DAO
 {
     public class ItemFiltradoDAO : CommonDAO
     {
+        private static readonly int[] entDevol = new int[4] { 1411, 1415, 2411, 2415 };
+        private static readonly int[] saiDevol = new int[2] { 5411, 5415 };
+
         public ItemFiltradoDAO() => table = "\"ItensFiltrados\"";
 
         public ItemFiltrado BuildObject(NpgsqlDataReader reader)
@@ -51,6 +54,7 @@ namespace DAO
                 UF = reader["UF"]?.ToString(),
                 UF_DEST = reader["UF_DEST"]?.ToString(),
                 xNome = reader["xNome"]?.ToString(),
+                cEAN = reader["cEAN"]?.ToString(),
             };
         }
 
@@ -119,52 +123,108 @@ namespace DAO
                         {
                             var nfesEntrada = new List<NFeEntrada>();
                             var nfesSaida = new List<NFeSaida>();
+                            var nfesEntradaDevol = new List<NFeEntradaDevol>();
+                            var nfesSaidaDevol = new List<NFeSaidaDevol>();
 
                             foreach (var item in byNCM)
                             {
-                                var CST_CSOSN = (item.CST != null ? item.CST : item.CSOSN)?.ToString("D" + 2);
+                                var CST_CSOSN = (item.CST != null 
+                                        ? item.CST 
+                                        : item.CSOSN
+                                    )?.ToString("D" + 2);
 
                                 if (item.Entrada)
                                 {
-                                    nfesEntrada.Add(new NFeEntrada
+                                    if (!entDevol.Contains(item.CFOP))
                                     {
-                                        DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
-                                        COD_RESP_RET = 0,
-                                        CST_CSOSN = CST_CSOSN,
-                                        CHAVE = item.Chave,
-                                        N_NF = item.nNF.ToString(),
-                                        CNPJ_EMIT = item.CNPJ,
-                                        UF_EMIT = item.UF,
-                                        CNPJ_DEST = item.CNPJ_DEST,
-                                        UF_DEST = item.UF_DEST,
-                                        CFOP = item.CFOP.ToString("D" + 4),
-                                        N_ITEM = item.nItem.ToString(),
-                                        UNID_ITEM = item.uCom,
-                                        QTD_ENTRADA = item.qCom.Value,
-                                        VL_UNIT_ITEM = item.vUnCom.Value,
-                                        VL_BC_ICMS_ST = 0.0,
-                                        VL_ICMS_SUPORT_ENTR = 0.0,
-                                    });
+                                        nfesEntrada.Add(new NFeEntrada
+                                        {
+                                            DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
+                                            COD_RESP_RET = 0,
+                                            CST_CSOSN = CST_CSOSN,
+                                            CHAVE = item.Chave,
+                                            N_NF = item.nNF.ToString(),
+                                            CNPJ_EMIT = item.CNPJ,
+                                            UF_EMIT = item.UF,
+                                            CNPJ_DEST = item.CNPJ_DEST,
+                                            UF_DEST = item.UF_DEST,
+                                            CFOP = item.CFOP.ToString("D" + 4),
+                                            N_ITEM = item.nItem.ToString(),
+                                            UNID_ITEM = item.uCom,
+                                            QTD_ENTRADA = item.qCom.Value,
+                                            VL_UNIT_ITEM = item.vUnCom.Value,
+                                            VL_BC_ICMS_ST = 0.0,
+                                            VL_ICMS_SUPORT_ENTR = 0.0,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        nfesEntradaDevol.Add(new NFeEntradaDevol
+                                        {
+                                            DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
+                                            CST_CSOSN = CST_CSOSN,
+                                            CHAVE = item.Chave,
+                                            N_NF = item.nNF.ToString(),
+                                            CNPJ_EMIT = item.CNPJ,
+                                            UF_EMIT = item.UF,
+                                            CNPJ_DEST = item.CNPJ_DEST,
+                                            UF_DEST = item.UF_DEST,
+                                            CFOP = item.CFOP.ToString("D" + 4),
+                                            N_ITEM = item.nItem.ToString(),
+                                            UNID_ITEM = item.uCom,
+                                            VL_UNIT_ITEM = item.vUnCom.Value,
+                                            VL_BC_ICMS_ST = 0.0,
+                                            VL_ICMS_SUPORT_ENTR = 0.0,
+                                            CHAVE_REF = "",
+                                            N_ITEM_REF = "",
+                                            QTD_DEVOLVIDA = 0.0
+                                        });
+                                    }
                                 }
                                 else
                                 {
-                                    nfesSaida.Add(new NFeSaida
+                                    if (!saiDevol.Contains(item.CFOP))
                                     {
-                                        DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
-                                        CST_CSOSN = CST_CSOSN,
-                                        CHAVE = item.Chave,
-                                        N_NF = item.nNF.ToString(),
-                                        CNPJ_EMIT = item.CNPJ,
-                                        UF_EMIT = item.UF,
-                                        CNPJ_DEST = item.CNPJ_DEST,
-                                        UF_DEST = item.UF_DEST,
-                                        CFOP = item.CFOP.ToString("D" + 4),
-                                        N_ITEM = item.nItem.ToString(),
-                                        UNID_ITEM = item.uCom,
-                                        QTD_SAIDA = item.qCom.Value,
-                                        VL_UNIT_ITEM = item.vUnCom.Value,
-                                        VL_ICMS_EFET = (item.vUnCom * 18 / 100).Value,
-                                    });
+                                        nfesSaida.Add(new NFeSaida
+                                        {
+                                            DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
+                                            CST_CSOSN = CST_CSOSN,
+                                            CHAVE = item.Chave,
+                                            N_NF = item.nNF.ToString(),
+                                            CNPJ_EMIT = item.CNPJ,
+                                            UF_EMIT = item.UF,
+                                            CNPJ_DEST = item.CNPJ_DEST,
+                                            UF_DEST = item.UF_DEST,
+                                            CFOP = item.CFOP.ToString("D" + 4),
+                                            N_ITEM = item.nItem.ToString(),
+                                            UNID_ITEM = item.uCom,
+                                            QTD_SAIDA = item.qCom.Value,
+                                            VL_UNIT_ITEM = item.vUnCom.Value,
+                                            VL_ICMS_EFET = (item.vUnCom * 18 / 100).Value
+                                        });
+                                    }
+                                    else
+                                    {
+                                        nfesSaidaDevol.Add(new NFeSaidaDevol
+                                        {
+                                            DT_DOC = item.dhEmi.ToString("ddMMyyyy"),
+                                            CST_CSOSN = CST_CSOSN,
+                                            CHAVE = item.Chave,
+                                            N_NF = item.nNF.ToString(),
+                                            CNPJ_EMIT = item.CNPJ,
+                                            UF_EMIT = item.UF,
+                                            CNPJ_DEST = item.CNPJ_DEST,
+                                            UF_DEST = item.UF_DEST,
+                                            CFOP = item.CFOP.ToString("D" + 4),
+                                            N_ITEM = item.nItem.ToString(),
+                                            UNID_ITEM = item.uCom,
+                                            VL_UNIT_ITEM = item.vUnCom.Value,
+                                            CHAVE_REF = "",
+                                            N_ITEM_REF = "",
+                                            QTD_DEVOLVIDA = 0.0,
+                                            VL_ICMS_EFETIVO = 0.0
+                                        });
+                                    }
                                 }
                             }
 
@@ -231,7 +291,7 @@ namespace DAO
                                 {
                                     IND_FECOP = 0,
                                     COD_ITEM = byNCM.First().cProd,
-                                    COD_BARRAS = "",
+                                    COD_BARRAS = byNCM.First().cEAN,
                                     COD_ANP = "",
                                     NCM = byNCM.First().NCM.ToString("D" + 8),
                                     CEST = "",
@@ -243,9 +303,11 @@ namespace DAO
                                     QTD_TOT_SAIDA = countSaidas,
                                 },
                                 TotalEntrada = totalEntradas,
-                                NFeEntrada = nfesEntrada,
+                                NFesEntrada = nfesEntrada,
+                                NFesEntradaDevol = nfesEntradaDevol,
                                 TotalSaida = totalSaidas,
-                                NFeSaida = nfesSaida,
+                                NFesSaida = nfesSaida,
+                                NFesSaidaDevol = nfesSaidaDevol,
                                 FimInfoBase = new FimInfoBase
                                 {
                                     QTD_LIN = (3 + nfesEntrada.Count() + 1 + nfesSaida.Count() + 1)
@@ -324,7 +386,7 @@ namespace DAO
                                                      arquivo.TotalEntrada.VL_UNIT_MED_ICMS_SUPORT_ENTR);
 
                                     //NFeEntrada
-                                    foreach (var nfe in arquivo.NFeEntrada)
+                                    foreach (var nfe in arquivo.NFesEntrada)
                                     {
                                         stream.WriteLine(nfe.REG + '|' +
                                                          nfe.DT_DOC + '|' +
@@ -358,7 +420,7 @@ namespace DAO
                                                      arquivo.TotalSaida.APUR_FECOP_COMPLEMENTAR);
 
                                     //NFeSaida
-                                    foreach (var nfe in arquivo.NFeSaida)
+                                    foreach (var nfe in arquivo.NFesSaida)
                                     {
                                         stream.WriteLine(nfe.REG + '|' +
                                                          nfe.DT_DOC + '|' +
