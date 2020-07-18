@@ -189,6 +189,7 @@ namespace API.Controllers
 
         // DELETE api/<ProcessoController>/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "ADMIN")]
         public IActionResult Delete(int id)
         {
             try

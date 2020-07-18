@@ -4,6 +4,7 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static DAO.Extentions;
 
 namespace DAO
 {
@@ -11,7 +12,6 @@ namespace DAO
     {
         protected static readonly string connString = AppSettings.ConnectionString;
         protected string table = string.Empty;
-        //protected const string quote = "\"";
 
         public async Task<Pagination> GetPagination(int page, int take, Dictionary<string, string> filters)
         {

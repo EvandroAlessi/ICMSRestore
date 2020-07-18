@@ -24,6 +24,8 @@ namespace NFeSeeder
         private static List<string> zipPaths = new List<string>();
         private static bool startDescompress = true;
 
+        private static readonly NFeService nfeService = new NFeService();
+
         [MTAThread]
         static void Main(string[] args)
         {
@@ -115,7 +117,7 @@ namespace NFeSeeder
             }
         }
 
-        public static async Task Decompress(string zipPath)
+        public static void Decompress(string zipPath)
         {
             using (var stream = File.OpenRead(zipPath))
             {
@@ -277,7 +279,6 @@ namespace NFeSeeder
             }
         }
 
-
         public static void RemoveCompletedFolder(int processoID, string subDir)
         {
             try
@@ -363,11 +364,10 @@ namespace NFeSeeder
             }
         }
 
-        public static async Task DoWork(int processoID, string subDir)
-        {
+        public static void DoWork(int processoID, string subDir)
+         {
             try
             {
-                var nfeService = new NFeService();
                 string[] filePaths = Directory.GetFiles(subDir);
                 bool entrada = subDir.Split("\\").Last().StartsWith("$@-");
 

@@ -50,6 +50,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'users',
+        loadChildren: () =>
+          import('./pages/users/users.module').then(
+            (m) => m.UsersModule
+          ),
+      },
+      {
         path: 'companies',
         loadChildren: () =>
           import('./pages/companies/companies.module').then(

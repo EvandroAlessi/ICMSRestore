@@ -1,21 +1,22 @@
-﻿using API.Models;
-using API.Repositories;
-using API.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using API.Services;
+using BLL;
+using Dominio;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/accounts")]
-    public class AccountController : ControllerBase
+    [Route("api/auth")]
+    public class AuthController : ControllerBase
     {
         [HttpPost("login")]
-        public IActionResult Login([FromBody] User model)
+        public async Task<IActionResult> Login([FromBody] Usuario model)
         {
             if (!ModelState.IsValid)
             {
@@ -29,8 +30,10 @@ namespace API.Controllers
                 return BadRequest(errors);
             }
 
+            var service = new UsuarioService();
+
             // Recupera o usuário
-            var user = UserRepository.Get(model.Username, model.Password);
+            var user = await service.Get(model.Nome, model.Senha);
 
             // Verifica se o usuário existe
             if (user is null)
@@ -40,7 +43,7 @@ namespace API.Controllers
             var token = TokenService.GenerateToken(user);
 
             // Oculta a senha
-            user.Password = "";
+            user.Senha = "";
 
             // Retorna os dados
             return Ok(new
@@ -54,7 +57,7 @@ namespace API.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout()
+        public IActionResult Logout()
         {
             Request.HttpContext.User = null;
 
@@ -73,12 +76,12 @@ namespace API.Controllers
 
         [HttpGet]
         [Route("employee")]
-        [Authorize(Roles = "employee,manager")]
+        [Authorize(Roles = "funcionario,admin")]
         public string Employee() => "Funcionário";
 
         [HttpGet]
-        [Route("manager")]
-        [Authorize(Roles = "manager")]
-        public string Manager() => "Gerente";
+        [Route("admin")]
+        [Authorize(Roles = "admin")]
+        public string Manager() => "Admin";
     }
 }

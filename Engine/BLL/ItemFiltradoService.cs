@@ -1,4 +1,5 @@
-﻿using CrossCutting.Models;
+﻿using CrossCutting;
+using CrossCutting.Models;
 using DAO;
 using Dominio;
 using System;
@@ -91,11 +92,15 @@ namespace BLL
             }
         }
 
-        public async Task<bool> Calc(string path, int processID, int? ncm = null)
+        public async Task BuildResult(string path, int processID, int? ncm = null)
         {
             try
             {
-                return await dao.CalcItems(path, processID, ncm);
+                var items = await dao.BuildResult(processID, ncm);
+
+                var documents = DocumentBuilder.BuildDocument(items);
+
+                DocumentBuilder.WriteDocument(path, documents);
             }
             catch (Exception ex)
             {

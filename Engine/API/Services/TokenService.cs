@@ -1,5 +1,5 @@
-﻿using API.Models;
-using CrossCutting;
+﻿using CrossCutting;
+using Dominio;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,7 +10,7 @@ namespace API.Services
 {
     public static class TokenService
     {
-        public static string GenerateToken(User user)
+        public static string GenerateToken(Usuario user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -20,8 +20,9 @@ namespace API.Services
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Username.ToString()),
-                    new Claim(ClaimTypes.Role, user.Role.ToString())
+                    new Claim(ClaimTypes.SerialNumber, user.ID.ToString()),
+                    new Claim(ClaimTypes.Name, user.Nome.ToString()),
+                    new Claim(ClaimTypes.Role, user.Cargo.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)

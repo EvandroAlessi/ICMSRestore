@@ -11,17 +11,7 @@ namespace DAO
 {
     public class NFeDAO : CommonDAO
     {
-        public NFeDAO() => table = "\"NFe\"";
-
-        public string BuildItemsInsertQuery(List<Item> itens, int nfeID)
-        {
-            var query = "";
-
-            for (int i = 0; i < itens.Count; i++)
-            {
-                if (i == 0)
-                {
-                    query = $@"INSERT INTO ""Itens"" (
+        private const string itemsInsertQuery = @"INSERT INTO ""Itens"" (
                                 ""nItem""
                                 , ""cProd""
                                 , ""cEAN""
@@ -47,7 +37,6 @@ namespace DAO
                                 , ""vBC_COFINS""
                                 , ""pCOFINS""
                                 , ""vCOFINS""
-                                , ""NFeID""
                                 , ""CSOSN""
                                 , ""vProd""
                                 , ""cEANTrib""
@@ -55,93 +44,44 @@ namespace DAO
                                 , ""qTrib""
                                 , ""vUnTrib""
                                 , ""indTot""
+                                , ""NFeID""
                             ) VALUES (
-                                { itens[i].nItem }
-                                , '{ itens[i].cProd }'
-                                , '{ itens[i].cEAN }'
-                                , '{ itens[i].xProd }'
-                                , { NullableUtils.TestValue(itens[i].NCM) }
-                                , { NullableUtils.TestValue(itens[i].CFOP) }
-                                , '{ itens[i].uCom }'
-                                , { NullableUtils.TestValue(itens[i].qCom) }
-                                , { NullableUtils.TestValue(itens[i].vUnCom) }
-                                , { NullableUtils.TestValue(itens[i].orig) }
-                                , { NullableUtils.TestValue(itens[i].CST) }
-                                , { NullableUtils.TestValue(itens[i].modBC) }
-                                , { NullableUtils.TestValue(itens[i].vBC) }
-                                , { NullableUtils.TestValue(itens[i].pICMS) }
-                                , { NullableUtils.TestValue(itens[i].vICMS) }
-                                , { NullableUtils.TestValue(itens[i].cEnq) }
-                                , '{ itens[i].CST_IPI }'
-                                , '{ itens[i].CST_PIS }'
-                                , { NullableUtils.TestValue(itens[i].vBC_PIS) }
-                                , { NullableUtils.TestValue(itens[i].pPIS) }
-                                , { NullableUtils.TestValue(itens[i].vPIS) }
-                                , '{ itens[i].CST_COFINS }'
-                                , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
-                                , { NullableUtils.TestValue(itens[i].pCOFINS) }
-                                , { NullableUtils.TestValue(itens[i].vCOFINS) }
-                                , { nfeID }
-                                , { NullableUtils.TestValue(itens[i].CSOSN) }
-                                , { NullableUtils.TestValue(itens[i].vProd) }
-                                , '{ itens[i].cEANTrib }'
-                                , '{ itens[i].uTrib }'
-                                , { NullableUtils.TestValue(itens[i].qTrib) }
-                                , { NullableUtils.TestValue(itens[i].vUnTrib) }
-                                , { NullableUtils.TestValue(itens[i].indTot) }
+                                 @nItem
+                                , @cProd
+                                , @cEAN
+                                , @xProd
+                                , @NCM
+                                , @CFOP
+                                , @uCom
+                                , @qCom
+                                , @vUnCom
+                                , @orig
+                                , @CST
+                                , @modBC
+                                , @vBC
+                                , @pICMS
+                                , @vICMS
+                                , @cEnq
+                                , @CST_IPI
+                                , @CST_PIS
+                                , @vBC_PIS
+                                , @pPIS
+                                , @vPIS
+                                , @CST_COFINS
+                                , @vBC_COFINS
+                                , @pCOFINS
+                                , @vCOFINS
+                                , @CSOSN
+                                , @vProd
+                                , @cEANTrib
+                                , @uTrib
+                                , @qTrib
+                                , @vUnTrib
+                                , @indTot
+                                , @nfeID
                             )";
-                }
-                else
-                {
-                    query += $@", (
-                                { itens[i].nItem }
-                                , '{ itens[i].cProd }'
-                                , '{ itens[i].cEAN }'
-                                , '{ itens[i].xProd }'
-                                , { NullableUtils.TestValue(itens[i].NCM) }
-                                , { NullableUtils.TestValue(itens[i].CFOP) }
-                                , '{ itens[i].uCom }'
-                                , { NullableUtils.TestValue(itens[i].qCom) }
-                                , { NullableUtils.TestValue(itens[i].vUnCom) }
-                                , { NullableUtils.TestValue(itens[i].orig) }
-                                , { NullableUtils.TestValue(itens[i].CST) }
-                                , { NullableUtils.TestValue(itens[i].modBC) }
-                                , { NullableUtils.TestValue(itens[i].vBC) }
-                                , { NullableUtils.TestValue(itens[i].pICMS) }
-                                , { NullableUtils.TestValue(itens[i].vICMS) }
-                                , { NullableUtils.TestValue(itens[i].cEnq) }
-                                , '{ itens[i].CST_IPI }'
-                                , '{ itens[i].CST_PIS }'
-                                , { NullableUtils.TestValue(itens[i].vBC_PIS) }
-                                , { NullableUtils.TestValue(itens[i].pPIS) }
-                                , { NullableUtils.TestValue(itens[i].vPIS) }
-                                , '{ itens[i].CST_COFINS }'
-                                , { NullableUtils.TestValue(itens[i].vBC_COFINS) }
-                                , { NullableUtils.TestValue(itens[i].pCOFINS) }
-                                , { NullableUtils.TestValue(itens[i].vCOFINS) }
-                                , { nfeID }
-                                , { NullableUtils.TestValue(itens[i].CSOSN) }
-                                , { NullableUtils.TestValue(itens[i].vProd) }
-                                , '{ itens[i].cEANTrib }'
-                                , '{ itens[i].uTrib }'
-                                , { NullableUtils.TestValue(itens[i].qTrib) }
-                                , { NullableUtils.TestValue(itens[i].vUnTrib) }
-                                , { NullableUtils.TestValue(itens[i].indTot) }
-                            )";
-                }
 
-                if (i == itens.Count - 1)
-                {
-                    query += ";";
-                }
-            }
-
-            return query.Replace("\' \'", "null").Replace("\'\'", "null");
-        }
-
-        public string BuildInsertQuery(NFe nfe, bool hasReturn = false)
-        {
-            var query = $@"INSERT INTO { table } (
+        private const string invoiceInsertQuery = @"INSERT INTO ""NFe"" (
                                 ""ProcessoID""
                                 , ""CEP""
                                 , ""CEP_DEST""
@@ -202,75 +142,175 @@ namespace DAO
                                 , ""Entrada""
                                 , ""Chave""
                             ) VALUES (
-                                { nfe.ProcessoID }
-                                , '{ nfe.CEP }'
-                                , '{ nfe.CEP_DEST }'
-                                , '{ nfe.CNPJ }'
-                                , '{ nfe.CNPJ_DEST }'
-                                , '{ nfe.CPF_DEST }'
-                                , { NullableUtils.TestValue(nfe.CRT) }
-                                , '{ nfe.IE }'
-                                , '{ nfe.IEST }'
-                                , '{ nfe.UF }'
-                                , '{ nfe.UF_DEST }'
-                                , '{ nfe.cMun }'
-                                , '{ nfe.cMun_DEST }'
-                                , { NullableUtils.TestValue(nfe.cNF) }
-                                , { NullableUtils.TestValue(nfe.cPais) }
-                                , { NullableUtils.TestValue(nfe.cPais_DEST) }
-                                , { NullableUtils.TestValue(nfe.cUF) }
-                                , '{ nfe.dhEmi }'
-                                , '{ nfe.dhSaiEnt?.ToString() }'
-                                , '{ nfe.email_DEST }'
-                                , { NullableUtils.TestValue(nfe.indPag) }
-                                , '{ nfe.mod }'
-                                , { NullableUtils.TestValue(nfe.nNF) }
-                                , '{ nfe.natOp }'
-                                , '{ nfe.nro }'
-                                , '{ nfe.nro_DEST }'
-                                , { NullableUtils.TestValue(nfe.serie) }
-                                , '{ nfe.xBairro }'
-                                , '{ nfe.xBairro_DEST }'
-                                , '{ nfe.xFant }'
-                                , '{ nfe.xLgr }'
-                                , '{ nfe.xLgr_DEST }'
-                                , '{ nfe.xMun }'
-                                , '{ nfe.xMun_DEST }'
-                                , '{ nfe.xNome }'
-                                , '{ nfe.xNome_DEST }'
-                                , '{ nfe.xPais }'
-                                , '{ nfe.xPais_DEST }'
-                                , { NullableUtils.TestValue(nfe.vBC_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vICMS_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vICMSDeson_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vFCP_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vBCST_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vST_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vFCPST_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vFCPSTRet_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vProd_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vFrete_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vSeg_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vDesc_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vII_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vIPI_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vIPIDevol_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vPIS_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vCOFINS_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vOutro_TOTAL) }
-                                , { NullableUtils.TestValue(nfe.vNF_TOTAL) }
-                                , { nfe.Entrada }
-                                , { nfe.Chave?.Replace("NFe", "") }
-                            )";
+                                @ProcessoID
+                                , @CEP
+                                , @CEP_DEST
+                                , @CNPJ
+                                , @CNPJ_DEST
+                                , @CPF_DEST
+                                , @CRT
+                                , @IE
+                                , @IEST
+                                , @UF
+                                , @UF_DEST
+                                , @cMun
+                                , @cMun_DEST
+                                , @cNF
+                                , @cPais
+                                , @cPais_DEST
+                                , @cUF
+                                , @dhEmi
+                                , @dhSaiEnt
+                                , @email_DEST
+                                , @indPag
+                                , @mod
+                                , @nNF
+                                , @natOp
+                                , @nro
+                                , @nro_DEST
+                                , @serie
+                                , @xBairro
+                                , @xBairro_DEST
+                                , @xFant
+                                , @xLgr
+                                , @xLgr_DEST
+                                , @xMun
+                                , @xMun_DEST
+                                , @xNome
+                                , @xNome_DEST
+                                , @xPais
+                                , @xPais_DEST
+                                , @vBC_TOTAL
+                                , @vICMS_TOTAL
+                                , @vICMSDeson_TOTAL
+                                , @vFCP_TOTAL
+                                , @vBCST_TOTAL
+                                , @vST_TOTAL
+                                , @vFCPST_TOTAL
+                                , @vFCPSTRet_TOTAL
+                                , @vProd_TOTAL
+                                , @vFrete_TOTAL
+                                , @vSeg_TOTAL
+                                , @vDesc_TOTAL
+                                , @vII_TOTAL
+                                , @vIPI_TOTAL
+                                , @vIPIDevol_TOTAL
+                                , @vPIS_TOTAL
+                                , @vCOFINS_TOTAL
+                                , @vOutro_TOTAL
+                                , @vNF_TOTAL
+                                , @Entrada
+                                , @Chave
+                            ) RETURNING ""ID"" ;";
 
-            if (hasReturn)
-            {
-                query += $@"RETURNING ""ID""";
-            }
+        public NFeDAO() => table = "\"NFe\"";
 
-            query += ";";
+        public NpgsqlCommand BuildItemsInsertCommand()
+        {
+            var cmd = new NpgsqlCommand(itemsInsertQuery);
 
-            return query.Replace("\' \'", "null").Replace("\'\'", "null");
+            cmd.Parameters.Add("@nItem", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@cProd", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@cEAN", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@xProd", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@NCM", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@CFOP", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@uCom", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@qCom", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@vUnCom", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@orig", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@CST", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@modBC", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@vBC", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@vICMS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@pICMS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@cEnq", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@CST_IPI", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@CST_PIS", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@vBC_PIS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@pPIS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@vPIS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@CST_COFINS", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@vBC_COFINS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@pCOFINS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@vCOFINS", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@CSOSN", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@vProd", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@cEANTrib", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@uTrib", NpgsqlTypes.NpgsqlDbType.Varchar);
+            cmd.Parameters.Add("@qTrib", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@vUnTrib", NpgsqlTypes.NpgsqlDbType.Real);
+            cmd.Parameters.Add("@indTot", NpgsqlTypes.NpgsqlDbType.Integer);
+            cmd.Parameters.Add("@NFeID", NpgsqlTypes.NpgsqlDbType.Integer);
+
+            return cmd;
+        }
+
+        public NpgsqlCommand BuildInsertCommand(NFe nfe)
+        {
+            var cmd = new NpgsqlCommand(invoiceInsertQuery);
+
+            cmd.Parameters.AddWithNullableValue("@ProcessoID", NpgsqlTypes.NpgsqlDbType.Integer, nfe.ProcessoID);
+            cmd.Parameters.AddWithNullableValue("@CEP", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.CEP);
+            cmd.Parameters.AddWithNullableValue("@CEP_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.CEP_DEST);
+            cmd.Parameters.AddWithNullableValue("@CNPJ", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.CNPJ);
+            cmd.Parameters.AddWithNullableValue("@CNPJ_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.CNPJ_DEST);
+            cmd.Parameters.AddWithNullableValue("@CPF_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.CPF_DEST);
+            cmd.Parameters.AddWithNullableValue("@CRT", NpgsqlTypes.NpgsqlDbType.Integer, nfe.CRT);
+            cmd.Parameters.AddWithNullableValue("@IE", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.IE);
+            cmd.Parameters.AddWithNullableValue("@IEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.IEST);
+            cmd.Parameters.AddWithNullableValue("@UF", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.UF);
+            cmd.Parameters.AddWithNullableValue("@UF_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.UF_DEST);
+            cmd.Parameters.AddWithNullableValue("@cMun", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.cMun);
+            cmd.Parameters.AddWithNullableValue("@cMun_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.cMun_DEST);
+            cmd.Parameters.AddWithNullableValue("@cNF", NpgsqlTypes.NpgsqlDbType.Integer, nfe.cNF);
+            cmd.Parameters.AddWithNullableValue("@cPais", NpgsqlTypes.NpgsqlDbType.Integer, nfe.cPais);
+            cmd.Parameters.AddWithNullableValue("@cPais_DEST", NpgsqlTypes.NpgsqlDbType.Integer, nfe.cPais_DEST);
+            cmd.Parameters.AddWithNullableValue("@cUF", NpgsqlTypes.NpgsqlDbType.Integer, nfe.cUF);
+            cmd.Parameters.AddWithNullableValue("@dhEmi", NpgsqlTypes.NpgsqlDbType.TimestampTz, nfe.dhEmi);
+            cmd.Parameters.AddWithNullableValue("@dhSaiEnt", NpgsqlTypes.NpgsqlDbType.TimestampTz, nfe.dhSaiEnt);
+            cmd.Parameters.AddWithNullableValue("@email_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.email_DEST);
+            cmd.Parameters.AddWithNullableValue("@indPag", NpgsqlTypes.NpgsqlDbType.Integer, nfe.indPag);
+            cmd.Parameters.AddWithNullableValue("@mod", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.mod);
+            cmd.Parameters.AddWithNullableValue("@nNF", NpgsqlTypes.NpgsqlDbType.Integer, nfe.nNF);
+            cmd.Parameters.AddWithNullableValue("@natOp", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.natOp);
+            cmd.Parameters.AddWithNullableValue("@nro", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.nro);
+            cmd.Parameters.AddWithNullableValue("@nro_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.nro_DEST);
+            cmd.Parameters.AddWithNullableValue("@serie", NpgsqlTypes.NpgsqlDbType.Integer, nfe.serie);
+            cmd.Parameters.AddWithNullableValue("@xBairro", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xBairro);
+            cmd.Parameters.AddWithNullableValue("@xBairro_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xBairro_DEST);
+            cmd.Parameters.AddWithNullableValue("@xFant", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xFant);
+            cmd.Parameters.AddWithNullableValue("@xLgr", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xLgr);
+            cmd.Parameters.AddWithNullableValue("@xLgr_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xLgr_DEST);
+            cmd.Parameters.AddWithNullableValue("@xMun", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xMun);
+            cmd.Parameters.AddWithNullableValue("@xMun_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xMun_DEST);
+            cmd.Parameters.AddWithNullableValue("@xNome", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xNome);
+            cmd.Parameters.AddWithNullableValue("@xNome_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xNome_DEST);
+            cmd.Parameters.AddWithNullableValue("@xPais", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xPais);
+            cmd.Parameters.AddWithNullableValue("@xPais_DEST", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.xPais_DEST);
+            cmd.Parameters.AddWithNullableValue("@vBC_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vBC_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vICMS_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vICMS_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vICMSDeson_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vICMSDeson_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vFCP_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vFCP_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vBCST_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vBCST_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vST_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vST_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vFCPST_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vFCPST_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vFCPSTRet_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vFCPSTRet_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vProd_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vProd_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vFrete_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vFrete_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vSeg_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vSeg_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vDesc_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vDesc_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vII_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vII_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vIPI_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vIPI_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vIPIDevol_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vIPIDevol_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vPIS_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vPIS_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vCOFINS_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vCOFINS_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vOutro_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vOutro_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@vNF_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vNF_TOTAL);
+            cmd.Parameters.AddWithNullableValue("@Entrada", NpgsqlTypes.NpgsqlDbType.Boolean, nfe.Entrada);
+            cmd.Parameters.AddWithNullableValue("@Chave", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.Chave.Replace("NFe", ""));
+
+            return cmd;
         }
 
         public NFe BuildObject(NpgsqlDataReader reader)
@@ -580,9 +620,9 @@ namespace DAO
                 {
                     conn.Open();
 
-                    using (var cmd = conn.CreateCommand())
+                    using (var cmd = BuildInsertCommand(nfe))
                     {
-                        cmd.CommandText = BuildInsertQuery(nfe, true);
+                        cmd.Connection = conn;
 
                         id = cmd.ExecuteScalar();
                     }
@@ -624,37 +664,73 @@ namespace DAO
                     using (var transaction = conn.BeginTransaction())
                     {
                         try
-                        {
-                            using (var cmd = conn.CreateCommand())
+                        { 
+                            using (var cmd = BuildInsertCommand(nfe))
                             {
+                                cmd.Connection = conn;
                                 cmd.Transaction = transaction;
                                 cmd.CommandType = CommandType.Text;
-                                cmd.CommandText = BuildInsertQuery(nfe, true);
-                                cmd.Prepare();
+                                //cmd.Prepare();
 
                                 var nfeID = (int)cmd.ExecuteScalar();
 
                                 if (nfeID <= 0)
                                 {
-                                    transaction.Rollback();
-
-                                    return false;
+                                    // rollback
+                                    throw new NpgsqlException();
                                 }
 
-                                using (var cmd2 = conn.CreateCommand())
+                                using(var cmd2 = BuildItemsInsertCommand())
                                 {
+                                    cmd2.Connection = conn;
                                     cmd2.Transaction = transaction;
                                     cmd2.CommandType = CommandType.Text;
-                                    cmd2.CommandText = BuildItemsInsertQuery(itens, nfeID);
-                                    cmd2.Prepare();
 
-                                    rows = cmd2.ExecuteNonQuery();
+                                    foreach (var item in itens)
+                                    {
+                                        cmd2.Parameters.ChangeParameterValue(0, item.nItem);
+                                        cmd2.Parameters.ChangeParameterValue(1, item.cProd);
+                                        cmd2.Parameters.ChangeParameterValue(2, item.cEAN);
+                                        cmd2.Parameters.ChangeParameterValue(3, item.xProd);
+                                        cmd2.Parameters.ChangeParameterValue(4, item.NCM);
+                                        cmd2.Parameters.ChangeParameterValue(5, item.CFOP);
+                                        cmd2.Parameters.ChangeParameterValue(6, item.uCom);
+                                        cmd2.Parameters.ChangeParameterValue(7, item.qCom);
+                                        cmd2.Parameters.ChangeParameterValue(8, item.vUnCom);
+                                        cmd2.Parameters.ChangeParameterValue(9, item.orig);
+                                        cmd2.Parameters.ChangeParameterValue(10, item.CST);
+                                        cmd2.Parameters.ChangeParameterValue(11, item.modBC);
+                                        cmd2.Parameters.ChangeParameterValue(12, item.vBC);
+                                        cmd2.Parameters.ChangeParameterValue(13, item.vICMS);
+                                        cmd2.Parameters.ChangeParameterValue(14, item.pICMS);
+                                        cmd2.Parameters.ChangeParameterValue(15, item.cEnq);
+                                        cmd2.Parameters.ChangeParameterValue(16, item.CST_IPI);
+                                        cmd2.Parameters.ChangeParameterValue(17, item.CST_PIS);
+                                        cmd2.Parameters.ChangeParameterValue(18, item.vBC_PIS);
+                                        cmd2.Parameters.ChangeParameterValue(19, item.pPIS);
+                                        cmd2.Parameters.ChangeParameterValue(20, item.vPIS);
+                                        cmd2.Parameters.ChangeParameterValue(21, item.CST_COFINS);
+                                        cmd2.Parameters.ChangeParameterValue(22, item.vBC_COFINS);
+                                        cmd2.Parameters.ChangeParameterValue(23, item.pCOFINS);
+                                        cmd2.Parameters.ChangeParameterValue(24, item.vCOFINS);
+                                        cmd2.Parameters.ChangeParameterValue(25, item.CSOSN);
+                                        cmd2.Parameters.ChangeParameterValue(26, item.vProd);
+                                        cmd2.Parameters.ChangeParameterValue(27, item.cEANTrib);
+                                        cmd2.Parameters.ChangeParameterValue(28, item.uTrib);
+                                        cmd2.Parameters.ChangeParameterValue(29, item.qTrib);
+                                        cmd2.Parameters.ChangeParameterValue(30, item.vUnTrib);
+                                        cmd2.Parameters.ChangeParameterValue(31, item.indTot);
+                                        cmd2.Parameters.ChangeParameterValue(32, nfeID);
+
+                                        if (cmd2.ExecuteNonQuery() != 1)
+                                        {
+                                            // rollback
+                                            throw new NpgsqlException();
+                                        }
+                                    }
                                 }
 
-                                if (rows > 0)
-                                    transaction.Commit();
-                                else
-                                    transaction.Rollback();
+                                transaction.Commit();
                             }
                         }
                         catch (NpgsqlException ex)
@@ -690,9 +766,9 @@ namespace DAO
                 {
                     conn.Open();
 
-                    using (var cmd = conn.CreateCommand())
+                    using (var cmd = BuildInsertCommand(nfe))
                     {
-                        cmd.CommandText = BuildInsertQuery(nfe);
+                        cmd.Connection = conn;
 
                         rows = cmd.ExecuteNonQuery();
                     }

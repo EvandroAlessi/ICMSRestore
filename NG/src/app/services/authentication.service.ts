@@ -7,11 +7,16 @@ import { Router } from '@angular/router';
   providedIn: 'root',
 })
 export class AuthenticationService {
-  private api = environment.api.url + "/accounts";
+  private api = environment.api.url + "/auth";
 
   constructor(private router: Router, private http: HttpClient) {}
 
-  login(credentials): Promise<any> {
+  login(user): Promise<any> {
+    const credentials = {
+      Nome: user.username,
+      Senha: user.password,
+    };
+    
     return this.http
       .post<any>(`${this.api}/login`, credentials, {})
       .pipe(
@@ -47,14 +52,14 @@ export class AuthenticationService {
   }
 
   getUser() {
-    let user = JSON.parse(localStorage.getItem('usuario'));
+    let user = JSON.parse(localStorage.getItem('user'));
 
     if (!user) {
       user = {
-        name: 'Usuário',
+        nome: 'Usuário',
       };
     }
     
-    return user;
+    return user.user;
   }
 }

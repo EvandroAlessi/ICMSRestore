@@ -1,4 +1,4 @@
-import { Component, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, AfterViewInit, OnInit } from '@angular/core';
 import { navItems } from '../navigation';
 import { AuthenticationService } from '../../../services/authentication.service';
 
@@ -6,9 +6,16 @@ import { AuthenticationService } from '../../../services/authentication.service'
   selector: 'app-dashboard',
   templateUrl: './container.component.html',
 })
-export class ContainerComponent implements AfterViewInit {
+export class ContainerComponent implements OnInit, AfterViewInit {
   public sidebarMinimized = true;
   public navItems = navItems;
+  public user: any = {};
+
+  ngOnInit(){
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      this.user = user.user;
+  }
 
   constructor(
     private authenticationService: AuthenticationService,

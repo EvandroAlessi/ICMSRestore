@@ -22,6 +22,7 @@ export class ListComponent implements OnInit {
   };
   public pagination: any = {};
   public companies: any = [];
+  admin: boolean = false;
 
   constructor(
     private routerActived: ActivatedRoute,
@@ -32,6 +33,9 @@ export class ListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.admin = JSON.parse(localStorage.getItem('user')) 
+                    && JSON.parse(localStorage.getItem('user')).user.cargo.toUpperCase() === 'ADMIN';
+
     this.routerActived.queryParams.subscribe((params) => {
       for (const key in params) {
         if (this.filters.hasOwnProperty(key)) {
@@ -47,8 +51,6 @@ export class ListComponent implements OnInit {
     this.companyService.getAll(this.filters).subscribe((response) => {
       this.companies = response.companies;
       this.pagination = response.pagination;
-
-      console.log(this.pagination);
     });
   }
 

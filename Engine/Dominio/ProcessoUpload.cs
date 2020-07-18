@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dominio
 {
-    public class ProcessoUpload
+    public partial class ProcessoUpload
     {
         [Key]
         public int ID { get; set; }

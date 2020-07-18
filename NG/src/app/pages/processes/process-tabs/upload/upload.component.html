@@ -29,7 +29,17 @@
                     </td>
                     <td data-th="Nome do ZIP">{{ uploadProcess.pastaZip.substring(uploadProcess.pastaZip.lastIndexOf('\\') + 1) }}</td>
                     <td data-th="Total de Arquivos">{{ uploadProcess.qntArq }}</td>
-                    <td data-th="Arquivos com Erro">{{ uploadProcess.errorFiles }}</td>
+                    <td data-th="Arquivos com Erro">
+                        <button type="button" class="btn btn-link"
+                            *ngIf="uploadProcess.errorFiles > 0; else zeroErrors" 
+                            (click)="downloadErros(uploadProcess.id)" 
+                            title="Clique para baixar arquivos com erro.">
+                            {{ uploadProcess.errorFiles }}
+                        </button>
+                        <ng-template #zeroErrors>
+                            {{ uploadProcess.errorFiles }}
+                        </ng-template> 
+                    </td>
                     <td data-th="Processado" class="sm-column">
                         <a *ngIf="uploadProcess.percent == 100; else elseBlock" class="btn btn-success m-1 disabled">Concluído</a>
                         <ng-template #elseBlock>

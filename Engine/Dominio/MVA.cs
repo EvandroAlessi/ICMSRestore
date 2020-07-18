@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Dominio
 {
-    public class MVA
+    public partial class MVA
     {
         [Key]
         public int ID { get; set; }

@@ -1,10 +1,14 @@
 ﻿using BLL;
+using CrossCutting;
 using Dominio;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace API.Controllers
@@ -147,6 +151,50 @@ namespace API.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("download-errors")]
+        public async Task<IActionResult> Download(int id)
+        {
+            try
+            {
+                var processoUpload = await service.Get(id);
+
+                var path = Path.Combine(processoUpload.PastaZip, "Error");
+
+                var tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".zip"); 
+
+                using (var stream = new FileStream(tempFile, FileMode.Create))
+                {
+                    using (var archive = new ZipArchive(stream, ZipArchiveMode.Update, true))
+                    {
+                        //Create a zip entry for each attachment
+                        foreach (var file in Directory.GetFiles(path))
+                        {
+                            // Add the entry for each file
+                            archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                        }
+                    }
+                }
+
+                const string contentType = "application/zip";
+                HttpContext.Response.ContentType = contentType;
+
+                var result = new FileContentResult(System.IO.File.ReadAllBytes(tempFile), contentType)
+                {
+                    FileDownloadName = $"{ processoUpload.PastaZip.Substring(processoUpload.PastaZip.LastIndexOf('\\') + 1) }-ERRORS.zip"
+                };
+
+
+                System.IO.File.Delete(tempFile);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
 
         // POST api/<ProcessoUploadController>
         /// <summary>

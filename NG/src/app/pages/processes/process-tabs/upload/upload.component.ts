@@ -59,7 +59,7 @@ export class UploadComponent implements OnInit, OnDestroy {
         clearInterval(element);
       });
 
-      this.timersID = null;
+      this.timersID = [];
     }
 
     this.uploadProcessService
@@ -73,10 +73,15 @@ export class UploadComponent implements OnInit, OnDestroy {
 
               if(element.ativo){
                 setInterval(() => {
-                  this.timersID[i] = this.uploadProcessService.getState(element.id).subscribe((response) => {
-                    element.percent = response.percent;
-                    element.errorFiles = response.errorFiles;
-                  });
+                  this.timersID[i] = this.uploadProcessService
+                    .getState(element.id)
+                    .subscribe((response) => {
+                      element.percent = response.percent;
+                      element.errorFiles = response.errorFiles;
+                    },
+                    (err) => {
+                      clearInterval(this.timersID[i]);
+                    });
                 }, 20000);
               }
             }
@@ -86,6 +91,31 @@ export class UploadComponent implements OnInit, OnDestroy {
           }
         );
   }
+
+  downLoadFile(data: any, type: string) {
+    const blob = new Blob([data], { type: type});
+    const url = window.URL.createObjectURL(blob);
+    let pwa = window.open(url,"_self");
+
+    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
+        alert( 'Please disable your Pop-up blocker and try again.');
+    }
+  }
+
+  downloadErros(id) {
+    this.uploadProcessService
+        .download(id)
+        .subscribe((response) => {
+            this.toast.success('Arquivos baixados', 'Sucesso!');
+            
+            this.downLoadFile(response, 'application/zip');
+          },
+          (err) => {
+            this.toast.error('Algo deu errado!', 'erro :(');
+          }
+        );
+  }
+
 
   changePageSize(size) {
     this.filters.take = size;
@@ -122,7 +152,10 @@ export class UploadComponent implements OnInit, OnDestroy {
                 this.toast.success("Arquivo '"+ file.name +"' enviado.", 'Sucesso!');
                 this.files = this.files.filter(obj => obj !== file);
   
-                if(i == this.files.length) {
+                console.log("i: " + i);
+                console.log("length: " + this.files.length);
+
+                if(this.files.length == 0) {
                   this.canSend = true;
                 }
               }
@@ -130,7 +163,8 @@ export class UploadComponent implements OnInit, OnDestroy {
             (err) => {
               this.toast.error("Não foi possível enviar o arquvo '"+ file.name +"'.", 'Erro :(');
               error++;
-              if(i == this.files.length - error) {
+
+              if(this.files.length - error == 0) {
                 this.canSend = true;
               }
             }
@@ -206,6 +240,9 @@ export class UploadComponent implements OnInit, OnDestroy {
       if (item.type == "application/x-zip-compressed") {
         item.progress = 0;
         this.files.push(item);
+      }
+      else {
+        this.toast.warning("Só é possível enviar arquivos do tipo ZIP. Qualquer outro tipo, mesmo XML ou RAR não é aceito.", 'Atenção');
       }
     }
     //this.uploadFilesSimulator(0);

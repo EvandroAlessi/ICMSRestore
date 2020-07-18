@@ -1,0 +1,108 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-align-justify mr-2"></i>
+                        <strong>Usuários</strong>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-primary" (click)="toggleFilter()"><i
+								class="fa fa-filter mr-1"></i>Filtrar</button>
+                        <a class="btn btn-success" routerLink="{{ route }}/create"><i class="fa fa-edit mr-1"></i>Incluir</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="filter-container" [collapse]="!showFilter">
+                        <div class="card border-0">
+                            <div class="card-body pb-0 pt-1">
+                                <form class="form-inline justify-content-center" action="" method="post">
+                                    <div class="form-group mr-1 ml-1">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">Conteúdo</span>
+                                            </div>
+                                            <input type="text" id="content" name="Nome" [(ngModel)]="filters.nome" class="form-control" placeholder="Nome" title="Nome">
+                                            <input type="text" id="content" name="Cargo" [(ngModel)]="filters.cargo" class="form-control" placeholder="Cargo" title="Cargo">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-actions mb-0">
+                                        <button type="button" class="btn btn-primary mr-1 ml-1" (click)="filter()"><i
+												class="fa fa-filter mr-1"></i>Filtrar</button>
+                                        <button type="button" type="button" class="btn btn-danger mr-1" (click)="unfilter()"><i
+												class="fa fa-ban mr-1"></i>Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-striped text-center mobile-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Cargo</th>
+                                <th class="md-column">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let user of users">
+                                <td data-th="Nome">{{ user.nome }}</td>
+                                <td data-th="Cargo">
+                                    <div class="btn-group" dropdown>
+                                        <button id="button-basic" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-basic" title="Cargo">
+                                            {{ user.cargo }} <span class="caret"></span>
+                                        </button>
+                                        <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-basic">
+                                            <li role="menuitem" *ngFor="let role of roles">
+                                                <a class="dropdown-item" (click)="changeRole(user, role)">{{ role }}</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td data-th="Ações" class="sm-column">
+                                    <a *ngIf="loggedUserID == user.id" class="btn btn-success m-1" routerLink="{{ route }}/edit/{{ user.id }}">
+                                        <i class="fa fa-edit mr-1"></i>Editar
+                                    </a>
+                                    <button type="button" class="btn btn-danger m-1" (click)="delete(user)">
+                                        <i class="fa fa-trash-o mr-1"></i>Remover
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="users.length == 0">
+                                <td colspan="5">Nenhum Registro Encontrado</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <nav *ngIf="pagination && pagination.pageCount > 1" class="row">
+                        <div class="col-md-2">
+                            <div class="btn-group" dropdown [dropup]="true">
+                                <button id="button-dropup" dropdownToggle type="button" class="btn btn-primary dropdown-toggle" aria-controls="dropdown-dropup" title="Quanita de itens por página">
+                                  {{ filters.take }} <span class="caret"></span>
+                                </button>
+                                <ul id="dropdown-dropup" *dropdownMenu class="dropdown-menu" role="menu" aria-labelledby="button-dropup" title="Itens por página">
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(5)">5</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(10)">10</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(30)">30</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(50)">50</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(100)">100</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(500)">500</a></li>
+                                    <li role="menuitem"><a class="dropdown-item" (click)="changePageSize(1000)">1000</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <ul class="pagination justify-content-end mb-0 col-md-10">
+                            <li class="page-item" [class.disabled]="pagination.currentPage == 1"><a (click)="paginate(1)" class="page-link">Primeira</a></li>
+
+                            <li *ngFor="let i of pagination.pages" class="page-item" [class.active]="i == pagination.currentPage"><a (click)="paginate(i)" class="page-link">{{ i }}</a></li>
+
+                            <li class="page-item" [class.disabled]="pagination.pageCount == pagination.currentPage"><a (click)="paginate(pagination.pageCount)" class="page-link">Última</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+</div>

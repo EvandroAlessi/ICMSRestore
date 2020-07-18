@@ -157,55 +157,50 @@ namespace API.Controllers
 
                 PathControl.Create(path);
                 
-                var tempFile = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".zip"); // might want to clean this up if there are a lot of downloads
+                var tempFile = Path.Combine(Path.GetTempPath(), $"{ Guid.NewGuid() }.zip"); // might want to clean this up if there are a lot of downloads
 
-                await service.Calc(path, processID, ncm);
+                await service.BuildResult(path, processID, ncm);
 
                 using (var stream = new FileStream(tempFile, FileMode.Create))
-                using (var archive = new ZipArchive(stream, ZipArchiveMode.Update, true))
                 {
-                    if (ncm is null)
+                    using (var archive = new ZipArchive(stream, ZipArchiveMode.Update, true))
                     {
-                        foreach (var item in Directory.GetDirectories(path))
+                        if (ncm is null)
                         {
-                            //Create a zip entry for each attachment
-                            foreach (var file in Directory.GetFiles(item))
+                            foreach (var item in Directory.GetDirectories(path))
+                            {
+                                //Create a zip entry for each attachment
+                                foreach (var file in Directory.GetFiles(item))
+                                {
+                                    // Add the entry for each file
+                                    archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            path = Path.Combine(path, ncm.ToString());
+
+                            foreach (var file in Directory.GetFiles(path))
                             {
                                 // Add the entry for each file
                                 archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
                             }
                         }
                     }
-                    else
-                    {
-                        path = Path.Combine(path, ncm.ToString());
-
-                        foreach (var file in Directory.GetFiles(path))
-                        {
-                            // Add the entry for each file
-                            archive.CreateEntryFromFile(file, Path.GetFileName(file), CompressionLevel.Optimal);
-                        }
-                    }
                 }
-
-                //using (var fileStream = new FileStream(tempFile, FileMode.Create))
-                //{
-                //    compressedFileStream.Seek(0, SeekOrigin.Begin);
-                //    compressedFileStream.CopyTo(fileStream);
-                //}
-
-                //System.Net.Http.HttpResponseMessage response = new System.Net.Http.HttpResponseMessage(HttpStatusCode.OK);
-                //response.Content = new StreamContent(compressedFileStream);
-                //response.Content.Headers.ContentDisposition = new System.Net.Http.Headers.ContentDispositionHeaderValue("attachment");
-                //response.Content.Headers.ContentDisposition.FileName = ncm.ToString();
-                //response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/zip");
 
                 const string contentType = "application/zip";
                 HttpContext.Response.ContentType = contentType;
+
                 var result = new FileContentResult(System.IO.File.ReadAllBytes(tempFile), contentType)
                 {
-                    FileDownloadName = $"{tempFile}.zip"
+                    FileDownloadName = $@"{ (ncm is null 
+                                                ? tempFile 
+                                                : ncm.ToString()) }.zip"
                 };
+
+                System.IO.File.Delete(tempFile);
 
                 return result;
             }

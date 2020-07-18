@@ -61,7 +61,7 @@
                                     <a class="btn btn-success m-1" routerLink="{{ route }}/edit/{{ company.id }}">
                                         <i class="fa fa-edit mr-1"></i>Editar
                                     </a>
-                                    <button type="button" class="btn btn-danger m-1" (click)="delete(company)">
+                                    <button *ngIf="admin" type="button" class="btn btn-danger m-1" (click)="delete(company)">
                                         <i class="fa fa-trash-o mr-1"></i>Remover
                                     </button>
                                 </td>

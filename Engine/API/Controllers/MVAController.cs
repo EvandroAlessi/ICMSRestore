@@ -128,86 +128,86 @@ namespace API.Controllers
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="file"></param>
-        /// <returns></returns>
-        [HttpPost("import")]
-        public async Task<IActionResult> Post([FromForm] IFormFile file)
-        {
-            try
-            {
-                if (file == null || file.Length == 0)
-                    return Content("File Not Selected");
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        ///// <param name="file"></param>
+        ///// <returns></returns>
+        //[HttpPost("import")]
+        //public async Task<IActionResult> Post([FromForm] IFormFile file)
+        //{
+        //    try
+        //    {
+        //        if (file == null || file.Length == 0)
+        //            return Content("File Not Selected");
 
-                string fileExtension = Path.GetExtension(file.FileName);
+        //        string fileExtension = Path.GetExtension(file.FileName);
 
-                if (fileExtension == ".xls" || fileExtension == ".xlsx")
-                {
-                    var rootFolder = AppSettings.RootPath;
-                    var fileName = file.FileName;
-                    var filePath = Path.Combine(rootFolder, fileName);
-                    var fileLocation = new FileInfo(filePath);
+        //        if (fileExtension == ".xls" || fileExtension == ".xlsx")
+        //        {
+        //            var rootFolder = AppSettings.RootPath;
+        //            var fileName = file.FileName;
+        //            var filePath = Path.Combine(rootFolder, fileName);
+        //            var fileLocation = new FileInfo(filePath);
 
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
+        //            using (var fileStream = new FileStream(filePath, FileMode.Create))
+        //            {
+        //                await file.CopyToAsync(fileStream);
+        //            }
 
-                    if (file.Length <= 0)
-                        return BadRequest("FileNotFound");
+        //            if (file.Length <= 0)
+        //                return BadRequest("FileNotFound");
 
-                    string con = @"Provider=Microsoft.ACE.OLEDB;Data Source=" + fileLocation + @"Extended Properties='Excel 12.0 Xml;HDR=Yes;'";
+        //            string con = @"Provider=Microsoft.ACE.OLEDB;Data Source=" + fileLocation + @"Extended Properties='Excel 12.0 Xml;HDR=Yes;'";
 
-                    using (OleDbConnection connection = new OleDbConnection(con))
-                    {
-                        connection.Open();
+        //            using (OleDbConnection connection = new OleDbConnection(con))
+        //            {
+        //                connection.Open();
 
-                        OleDbCommand command = new OleDbCommand("select * from [Sheet1$]", connection);
+        //                OleDbCommand command = new OleDbCommand("select * from [Sheet1$]", connection);
 
-                        using (OleDbDataReader dr = command.ExecuteReader())
-                        {
-                            while (dr.Read())
-                            {
-                                var row1Col0 = dr[0];
-                                Console.WriteLine(row1Col0);
-                            }
-                        }
-                    }
+        //                using (OleDbDataReader dr = command.ExecuteReader())
+        //                {
+        //                    while (dr.Read())
+        //                    {
+        //                        var row1Col0 = dr[0];
+        //                        Console.WriteLine(row1Col0);
+        //                    }
+        //                }
+        //            }
 
 
 
-                    //using (ExcelPackage package = new ExcelPackage(fileLocation))
-                    //{
-                    //    ExcelWorksheet workSheet = package.Workbook.Worksheets["Table1"];
-                    //    //var workSheet = package.Workbook.Worksheets.First();
-                    //    int totalRows = workSheet.Dimension.Rows;
+        //            //using (ExcelPackage package = new ExcelPackage(fileLocation))
+        //            //{
+        //            //    ExcelWorksheet workSheet = package.Workbook.Worksheets["Table1"];
+        //            //    //var workSheet = package.Workbook.Worksheets.First();
+        //            //    int totalRows = workSheet.Dimension.Rows;
 
-                    //    //var DataList = new List<Customers>();
+        //            //    //var DataList = new List<Customers>();
 
-                    //    for (int i = 2; i <= totalRows; i++)
-                    //    {
-                    //        //DataList.Add(new Customers
-                    //        // {
-                    //        var CustomerName = workSheet.Cells[i, 1].Value.ToString();
-                    //        var CustomerEmail = workSheet.Cells[i, 2].Value.ToString();
-                    //        var CustomerCountry = workSheet.Cells[i, 3].Value.ToString();
-                    //        //});
-                    //    }
+        //            //    for (int i = 2; i <= totalRows; i++)
+        //            //    {
+        //            //        //DataList.Add(new Customers
+        //            //        // {
+        //            //        var CustomerName = workSheet.Cells[i, 1].Value.ToString();
+        //            //        var CustomerEmail = workSheet.Cells[i, 2].Value.ToString();
+        //            //        var CustomerCountry = workSheet.Cells[i, 3].Value.ToString();
+        //            //        //});
+        //            //    }
 
-                    //    //_db.Customers.AddRange(customerList);
-                    //    //_db.SaveChanges();
-                    //}
-                }
+        //            //    //_db.Customers.AddRange(customerList);
+        //            //    //_db.SaveChanges();
+        //            //}
+        //        }
 
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //        return Ok();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
         // PUT api/<MVAController>/5
         /// <summary>

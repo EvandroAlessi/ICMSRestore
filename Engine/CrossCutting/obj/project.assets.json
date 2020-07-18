@@ -88,6 +88,16 @@
             "rid": "win"
           }
         }
+      },
+      "Dominio/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v3.1",
+        "compile": {
+          "bin/placeholder/Dominio.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/Dominio.dll": {}
+        }
       }
     }
   },
@@ -283,10 +293,16 @@
         "useSharedDesignerContext.txt",
         "version.txt"
       ]
+    },
+    "Dominio/1.0.0": {
+      "type": "project",
+      "path": "../Dominio/Dominio.csproj",
+      "msbuildProject": "../Dominio/Dominio.csproj"
     }
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
+      "Dominio >= 1.0.0",
       "Microsoft.Extensions.Configuration.Abstractions >= 3.1.4",
       "System.IO.FileSystem.AccessControl >= 4.7.0"
     ]
@@ -320,7 +336,11 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "projectReferences": {}
+          "projectReferences": {
+            "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\Dominio\\Dominio.csproj": {
+              "projectPath": "C:\\Users\\evand\\source\\repos\\ICMSRestore\\Engine\\Dominio\\Dominio.csproj"
+            }
+          }
         }
       },
       "warningProperties": {

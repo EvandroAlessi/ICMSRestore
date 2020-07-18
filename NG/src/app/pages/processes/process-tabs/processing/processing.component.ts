@@ -38,16 +38,11 @@ export class ProcessingComponent implements OnInit {
         );
   }
 
-  downloadFile(data: any) {
-    const blob = new Blob([data], { type: 'blob' });
-    const url= window.URL.createObjectURL(blob);
-    window.open(url);
-  }
-
   downLoadFile(data: any, type: string) {
-    let blob = new Blob([data], { type: type});
-    let url = window.URL.createObjectURL(blob);
-    let pwa = window.open(url);
+    const blob = new Blob([data], { type: type});
+    const url = window.URL.createObjectURL(blob);
+    let pwa = window.open(url,"_self");
+
     if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
         alert( 'Please disable your Pop-up blocker and try again.');
     }
@@ -59,11 +54,7 @@ export class ProcessingComponent implements OnInit {
         .subscribe((response) => {
             this.toast.success('Arquivos baixados', 'Sucesso!');
             
-            const blob = new Blob([response], {
-              type: 'application/zip'
-            });
-            const url = window.URL.createObjectURL(blob);
-            window.open(url);
+            this.downLoadFile(response, 'application/zip');
           },
           (err) => {
             this.toast.error('Algo deu errado!', 'erro :(');
