@@ -258,7 +258,7 @@ namespace CrossCutting
                 {
                     foreach (var byMonth in byYear.GroupBy(x => x.dhEmi.Month))
                     {
-                        foreach (var byNCM in byMonth.GroupBy(x => x.NCM))
+                        foreach (var byNCM in byMonth.GroupBy(x => new { x.cProd, x.NCM }))
                         {
                             var nfesEntrada = new List<NFeEntrada>();
                             var nfesSaida = new List<NFeSaida>();

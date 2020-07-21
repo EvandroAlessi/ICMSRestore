@@ -12,8 +12,15 @@ namespace CrossCutting.SerializationModels
 
         public class InfNFe
         {
+            [XmlIgnore]
+            private string _chave;
+
             [XmlAttribute("Id")]
-            public string Chave { get; set; }
+            public string Chave
+            {
+                get { return _chave; }
+                set { _chave = value.Replace("NFe", ""); }
+            }
 
             [XmlElement("ide")]
             public Identificacao Identificacao { get; set; }

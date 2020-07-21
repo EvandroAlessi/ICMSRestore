@@ -308,7 +308,7 @@ namespace DAO
             cmd.Parameters.AddWithNullableValue("@vOutro_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vOutro_TOTAL);
             cmd.Parameters.AddWithNullableValue("@vNF_TOTAL", NpgsqlTypes.NpgsqlDbType.Real, nfe.vNF_TOTAL);
             cmd.Parameters.AddWithNullableValue("@Entrada", NpgsqlTypes.NpgsqlDbType.Boolean, nfe.Entrada);
-            cmd.Parameters.AddWithNullableValue("@Chave", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.Chave.Replace("NFe", ""));
+            cmd.Parameters.AddWithNullableValue("@Chave", NpgsqlTypes.NpgsqlDbType.Varchar, nfe.Chave);
 
             return cmd;
         }
@@ -568,37 +568,37 @@ namespace DAO
             }
         }
 
-        public async Task<bool> Exists(int cNF, int nNF, int processoID)
+        public int? Exists(string chave, int processoID)
         {
             try
             {
-                bool exists = false;
+                int? currentID = null;
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
-                    await conn.OpenAsync();
+                    conn.Open();
 
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"SELECT ""ID"" FROM { table } 
-                                WHERE ""cNF"" = { cNF } 
-                                    AND ""nNF"" = { nNF }
-                                    AND ""ProcessoID"" = { processoID } ;";
+                                WHERE ""ProcessoID"" = { processoID }
+                                    AND ""Chave"" = '{ chave }';";
+                        //AND ""nNF"" = { nNF }
 
                         using (var reader = cmd.ExecuteReader())
                         {
                             while (reader.Read())
                             {
-                                exists = true;
+                                currentID = Convert.ToInt32(reader["id"]);
                                 break;
                             }
                         }
                     }
 
-                    await conn.CloseAsync();
+                    conn.Close();
                 }
 
-                return exists;
+                return currentID;
             }
             catch (NpgsqlException ex)
             {

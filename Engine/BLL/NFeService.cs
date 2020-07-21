@@ -88,11 +88,11 @@ namespace BLL
             }
         }
 
-        public async Task<bool> Exists(int cNF, int nNF, int processoID)
+        public int? Exists(string chave, int processoID)
         {
             try
             {
-                return await dao.Exists(cNF, nNF, processoID);
+                return dao.Exists(chave, processoID);
             }
             catch (Exception ex)
             {

@@ -1,5 +1,4 @@
 ﻿using CrossCutting;
-using CrossCutting.Models;
 using Dominio;
 using Npgsql;
 using System;
@@ -8,27 +7,30 @@ using System.Threading.Tasks;
 
 namespace DAO
 {
-    public class EmpresaDAO : CommonDAO
+    public class NFeRepetidaDAO : CommonDAO
     {
-        public EmpresaDAO() => table = "\"Empresas\"";
+        public NFeRepetidaDAO() => table = "\"NFeRepetidas\"";
 
-        public Empresa BuildObject(NpgsqlDataReader reader)
+        public NFeRepetida BuildObject(NpgsqlDataReader reader)
         {
-            return new Empresa
+            return new NFeRepetida
             {
                 ID = Convert.ToInt32(reader["ID"]),
-                CNPJ = reader["CNPJ"]?.ToString(),
-                Nome = reader["Nome"]?.ToString(),
-                Cidade = reader["Cidade"]?.ToString(),
-                UF = reader["UF"]?.ToString(),
+                NFeID = Convert.ToInt32(reader["NFeID"]),
+                ProcessoID = Convert.ToInt32(reader["ProcessoID"]),
+                DataHora = Convert.ToDateTime(reader["DataHora"]),
+                StackTrace = reader["StackTrace"]?.ToString(),
+                Chave = reader["Chave"]?.ToString(),
+                MensagemErro = reader["MensagemErro"]?.ToString(),
+                XML = reader["XML"]?.ToString(),
             };
         }
 
-        public async Task<List<Empresa>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
+        public async Task<List<NFeRepetida>> GetAll(int skip = 0, int take = 30, Dictionary<string, string> filters = null)
         {
             try
             {
-                var list = new List<Empresa>();
+                var list = new List<NFeRepetida>();
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
@@ -66,11 +68,11 @@ namespace DAO
             }
         }
 
-        public async Task<Empresa> Get(int id)
+        public async Task<NFeRepetida> Get(int id)
         {
             try
             {
-                Empresa empresa = null;
+                NFeRepetida repetida = null;
 
                 using (var conn = new NpgsqlConnection(connString))
                 {
@@ -85,7 +87,7 @@ namespace DAO
                         {
                             while (reader.Read())
                             {
-                                empresa = BuildObject(reader);
+                                repetida = BuildObject(reader);
                             }
                         }
                     }
@@ -93,7 +95,7 @@ namespace DAO
                     await conn.CloseAsync();
                 }
 
-                return empresa;
+                return repetida;
             }
             catch (NpgsqlException ex)
             {
@@ -145,12 +147,10 @@ namespace DAO
             }
         }
 
-        public Empresa Insert(Empresa empresa)
+        public void Insert(NFeRepetida repetida)
         {
             try
             {
-                object id;
-
                 using (var conn = new NpgsqlConnection(connString))
                 {
                     conn.Open();
@@ -158,33 +158,30 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"INSERT INTO { table } (
-                                ""CNPJ""
-                                , ""Nome""
-                                , ""Cidade""
-                                , ""UF""
+                                ""StackTrace""
+                                , ""MensagemErro""
+                                , ""DataHora""
+                                , ""ProcessoID""
+                                , ""Chave""
+                                , ""XML""
+                                , ""NFeID""
                             ) VALUES (
-                                '{ empresa.CNPJ }'
-                                , '{ empresa.Nome }'
-                                , '{ empresa.Cidade }'
-                                , '{ empresa.UF }'
-                            )
-                            RETURNING ""ID"";";
+                                '{ repetida.StackTrace }'
+                                , '{ repetida.MensagemErro }'
+                                , '{ repetida.DataHora ?? DateTime.Now }'
+                                , { repetida.ProcessoID }
+                                , '{ repetida.Chave }'
+                                , '{ repetida.XML }'
+                                , { repetida.NFeID }
+                            );";
 
-                        id = cmd.ExecuteScalar();
+                        if (cmd.ExecuteNonQuery() == 0)
+                        {
+                            throw new NpgsqlException($"Não foi possivel inserir NFeRepetida, NFeID: { repetida.NFeID }, xml: { repetida.XML }");
+                        }
                     }
 
                     conn.Close();
-                }
-
-                if (id != null && id.GetType() != typeof(DBNull))
-                {
-                    empresa.ID = (int)id;
-
-                    return empresa;
-                }
-                else
-                {
-                    return null;
                 }
             }
             catch (NpgsqlException ex)
@@ -197,7 +194,7 @@ namespace DAO
             }
         }
 
-        public Empresa Edit(Empresa empresa)
+        public NFeRepetida Edit(NFeRepetida repetida)
         {
             try
             {
@@ -210,11 +207,13 @@ namespace DAO
                     using (var cmd = conn.CreateCommand())
                     {
                         cmd.CommandText = $@"UPDATE { table } SET
-                                ""CNPJ"" = '{ empresa.CNPJ }'
-                                , ""Nome"" = '{ empresa.Nome }'
-                                , ""Cidade"" = '{ empresa.Cidade }'
-                                , ""UF"" = '{ empresa.UF }'
-                            WHERE ""ID"" = { empresa.ID };";
+                                ""StackTrace"" = '{ repetida.StackTrace }'
+                                , ""MensagemErro"" = '{ repetida.MensagemErro }'
+                                , ""ProcessoID"" = { repetida.ProcessoID }
+                                , ""Chave"" = '{ repetida.Chave }'
+                                , ""XML"" = '{ repetida.XML }'
+                                , ""NFeID"" = { repetida.NFeID }
+                            WHERE ""ID"" = { repetida.ID };";
 
                         rows = cmd.ExecuteNonQuery();
                     }
@@ -222,7 +221,7 @@ namespace DAO
                     conn.Close();
                 }
 
-                return rows > 0 ? empresa : null;
+                return rows > 0 ? repetida : null;
             }
             catch (NpgsqlException ex)
             {

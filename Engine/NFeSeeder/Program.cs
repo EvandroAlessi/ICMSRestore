@@ -25,6 +25,7 @@ namespace NFeSeeder
         private static bool startDescompress = true;
 
         private static readonly NFeService nfeService = new NFeService();
+        private static readonly NFeRepetidaService repeatedService = new NFeRepetidaService();
 
         [MTAThread]
         static void Main(string[] args)
@@ -221,7 +222,7 @@ namespace NFeSeeder
                         {
                             var currentZipList = Directory.GetFiles(dirPath).ToList();
 
-                            newFiles = currentZipList.Except(zipPaths).ToList();
+                            newFiles.AddRange(currentZipList.Except(zipPaths).ToList());
                         }
                     }
                 }
@@ -345,7 +346,7 @@ namespace NFeSeeder
 
                                     Task.Factory.StartNew(() =>
                                     {
-                                        DoWork(process.Key, subDir.Key);
+                                        DoWorkAsync(process.Key, subDir.Key);
                                     }, TaskCreationOptions.LongRunning)
                                     .ContinueWith(t =>
                                     {
@@ -364,7 +365,7 @@ namespace NFeSeeder
             }
         }
 
-        public static void DoWork(int processoID, string subDir)
+        public static void DoWorkAsync(int processoID, string subDir)
          {
             try
             {
@@ -414,26 +415,33 @@ namespace NFeSeeder
                         }
                         catch (Exception ex)
                         {
-                            if (nfe?.InformacoesNFe?.Identificacao?.cNF != null && nfe?.InformacoesNFe?.Identificacao?.nNF != null)
+                            if (!string.IsNullOrEmpty(nfe?.InformacoesNFe?.Chave))
                             {
-                                var exists = nfeService.Exists(nfe.InformacoesNFe.Identificacao.cNF, nfe.InformacoesNFe.Identificacao.nNF, processoID).Result;
+                                var currentNFeID = nfeService.Exists(nfe.InformacoesNFe.Chave, processoID);
 
-                                if (exists)
+                                if (currentNFeID != null)
                                 {
-                                    var loggingRepeated = new
+                                    Task.Run(() =>
                                     {
-                                        ProcessoID = processoID,
-                                        cNF = nfe.InformacoesNFe.Identificacao.cNF,
-                                        nNF = nfe.InformacoesNFe.Identificacao.nNF,
-                                        XmlFile = Path.GetFileName(filePath)
-                                    };
+                                        try
+                                        {
+                                            repeatedService.Insert(new Dominio.NFeRepetida
+                                            {
+                                                ProcessoID = processoID,
+                                                NFeID = currentNFeID.Value,
+                                                Chave = nfe.InformacoesNFe.Chave,
+                                                XML = Path.GetFileName(filePath),
+                                                MensagemErro = ex.Message,
+                                                StackTrace = ex.StackTrace
+                                            });
 
-                                    Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", 
-                                        ex: ex,
-                                        parameters: loggingRepeated, 
-                                        repeated: true);
-
-                                    File.Delete(filePath);
+                                            File.Delete(filePath);
+                                        }
+                                        catch (Exception ex)
+                                        {
+                                            Log(func: $"Program.{ MethodBase.GetCurrentMethod().Name }", ex);
+                                        }
+                                    });
 
                                     continue;
                                 }
@@ -477,11 +485,11 @@ namespace NFeSeeder
 
                 PathControl.Create(errorpPath);
 
-                File.Move(filePath, Path.Combine(errorpPath, Path.GetFileName(filePath)));
+                File.Move(filePath, Path.Combine(errorpPath, Path.GetFileName(filePath)), true);
             }
-            catch
+            catch(Exception e)
             {
-                throw ex;
+                throw e;
             }
         }
     }
