@@ -9,6 +9,8 @@ import { FilteredItemsModule } from './filtered-items/filtered-items.module';
 import { EditModule } from './edit/edit.module';
 import { ProcessTabsRouting } from './process-tabs.routing';
 import { ProcessingModule } from './processing/processing.module';
+import { CreateComponent } from '../../converters/create/create.component';
+import { CreateModule } from '../../converters/create/create.module';
 
 @NgModule({
   declarations: [ProcessTabsComponent],
@@ -24,6 +26,10 @@ import { ProcessingModule } from './processing/processing.module';
     FilteredItemsModule,
     EditModule,
     ProcessingModule,
+    CreateModule,
+  ],
+  entryComponents: [
+    CreateComponent
   ]
 })
 export class ProcessTabsModule {}

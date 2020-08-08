@@ -4,6 +4,7 @@ using DAO;
 using Dominio;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BLL
@@ -50,13 +51,13 @@ namespace BLL
             }
         }
 
-        public async Task<List<ItemFiltrado>> GetAll(int processID, int page = 1, int take = 30)
+        public async Task<List<ItemFiltrado>> GetAll(int processID, int page = 1, int take = 30, bool isLimited = true)
         {
             try
             {
                 int skip = (page - 1) * take;
 
-                return await dao.GetAll(processID, skip, take);
+                return await dao.GetAll(processID, skip, take, isLimited);
             }
             catch (Exception ex)
             {
@@ -76,15 +77,40 @@ namespace BLL
             }
         }
 
-        public async Task<List<ProductMedia>> GetSumarry(int processID)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="processID"></param>
+        /// <returns></returns>
+        public async Task<List<ProductMedia>> GetSummary(int processID)
         {
             try
             {
-                var processService = new ProcessoService();
+                var converterService = new ConversorService();
 
-                var process = await processService.Get(processID);
+                var converters = await converterService.GetAllByCompany(processID);
 
-                return await dao.GetSumarry(process);
+                var list = await dao.GetAll(processID, isLimited: false);
+
+                if (converters != null && converters.Count > 0)
+                {
+                    foreach (var item in list)
+                    {
+                        foreach (var converter in converters)
+                        {
+                            if (item.cProd == converter.cProd && item.NCM == converter.NCM)
+                            {
+                                list.First(x => x.ID == item.ID).vUnCom = item.vUnCom * converter.FatorConversao;
+
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                var result = SummaryBuilder.GetFilteredItems(list);
+
+                return result;
             }
             catch (Exception ex)
             {

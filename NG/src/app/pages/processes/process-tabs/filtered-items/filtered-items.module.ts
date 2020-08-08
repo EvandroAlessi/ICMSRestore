@@ -9,7 +9,9 @@ import { DetailsModule } from './details/details.module';
 import { SharedModule } from '../../../shared/shared.module';
 
 @NgModule({
-  declarations: [FilteredItemsComponent],
+  declarations: [
+    FilteredItemsComponent
+  ],
   imports: [
     CommonModule, 
     RouterModule, 
@@ -18,7 +20,11 @@ import { SharedModule } from '../../../shared/shared.module';
     SharedModule,
     DetailsModule,
   ],
-  exports: [FilteredItemsComponent],
-  entryComponents: [DetailsComponent]
+  exports: [
+    FilteredItemsComponent
+  ],
+  entryComponents: [
+    DetailsComponent, 
+  ]
 })
 export class FilteredItemsModule {}

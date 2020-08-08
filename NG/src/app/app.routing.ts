@@ -78,6 +78,13 @@ export const routes: Routes = [
           ),
       },
       {
+        path: 'converters',
+        loadChildren: () => import('./pages/converters/converters.module')
+          .then(
+            (m) => m.ConvertersModule
+          ),
+      },
+      {
         path: 'about',
         loadChildren: () =>
           import('./pages/help/help.module').then((m) => m.HelpModule),

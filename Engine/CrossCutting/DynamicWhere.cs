@@ -25,11 +25,11 @@ namespace CrossCutting
 
                 if (!isNumber)
                 {
-                    conditions.Add($"{ quote + filter.Key + quote } ILIKE  '%{ filter.Value }%'");
+                    conditions.Add($"{ quote + filter.Key + quote } ILIKE '%{ filter.Value }%'");
                 }
                 else
                 {
-                    conditions.Add($"{ quote + filter.Key + quote } =  '{ filter.Value }'");
+                    conditions.Add($"{ quote + filter.Key + quote } = '{ filter.Value }'");
                 }
             }
 

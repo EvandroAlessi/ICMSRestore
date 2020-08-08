@@ -116,12 +116,11 @@ namespace API.Controllers
         }
 
         [HttpGet("summary-result")]
-        public async Task<IActionResult> GetSumarry(int processID)
+        public async Task<IActionResult> GetSummary(int processID)
         {
             try
             {
-                return Ok(await service.GetSumarry(processID));
-
+                return Ok(await service.GetSummary(processID));
             }
             catch (Exception ex)
             {

@@ -21,7 +21,7 @@ namespace Uploader
 
                 foreach (var processo in new ProcessoService().GetAll().Result)
                 {
-                    var aux = new ItemFiltradoDAO().GetSumarry(processo).Result;
+                    var aux = new ItemFiltradoDAO().GetAll(processo.ID, isLimited: false).Result;
                 }
             }
             catch (Exception ex)

@@ -38,6 +38,11 @@ function buildNavItems(): any {
         icon: 'icon-docs',
       },
       {
+        name: 'Conversores',
+        url: '/converters',
+        icon: 'icon-home',
+      },
+      {
         title: true,
         name: 'Ajuda',
       },
@@ -73,6 +78,11 @@ function buildNavItems(): any {
         name: 'Notas Fiscais',
         url: '/invoices',
         icon: 'icon-docs',
+      },
+      {
+        name: 'Conversores',
+        url: '/converters',
+        icon: 'icon-home',
       },
       {
         title: true,

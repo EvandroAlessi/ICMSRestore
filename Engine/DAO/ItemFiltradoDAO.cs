@@ -139,7 +139,7 @@ namespace DAO
             }
         }
 
-        public async Task<List<ItemFiltrado>> GetAll(int processID, int skip = 0, int take = 30)
+        public async Task<List<ItemFiltrado>> GetAll(int processID, int skip = 0, int take = 30, bool isLimited = true)
         {
             try
             {
@@ -153,9 +153,12 @@ namespace DAO
                     {
                         cmd.CommandText = $@"SELECT * FROM { table } 
                                             WHERE ""ProcessoID"" = { processID }
-                                            ORDER BY ""ID"" desc
-                                            LIMIT { take } 
-                                            OFFSET { skip };";
+                                            ORDER BY ""ID"" desc 
+                                            {
+                                                (isLimited 
+                                                    ? $"LIMIT { take }  OFFSET { skip }"
+                                                    : "")
+                                            };";
 
                         using (var reader = cmd.ExecuteReader())
                         {
@@ -220,95 +223,42 @@ namespace DAO
             }
         }
 
-        public List<ProductMedia> CalcSumarry(List<ItemFiltrado> items)
-        {
-            try
-            {
-                var products = new List<ProductMedia>();
+        //public async Task<List<ItemFiltrado>> GetSummary(int processID)
+        //{
+        //    try
+        //    {
+        //        var list = new List<ItemFiltrado>();
 
-                foreach (var byYear in items.GroupBy(x => x.dhEmi.Year))
-                {
-                    foreach (var byMonth in byYear.GroupBy(x => x.dhEmi.Month))
-                    {
-                        foreach (var byNCM in byMonth.GroupBy(x => x.NCM))
-                        {
-                            var product = new ProductMedia();
+        //        using (var conn = new NpgsqlConnection(connString))
+        //        {
+        //            await conn.OpenAsync();
 
-                            product.Name = byNCM.FirstOrDefault()?.xProd;
-                            product.NCM = byNCM.FirstOrDefault()?.NCM;
-                            product.MonthYear = byNCM.FirstOrDefault()?.dhEmi.ToString("MM/yyyy");
-                            product.LowerValue = byNCM.Any(x => !x.Entrada)
-                                ? byNCM.Where(x => !x.Entrada)?.Min(x => x.vUnCom.Value)
-                                : null;
-                            product.HighestValue = byNCM.Any(x => !x.Entrada)
-                                ? byNCM.Where(x => !x.Entrada)?.Max(x => x.vUnCom.Value)
-                                : null;
-                            product.Media = byNCM.Any(x => !x.Entrada)
-                                ? byNCM.Where(x => !x.Entrada)?.Average(x => x.vUnCom.Value)
-                                : null;
-                            product.TotalResults = byNCM.Select(x => x).Count();
-                            product.TotalValue = byNCM.Any(x => !x.Entrada)
-                                ? byNCM.Where(x => !x.Entrada)?.Sum(x => x.vUnCom.Value)
-                                : null;
-                            product.MediaEntry = (byNCM.Any(x => x.Entrada)
-                                ? byNCM.Where(x => x.Entrada)?.Average(x => x.vUnCom.Value)
-                                : null);
+        //            using (var cmd = conn.CreateCommand())
+        //            {
+        //                cmd.CommandText = $@"SELECT *
+        //                        FROM { table }
+        //                        WHERE ""ProcessoID"" = { processID }
+        //                        ORDER BY 1 DESC;";
 
-                            products.Add(product);
-                        }
-                    }
-                }
+        //                using var reader = cmd.ExecuteReader();
+        //                    while (reader.Read())
+        //                        list.Add(BuildObject(reader));
+        //            }
 
-                return products.OrderByDescending(x => x.MediaEntry).ToList();
-            }
-            catch (Exception ex)
-            {
+        //            await conn.CloseAsync();
+        //        }
 
-                throw ex;
-            }
-        }
-
-        public async Task<List<ProductMedia>> GetSumarry(Processo process)
-        {
-            try
-            {
-                var list = new List<ItemFiltrado>();
-
-                using (var conn = new NpgsqlConnection(connString))
-                {
-                    await conn.OpenAsync();
-
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = $@"SELECT *
-                                FROM { table }
-                                WHERE 
-                                    ""dhEmi"" BETWEEN '{ process.InicioPeriodo }' AND '{ process.FimPeriodo }'
-                                ORDER BY 1 DESC;";
-
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                list.Add(BuildObject(reader));
-                            }
-                        }
-                    }
-
-                    await conn.CloseAsync();
-                }
-
-                return CalcSumarry(list);
-            }
-            catch (NpgsqlException ex)
-            {
-                throw ex;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
+        //        return list;
+        //    }
+        //    catch (NpgsqlException ex)
+        //    {
+        //        throw ex;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
 
         public async Task<bool> Exists(int id)
         {

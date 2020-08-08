@@ -5,6 +5,10 @@ import { UploadComponent } from './upload/upload.component';
 import { FilteredItemsComponent } from './filtered-items/filtered-items.component';
 import { EditComponent } from './edit/edit.component';
 import { ProcessingComponent } from './processing/processing.component';
+import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
+import { ConverterService } from '../../../services/converter.service';
+import { CreateComponent } from '../../converters/create/create.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-process-tabs',
@@ -13,6 +17,7 @@ import { ProcessingComponent } from './processing/processing.component';
 export class ProcessTabsComponent implements OnInit, AfterViewInit {
   public route: string = '/processes';
   public id: number;
+  bsModalRef: BsModalRef;
 
   tabs: any[] = [
     { title: 'Dados', active: true },
@@ -29,6 +34,9 @@ export class ProcessTabsComponent implements OnInit, AfterViewInit {
   
   constructor(
     private routerActived: ActivatedRoute,
+    private converterService: ConverterService,
+    private modalService: BsModalService,
+    private toast: ToastrService,
   ) {}
 
   ngOnInit() {
@@ -39,6 +47,45 @@ export class ProcessTabsComponent implements OnInit, AfterViewInit {
   
   ngAfterViewInit(): void {
     this.edit.getProcess(this.id);
+  }
+
+  doWork(converter) {
+    const initialState = {
+      converter: converter,
+      showCompanies: false
+    };
+
+    this.bsModalRef = this.modalService.show(CreateComponent, { initialState });
+  }
+
+  requiredConversions(processID) {
+    this.converterService
+        .getUnitDiferences(processID)
+        .subscribe((response) => {
+            console.log(response);
+
+            if (response) {
+              let first = true;
+
+              response.forEach(converter => {
+                
+                if(!first) {
+                  this.modalService
+                    .onHidden
+                    .subscribe(() => {
+                      this.doWork(converter)
+                    });
+                }
+                else {
+                  this.doWork(converter)
+                } 
+              });
+            }
+          },
+          (err) => {
+            this.toast.error(err.errors, "Erro :(");
+          }
+        );
   }
   
   onSelect(data: TabDirective): void {
@@ -54,6 +101,7 @@ export class ProcessTabsComponent implements OnInit, AfterViewInit {
         break;
       case this.tabs[3].title:
         this.processing.getSumarry(this.id);
+        this.requiredConversions(this.id);
         break;
     }
   }

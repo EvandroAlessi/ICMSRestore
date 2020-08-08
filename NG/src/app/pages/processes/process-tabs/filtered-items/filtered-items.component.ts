@@ -1,9 +1,12 @@
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { FilteredItemService } from '../../../../services/filtered-item.service';
-import { filter } from 'rxjs/operators';
+import { filter, take } from 'rxjs/operators';
 import { BsModalService, BsModalRef } from 'ngx-bootstrap/modal';
 import { DetailsComponent } from './details/details.component';
+import { CreateComponent } from '../../../converters/create/create.component';
+import { ConverterService } from '../../../../services/converter.service';
+import { promise } from 'protractor';
 
 @Component({
   selector: 'app-filtered-items',
@@ -30,7 +33,7 @@ export class FilteredItemsComponent implements OnInit {
     //this.getUploadProcesses();
   }
 
-  details(id){
+  details(id) {
     const initialState = {
       id: id
     };
@@ -48,7 +51,7 @@ export class FilteredItemsComponent implements OnInit {
             this.pagination = response.pagination;
           },
           (err) => {
-            //this.router.navigate([this.route]);
+            this.toast.error(err.errors, "Erro :(");
           }
         );
   }
